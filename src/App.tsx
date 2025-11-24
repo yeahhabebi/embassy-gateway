@@ -16,6 +16,7 @@ import AdminLogin from "./pages/admin/Login";
 import AdminSetup from "./pages/admin/Setup";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Applications from "./pages/admin/Applications";
+import ContactMessages from "./pages/admin/ContactMessages";
 import CMS from "./pages/admin/CMS";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
@@ -48,6 +49,7 @@ const App = () => (
           }>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="applications" element={<Applications />} />
+            <Route path="contact-messages" element={<ContactMessages />} />
             <Route path="cms" element={<CMS />} />
           </Route>
           
