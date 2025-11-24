@@ -1,15 +1,44 @@
 import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MapPin, Phone, Mail, Clock, FileText } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { MapPin, Phone, Mail, Clock, FileText, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
+const contactFormSchema = z.object({
+  name: z.string().trim().min(2, "Name must be at least 2 characters").max(255, "Name is too long"),
+  email: z.string().trim().email("Invalid email address").max(255, "Email is too long"),
+  phone: z.string().trim().max(50, "Phone number is too long").optional(),
+  subject: z.string().trim().min(3, "Subject must be at least 3 characters").max(500, "Subject is too long"),
+  message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message is too long"),
+});
+
+type ContactFormData = z.infer<typeof contactFormSchema>;
+
 const Contact = () => {
+  const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [contactInfo, setContactInfo] = useState({
     address: "123 Embassy Street\nCapital City, 12345\nCountry Name",
     phone: "+1 (555) 123-4567",
     email: "info@embassy.gov",
     hours: "Monday - Friday\n9:00 AM - 5:00 PM",
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactFormSchema),
   });
 
   useEffect(() => {
@@ -31,6 +60,36 @@ const Contact = () => {
         if (item.key === "embassy_hours") contentMap.hours = item.content;
       });
       setContactInfo((prev) => ({ ...prev, ...contentMap }));
+    }
+  };
+
+  const onSubmit = async (data: ContactFormData) => {
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from("contact_messages").insert({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || null,
+        subject: data.subject,
+        message: data.message,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Message sent successfully!",
+        description: "We'll get back to you as soon as possible.",
+      });
+      reset();
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -132,6 +191,114 @@ const Contact = () => {
                     <p className="text-muted-foreground">Available 24/7 for citizens in distress</p>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Form Section */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-12">
+              <h2 className="mb-4">Send Us a Message</h2>
+              <p className="text-muted-foreground text-lg">
+                Have a question or inquiry? Fill out the form below and we'll get back to you shortly.
+              </p>
+            </div>
+
+            <Card className="shadow-lg">
+              <CardHeader>
+                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
+                  <Send className="h-6 w-6 text-primary" />
+                </div>
+                <CardTitle>Contact Form</CardTitle>
+                <CardDescription>
+                  All fields marked with * are required
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      placeholder="John Doe"
+                      {...register("name")}
+                      className={errors.name ? "border-destructive" : ""}
+                    />
+                    {errors.name && (
+                      <p className="text-sm text-destructive">{errors.name.message}</p>
+                    )}
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="john@example.com"
+                        {...register("email")}
+                        className={errors.email ? "border-destructive" : ""}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                      )}
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="+91 98765 43210"
+                        {...register("phone")}
+                        className={errors.phone ? "border-destructive" : ""}
+                      />
+                      {errors.phone && (
+                        <p className="text-sm text-destructive">{errors.phone.message}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="subject">Subject *</Label>
+                    <Input
+                      id="subject"
+                      placeholder="Visa inquiry, general question, etc."
+                      {...register("subject")}
+                      className={errors.subject ? "border-destructive" : ""}
+                    />
+                    {errors.subject && (
+                      <p className="text-sm text-destructive">{errors.subject.message}</p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message *</Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Please provide details about your inquiry..."
+                      rows={6}
+                      {...register("message")}
+                      className={errors.message ? "border-destructive" : ""}
+                    />
+                    {errors.message && (
+                      <p className="text-sm text-destructive">{errors.message.message}</p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>
