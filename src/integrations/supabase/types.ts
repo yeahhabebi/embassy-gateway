@@ -211,6 +211,7 @@ export type Database = {
     Functions: {
       generate_application_number: { Args: never; Returns: string }
       is_admin: { Args: { user_id: string }; Returns: boolean }
+      is_super_admin: { Args: { user_id: string }; Returns: boolean }
     }
     Enums: {
       admin_role: "super_admin" | "staff"
