@@ -1,0 +1,159 @@
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2, Save } from "lucide-react";
+
+interface CMSContent {
+  id: string;
+  key: string;
+  content: string;
+}
+
+const contentKeys = [
+  { key: "homepage_hero_title", label: "Homepage Hero Title" },
+  { key: "homepage_hero_subtitle", label: "Homepage Hero Subtitle" },
+  { key: "homepage_about", label: "Homepage About Section" },
+  { key: "about_page_content", label: "About Page Content" },
+  { key: "services_intro", label: "Services Introduction" },
+  { key: "requirements_intro", label: "Requirements Introduction" },
+  { key: "embassy_name", label: "Embassy Name" },
+  { key: "embassy_address", label: "Embassy Address" },
+  { key: "embassy_phone", label: "Embassy Phone" },
+  { key: "embassy_email", label: "Embassy Email" },
+  { key: "embassy_hours", label: "Embassy Hours" },
+];
+
+export default function CMS() {
+  const [content, setContent] = useState<Record<string, string>>({});
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    loadContent();
+  }, []);
+
+  const loadContent = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("cms_content")
+        .select("*");
+
+      if (error) throw error;
+
+      const contentMap: Record<string, string> = {};
+      data?.forEach((item: CMSContent) => {
+        contentMap[item.key] = item.content;
+      });
+      setContent(contentMap);
+    } catch (error) {
+      console.error("Error loading content:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load content",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (key: string) => {
+    setSaving(key);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from("cms_content")
+        .upsert({
+          key,
+          content: content[key] || "",
+          updated_by: user?.id,
+          updated_at: new Date().toISOString(),
+        }, {
+          onConflict: "key",
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Content updated successfully",
+      });
+    } catch (error) {
+      console.error("Error saving content:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save content",
+        variant: "destructive",
+      });
+    } finally {
+      setSaving(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-3xl font-bold text-foreground">Content Management</h1>
+        <p className="text-muted-foreground mt-2">
+          Edit website content and embassy information
+        </p>
+      </div>
+
+      <div className="grid gap-6">
+        {contentKeys.map(({ key, label }) => (
+          <Card key={key}>
+            <CardHeader>
+              <CardTitle>{label}</CardTitle>
+              <CardDescription>Key: {key}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor={key}>Content</Label>
+                <Textarea
+                  id={key}
+                  value={content[key] || ""}
+                  onChange={(e) =>
+                    setContent({ ...content, [key]: e.target.value })
+                  }
+                  rows={6}
+                  className="font-mono text-sm"
+                />
+              </div>
+              <Button
+                onClick={() => handleSave(key)}
+                disabled={saving === key}
+                className="w-full sm:w-auto"
+              >
+                {saving === key ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Saving...
+                  </>
+                ) : (
+                  <>
+                    <Save className="mr-2 h-4 w-4" />
+                    Save Changes
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}
