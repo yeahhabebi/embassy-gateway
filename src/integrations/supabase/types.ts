@@ -210,6 +210,7 @@ export type Database = {
     }
     Functions: {
       generate_application_number: { Args: never; Returns: string }
+      has_any_admin: { Args: never; Returns: boolean }
       is_admin: { Args: { user_id: string }; Returns: boolean }
       is_super_admin: { Args: { user_id: string }; Returns: boolean }
     }
