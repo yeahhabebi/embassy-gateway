@@ -13,6 +13,7 @@ import Apply from "./pages/Apply";
 import Track from "./pages/Track";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/Login";
+import AdminSetup from "./pages/admin/Setup";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Applications from "./pages/admin/Applications";
 import CMS from "./pages/admin/CMS";
@@ -38,6 +39,7 @@ const App = () => (
           <Route path="/track" element={<Track />} />
           
           {/* Admin Routes */}
+          <Route path="/admin/setup" element={<AdminSetup />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={
             <ProtectedRoute>
