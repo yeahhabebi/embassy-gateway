@@ -191,34 +191,8 @@ const Track = () => {
                         <p className="font-medium">{application.first_name} {application.last_name}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-muted-foreground">Email</p>
-                        <p className="font-medium">{application.email}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Nationality</p>
-                        <p className="font-medium">{application.nationality}</p>
-                      </div>
-                      <div>
                         <p className="text-sm text-muted-foreground">Date of Birth</p>
                         <p className="font-medium">{new Date(application.date_of_birth).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Visa Information */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-2 text-sm">
-                      <Plane className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-semibold">Visa Information</span>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pl-6">
-                      <div>
-                        <p className="text-sm text-muted-foreground">Visa Type</p>
-                        <p className="font-medium capitalize">{application.visa_type.replace('_', ' ')}</p>
-                      </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">Intended Arrival</p>
-                        <p className="font-medium">{new Date(application.intended_arrival_date).toLocaleDateString()}</p>
                       </div>
                     </div>
                   </div>
@@ -230,12 +204,7 @@ const Track = () => {
                       <span className="font-semibold">Application Timeline</span>
                     </div>
                     <div className="pl-6">
-                      <div className="relative border-l-2 border-muted pl-6 pb-4">
-                        <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-1"></div>
-                        <p className="text-sm text-muted-foreground">Submitted</p>
-                        <p className="font-medium">{new Date(application.submission_date).toLocaleString()}</p>
-                      </div>
-                      <div className="relative border-l-2 border-muted pl-6">
+                      <div className="relative pl-6">
                         <div className={`absolute w-3 h-3 ${getStatusColor(application.status)} rounded-full -left-[7px] top-1`}></div>
                         <p className="text-sm text-muted-foreground">Current Status</p>
                         <p className="font-medium">{getStatusLabel(application.status)}</p>
