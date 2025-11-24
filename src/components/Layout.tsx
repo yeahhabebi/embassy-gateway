@@ -12,7 +12,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
     { to: "/services", label: "Services" },
-    { to: "/apply", label: "Apply for Visa" },
     { to: "/requirements", label: "Requirements" },
     { to: "/track", label: "Track Application" },
     { to: "/contact", label: "Contact" },
