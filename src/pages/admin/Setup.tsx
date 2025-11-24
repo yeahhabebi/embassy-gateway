@@ -9,52 +9,68 @@ import { useToast } from "@/hooks/use-toast";
 import { Shield, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
-export default function AdminLogin() {
+export default function AdminSetup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSetup = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+      // Check if any admin users already exist
+      const { count } = await supabase
+        .from("admin_users")
+        .select("*", { count: "exact", head: true });
+
+      if (count && count > 0) {
+        toast({
+          title: "Setup already completed",
+          description: "Admin users already exist. Please use the login page.",
+          variant: "destructive",
+        });
+        navigate("/admin/login");
+        return;
+      }
+
+      // Create the user account
+      const { data: authData, error: authError } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/admin/login`,
+        },
       });
 
       if (authError) throw authError;
+      if (!authData.user) throw new Error("Failed to create user");
 
-      // Check if user is admin
-      const { data: adminData, error: adminError } = await supabase
+      // Add user to admin_users table with service role
+      const { error: adminError } = await supabase
         .from("admin_users")
-        .select("*")
-        .eq("id", authData.user.id)
-        .single();
+        .insert([{
+          id: authData.user.id,
+          email: email,
+          full_name: email.split("@")[0],
+          role: "super_admin",
+        }]);
 
-      if (adminError || !adminData) {
-        await supabase.auth.signOut();
-        throw new Error("Access denied. Admin privileges required.");
-      }
-
-      // Update last login
-      await supabase
-        .from("admin_users")
-        .update({ last_login: new Date().toISOString() })
-        .eq("id", authData.user.id);
+      if (adminError) throw adminError;
 
       toast({
-        title: "Welcome back!",
-        description: "Successfully logged in to admin panel.",
+        title: "Admin account created!",
+        description: "You can now login with your credentials.",
       });
 
-      navigate("/admin/dashboard");
+      // Sign out and redirect to login
+      await supabase.auth.signOut();
+      navigate("/admin/login");
     } catch (error: any) {
       toast({
-        title: "Login failed",
+        title: "Setup failed",
         description: error.message,
         variant: "destructive",
       });
@@ -72,26 +88,26 @@ export default function AdminLogin() {
               <Shield className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl">Admin Login</CardTitle>
+          <CardTitle className="text-2xl">First Time Setup</CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin panel
+            Create your first admin account to access the admin panel
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Alert className="mb-4">
+        <CardContent className="space-y-4">
+          <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              First time here? <a href="/admin/setup" className="font-medium underline">Create your admin account</a>
+              This page is only available when no admin users exist. After setup, use the login page.
             </AlertDescription>
           </Alert>
           
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleSetup} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="admin@embassy.com"
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -102,13 +118,15 @@ export default function AdminLogin() {
               <Input
                 id="password"
                 type="password"
+                placeholder="Min 6 characters"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={6}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Logging in..." : "Login"}
+              {loading ? "Creating Admin Account..." : "Create Admin Account"}
             </Button>
           </form>
         </CardContent>
