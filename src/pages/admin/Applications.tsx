@@ -542,7 +542,7 @@ const Applications = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Application #</TableHead>
+                <TableHead>Visa Tracking Number</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Nationality</TableHead>

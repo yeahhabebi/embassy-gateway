@@ -170,7 +170,7 @@ const Track = () => {
                     <div>
                       <CardTitle>Application Details</CardTitle>
                       <CardDescription className="mt-2">
-                        Application Number: <span className="font-semibold text-foreground">{application.application_number}</span>
+                        Visa Tracking Number: <span className="font-semibold text-foreground">{application.application_number}</span>
                       </CardDescription>
                     </div>
                     <Badge className={getStatusColor(application.status)}>
