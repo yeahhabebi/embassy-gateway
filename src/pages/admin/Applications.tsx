@@ -48,6 +48,7 @@ const Applications = () => {
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
+    application_number: "",
     first_name: "",
     last_name: "",
     email: "",
@@ -102,6 +103,7 @@ const Applications = () => {
 
   const resetForm = () => {
     setFormData({
+      application_number: "",
       first_name: "",
       last_name: "",
       email: "",
@@ -135,6 +137,7 @@ const Applications = () => {
   const openEditDialog = (app: VisaApplication) => {
     setEditingApp(app);
     setFormData({
+      application_number: app.application_number,
       first_name: app.first_name,
       last_name: app.last_name,
       email: app.email,
@@ -166,7 +169,7 @@ const Applications = () => {
         ...formData,
         duration_of_stay: formData.duration_of_stay ? parseInt(formData.duration_of_stay) : null,
         postal_code: formData.postal_code || null,
-        application_number: editingApp?.application_number || "",
+        application_number: formData.application_number || "",
         visa_type: formData.visa_type as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
         status: formData.status as "processing" | "in_progress" | "approved" | "rejected",
       };
@@ -300,6 +303,16 @@ const Applications = () => {
               </DialogHeader>
 
               <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="application_number">Visa Tracking Number *</Label>
+                  <Input
+                    id="application_number"
+                    value={formData.application_number}
+                    onChange={(e) => handleInputChange("application_number", e.target.value)}
+                    placeholder="VISA-YYYY-XXXXXX"
+                  />
+                </div>
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="first_name">First Name *</Label>
