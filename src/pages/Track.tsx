@@ -191,6 +191,10 @@ const Track = () => {
                         <p className="font-medium">{application.first_name} {application.last_name}</p>
                       </div>
                       <div>
+                        <p className="text-sm text-muted-foreground">Passport Number</p>
+                        <p className="font-medium">{application.passport_number}</p>
+                      </div>
+                      <div>
                         <p className="text-sm text-muted-foreground">Date of Birth</p>
                         <p className="font-medium">{new Date(application.date_of_birth).toLocaleDateString()}</p>
                       </div>
