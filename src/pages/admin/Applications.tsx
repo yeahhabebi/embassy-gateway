@@ -164,12 +164,47 @@ const Applications = () => {
   };
 
   const handleSubmit = async () => {
+    // Validate required fields
+    const requiredFields = {
+      application_number: "Visa Tracking Number",
+      first_name: "First Name",
+      last_name: "Last Name",
+      email: "Email",
+      phone: "Phone",
+      date_of_birth: "Date of Birth",
+      gender: "Gender",
+      nationality: "Nationality",
+      passport_number: "Passport Number",
+      passport_issue_date: "Passport Issue Date",
+      passport_expiry_date: "Passport Expiry Date",
+      passport_issue_country: "Passport Issue Country",
+      address: "Address",
+      city: "City",
+      country: "Country",
+      visa_type: "Visa Type",
+      purpose_of_visit: "Purpose of Visit",
+      intended_arrival_date: "Intended Arrival Date",
+    };
+
+    const missingFields = Object.entries(requiredFields)
+      .filter(([key]) => !formData[key as keyof typeof formData])
+      .map(([_, label]) => label);
+
+    if (missingFields.length > 0) {
+      toast({
+        title: "Validation Error",
+        description: `Please fill in the following required fields: ${missingFields.join(", ")}`,
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const applicationData = {
         ...formData,
         duration_of_stay: formData.duration_of_stay ? parseInt(formData.duration_of_stay) : null,
         postal_code: formData.postal_code || null,
-        application_number: formData.application_number || "",
+        application_number: formData.application_number,
         visa_type: formData.visa_type as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
         status: formData.status as "processing" | "in_progress" | "approved" | "rejected",
       };
