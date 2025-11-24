@@ -1,148 +1,297 @@
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Users, Globe, Award } from "lucide-react";
+import { Shield, Users, Globe, Award, Heart, Building, Landmark, TrendingUp } from "lucide-react";
+import mostarBridge from "@/assets/mostar-bridge.jpg";
+import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 
 const About = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-16 md:py-24">
-        <div className="container mx-auto px-4">
+      <section className="relative bg-primary text-primary-foreground py-16 md:py-24 overflow-hidden">
+        <div 
+          className="absolute inset-0 z-0 opacity-20"
+          style={{
+            backgroundImage: `url(${sarajevoCityscape})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="mb-6">About Our Embassy</h1>
+            <h1 className="mb-6">About Bosnia and Herzegovina</h1>
             <p className="text-xl text-primary-foreground/90">
-              Serving the community with dedication, professionalism, and integrity
+              A country of rich history, diverse culture, and warm hospitality in the heart of Southeast Europe
             </p>
           </div>
         </div>
       </section>
 
-      {/* Mission Section */}
+      {/* Overview Section */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-center mb-12">Our Mission</h2>
-            <p className="text-lg text-muted-foreground text-center mb-8">
-              The Embassy of the Republic is committed to providing efficient, transparent, and secure visa services 
-              to all applicants. We strive to facilitate international travel while maintaining the highest standards 
-              of security and diplomatic excellence.
-            </p>
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mb-16">
+              <div>
+                <h2 className="mb-6">About Bosnia and Herzegovina</h2>
+                <div className="space-y-4 text-muted-foreground">
+                  <p className="text-lg">
+                    Bosnia and Herzegovina is a country located in Southeast Europe, on the Balkan Peninsula. 
+                    Known for its natural beauty, cultural diversity, and historical significance, Bosnia and 
+                    Herzegovina offers a unique blend of Eastern and Western influences.
+                  </p>
+                  <p className="text-lg">
+                    The country is characterized by its stunning landscapes, ranging from the Dinaric Alps to 
+                    the Adriatic coast, medieval villages, and vibrant cities. Sarajevo, the capital, is known 
+                    as the "Jerusalem of Europe" for its religious diversity and coexistence.
+                  </p>
+                </div>
+              </div>
+              <div className="relative h-96 rounded-xl overflow-hidden shadow-2xl">
+                <img 
+                  src={mostarBridge} 
+                  alt="Mostar Old Bridge" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
-              <Card>
+            {/* Key Facts Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6 text-center">
+                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Globe className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Capital</h3>
+                  <p className="text-muted-foreground">Sarajevo</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6 text-center">
+                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Users className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Population</h3>
+                  <p className="text-muted-foreground">~3.2 Million</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6 text-center">
+                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Landmark className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Area</h3>
+                  <p className="text-muted-foreground">51,197 km²</p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6 text-center">
+                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Award className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold mb-2">Languages</h3>
+                  <p className="text-muted-foreground">Bosnian, Croatian, Serbian</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Culture & Heritage Section */}
+      <section className="py-16 md:py-24 bg-muted/30">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-center mb-12">Culture & Heritage</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6">
+                  <div className="bg-primary/10 p-3 rounded-lg w-fit mb-4">
+                    <Heart className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">Cultural Diversity</h3>
+                  <p className="text-muted-foreground">
+                    Bosnia and Herzegovina is a melting pot of cultures, where East meets West. The country 
+                    showcases influences from Ottoman, Austro-Hungarian, and Mediterranean civilizations, 
+                    creating a unique cultural tapestry.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6">
+                  <div className="bg-primary/10 p-3 rounded-lg w-fit mb-4">
+                    <Landmark className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">Historical Significance</h3>
+                  <p className="text-muted-foreground">
+                    From medieval fortresses to Ottoman-era bridges and Austro-Hungarian architecture, 
+                    the country preserves centuries of history. The Old Bridge in Mostar is a UNESCO 
+                    World Heritage site and symbol of reconciliation.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6">
+                  <div className="bg-primary/10 p-3 rounded-lg w-fit mb-4">
+                    <Award className="h-6 w-6 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3">Arts & Traditions</h3>
+                  <p className="text-muted-foreground">
+                    Bosnia and Herzegovina is known for its traditional crafts including copperwork, 
+                    wood carving, and carpet weaving. The country has a rich tradition of music, 
+                    literature, and film that reflects its diverse heritage.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* BiH-India Relations Section */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-5xl mx-auto">
+            <h2 className="text-center mb-12">Bosnia and Herzegovina - India Relations</h2>
+            
+            <div className="mb-12">
+              <p className="text-lg text-muted-foreground text-center mb-8">
+                Bosnia and Herzegovina and India enjoy warm and friendly bilateral relations based on 
+                mutual respect, understanding, and shared commitment to democracy and development.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+              <Card className="border-2 hover:border-primary/50 transition-all">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
-                      <Shield className="h-6 w-6 text-primary" />
+                      <Building className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Security First</h3>
+                      <h3 className="text-xl font-semibold mb-3">Diplomatic Relations</h3>
                       <p className="text-muted-foreground">
-                        We prioritize the security of your personal information with state-of-the-art encryption 
-                        and data protection measures.
+                        India recognized Bosnia and Herzegovina's independence in 1992, and diplomatic 
+                        relations were established shortly thereafter. The Embassy in New Delhi serves 
+                        as a vital link between our two nations, facilitating cooperation in various fields.
                       </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-2 hover:border-primary/50 transition-all">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary/10 p-3 rounded-lg">
+                      <TrendingUp className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-semibold mb-3">Economic Cooperation</h3>
+                      <p className="text-muted-foreground">
+                        Both countries are actively working to enhance trade and investment opportunities. 
+                        There is growing interest in sectors such as IT, pharmaceuticals, agriculture, 
+                        and tourism, with potential for increased bilateral trade.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-all">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <Users className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Customer Service</h3>
+                      <h3 className="text-xl font-semibold mb-3">Cultural Exchange</h3>
                       <p className="text-muted-foreground">
-                        Our dedicated team is committed to providing exceptional service and support 
-                        throughout your visa application process.
+                        Cultural exchanges play an important role in strengthening people-to-people ties. 
+                        The embassy regularly organizes cultural events, film screenings, and art exhibitions 
+                        to promote Bosnian culture in India and vice versa.
                       </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
 
-              <Card>
+              <Card className="border-2 hover:border-primary/50 transition-all">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
                     <div className="bg-primary/10 p-3 rounded-lg">
                       <Globe className="h-6 w-6 text-primary" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-semibold mb-2">Global Reach</h3>
+                      <h3 className="text-xl font-semibold mb-3">Multilateral Cooperation</h3>
                       <p className="text-muted-foreground">
-                        We facilitate international relations and travel, connecting people across borders 
-                        and cultures.
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-lg">
-                      <Award className="h-6 w-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-semibold mb-2">Excellence</h3>
-                      <p className="text-muted-foreground">
-                        We maintain the highest professional standards in diplomatic services and 
-                        visa processing.
+                        Both nations collaborate on various international platforms including the United 
+                        Nations and the Non-Aligned Movement. India has been supportive of Bosnia and 
+                        Herzegovina's European integration efforts.
                       </p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* History Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-center mb-8">Our History</h2>
-            <div className="prose prose-lg max-w-none">
-              <p className="text-muted-foreground text-center mb-6">
-                Established in 1950, the Embassy of the Republic has been serving the international community 
-                for over seven decades. Throughout our history, we have continuously evolved to meet the changing 
-                needs of travelers while maintaining our commitment to excellence and security.
-              </p>
-              <p className="text-muted-foreground text-center">
-                Our modern visa portal represents the latest step in our ongoing digital transformation, 
-                making it easier than ever for applicants to access our services from anywhere in the world.
-              </p>
-            </div>
+            <Card className="bg-primary text-primary-foreground">
+              <CardContent className="pt-6">
+                <h3 className="text-2xl font-semibold mb-4 text-center">Our Mission</h3>
+                <p className="text-primary-foreground/90 text-center text-lg">
+                  The Embassy of Bosnia and Herzegovina in New Delhi is committed to strengthening the bonds 
+                  of friendship between our two nations, promoting mutual understanding, and providing excellent 
+                  consular services to both Bosnian citizens in India and Indian citizens interested in visiting 
+                  Bosnia and Herzegovina.
+                </p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Contact CTA */}
-      <section className="py-16 md:py-24">
+      <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
           <Card className="max-w-3xl mx-auto shadow-xl">
             <CardContent className="pt-8 text-center">
-              <h2 className="mb-4">Get in Touch</h2>
+              <h2 className="mb-4">Contact the Embassy</h2>
               <p className="text-muted-foreground mb-6">
-                Have questions about our services? Our team is here to help.
+                For consular services, visa inquiries, or general information, please reach out to us.
               </p>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                 <div>
                   <h3 className="font-semibold mb-2">Address</h3>
                   <p className="text-muted-foreground">
-                    123 Embassy Street<br />
-                    Capital City, 12345
+                    Embassy of Bosnia and Herzegovina<br />
+                    New Delhi - 110001, India
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Contact</h3>
                   <p className="text-muted-foreground">
-                    Email: info@embassy.gov<br />
-                    Phone: +1 (555) 123-4567
+                    Email: info@bihembassy.com<br />
+                    Phone: +91-11-26147415
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Office Hours</h3>
+                  <p className="text-muted-foreground">
+                    Monday - Friday<br />
+                    9:00 AM - 5:00 PM
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-2">Consular Hours</h3>
+                  <p className="text-muted-foreground">
+                    Monday, Wednesday, Friday<br />
+                    10:00 AM - 12:00 PM
                   </p>
                 </div>
               </div>
