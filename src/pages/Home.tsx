@@ -5,6 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
 import { supabase } from "@/integrations/supabase/client";
+import embassyHero from "@/assets/embassy-hero.jpg";
 
 const Home = () => {
   const [content, setContent] = useState({
@@ -35,8 +36,21 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative gradient-hero text-primary-foreground py-24 md:py-36">
-        <div className="container mx-auto px-4">
+      <section className="relative text-primary-foreground py-24 md:py-36 overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 z-0"
+          style={{
+            backgroundImage: `url(${embassyHero})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }}
+        />
+        {/* Gradient Overlay for text readability */}
+        <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
+        
+        <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6 font-bold">{content.hero_title}</h1>
             <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90">
