@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { Shield, Menu, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import bihLogo from "@/assets/bih-logo.png";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -27,12 +28,12 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           <div className="flex items-center justify-between py-4">
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
-              <div className="bg-accent p-2 rounded-lg">
-                <Shield className="h-8 w-8 text-accent-foreground" />
+              <div className="w-12 h-12 flex items-center justify-center">
+                <img src={bihLogo} alt="BiH Emblem" className="w-12 h-12 object-contain" />
               </div>
               <div>
-                <h1 className="text-xl font-bold leading-tight">Embassy Visa Portal</h1>
-                <p className="text-xs text-primary-foreground/80">Republic Embassy Services</p>
+                <h1 className="text-xl font-bold leading-tight">Embassy of Bosnia and Herzegovina</h1>
+                <p className="text-xs text-primary-foreground/80">New Delhi, India</p>
               </div>
             </Link>
 
@@ -108,11 +109,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
               <div className="space-y-2 text-sm text-primary-foreground/80">
-                <p>123 Embassy Street</p>
-                <p>Capital City, 12345</p>
-                <p>Email: info@embassy.gov</p>
-                <p>Phone: +1 (555) 123-4567</p>
-                <p>Fax: +1 (555) 123-4568</p>
+                <p>Embassy of Bosnia and Herzegovina</p>
+                <p>New Delhi - 110001, India</p>
+                <p>Email: info@bihembassy.com</p>
+                <p>Phone: +91-11-26147415</p>
               </div>
             </div>
 
@@ -122,8 +122,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="space-y-2 text-sm text-primary-foreground/80">
                 <p>Monday - Friday</p>
                 <p>9:00 AM - 5:00 PM</p>
-                <p className="mt-4">Visa Services</p>
-                <p>By Appointment Only</p>
+                <p className="mt-4">Consular Hours</p>
+                <p>Monday, Wednesday, Friday</p>
+                <p>10:00 AM - 12:00 PM</p>
               </div>
             </div>
 
@@ -145,7 +146,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
 
           <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center text-sm text-primary-foreground/60">
-            <p>&copy; {new Date().getFullYear()} Embassy of the Republic. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Embassy of Bosnia and Herzegovina, New Delhi. All rights reserved.</p>
           </div>
         </div>
       </footer>
