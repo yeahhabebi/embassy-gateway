@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { FileText, Home, LogOut, Menu, X } from "lucide-react";
+import { FileText, Home, LogOut, Menu, X, FileEdit } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function AdminLayout() {
@@ -39,6 +39,7 @@ export function AdminLayout() {
   const navItems = [
     { name: "Dashboard", path: "/admin/dashboard", icon: Home },
     { name: "Applications", path: "/admin/applications", icon: FileText },
+    { name: "CMS", path: "/admin/cms", icon: FileEdit },
   ];
 
   return (

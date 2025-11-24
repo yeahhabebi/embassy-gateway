@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import Applications from "./pages/admin/Applications";
+import CMS from "./pages/admin/CMS";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
@@ -45,6 +46,7 @@ const App = () => (
           }>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="applications" element={<Applications />} />
+            <Route path="cms" element={<CMS />} />
           </Route>
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

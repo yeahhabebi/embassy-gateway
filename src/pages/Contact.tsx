@@ -1,8 +1,38 @@
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail, Clock, FileText } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
+  const [contactInfo, setContactInfo] = useState({
+    address: "123 Embassy Street\nCapital City, 12345\nCountry Name",
+    phone: "+1 (555) 123-4567",
+    email: "info@embassy.gov",
+    hours: "Monday - Friday\n9:00 AM - 5:00 PM",
+  });
+
+  useEffect(() => {
+    loadContent();
+  }, []);
+
+  const loadContent = async () => {
+    const { data } = await supabase
+      .from("cms_content")
+      .select("key, content")
+      .in("key", ["embassy_address", "embassy_phone", "embassy_email", "embassy_hours"]);
+
+    if (data && data.length > 0) {
+      const contentMap: Record<string, string> = {};
+      data.forEach((item) => {
+        if (item.key === "embassy_address") contentMap.address = item.content;
+        if (item.key === "embassy_phone") contentMap.phone = item.content;
+        if (item.key === "embassy_email") contentMap.email = item.content;
+        if (item.key === "embassy_hours") contentMap.hours = item.content;
+      });
+      setContactInfo((prev) => ({ ...prev, ...contentMap }));
+    }
+  };
   return (
     <Layout>
       {/* Hero Section */}
@@ -31,10 +61,8 @@ const Contact = () => {
                   <CardDescription>Our embassy location</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-foreground">
-                    123 Embassy Street<br />
-                    Capital City, 12345<br />
-                    Country Name
+                  <p className="text-foreground whitespace-pre-line">
+                    {contactInfo.address}
                   </p>
                 </CardContent>
               </Card>
@@ -48,17 +76,9 @@ const Contact = () => {
                   <CardDescription>When we're available</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-2">
-                    <p className="text-foreground font-semibold">Consular Services:</p>
-                    <p className="text-muted-foreground">
-                      Monday - Friday<br />
-                      9:00 AM - 5:00 PM
-                    </p>
-                    <p className="text-foreground font-semibold mt-4">Visa Applications:</p>
-                    <p className="text-muted-foreground">
-                      By Appointment Only
-                    </p>
-                  </div>
+                  <p className="text-foreground whitespace-pre-line">
+                    {contactInfo.hours}
+                  </p>
                 </CardContent>
               </Card>
 
@@ -71,13 +91,8 @@ const Contact = () => {
                   <CardDescription>Call us directly</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-foreground mb-2">
-                    <strong>Main Line:</strong><br />
-                    +1 (555) 123-4567
-                  </p>
                   <p className="text-foreground">
-                    <strong>Emergency Line:</strong><br />
-                    +1 (555) 123-4999
+                    {contactInfo.phone}
                   </p>
                 </CardContent>
               </Card>
@@ -91,13 +106,8 @@ const Contact = () => {
                   <CardDescription>Send us a message</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-foreground mb-2">
-                    <strong>General Inquiries:</strong><br />
-                    info@embassy.gov
-                  </p>
                   <p className="text-foreground">
-                    <strong>Visa Services:</strong><br />
-                    visa@embassy.gov
+                    {contactInfo.email}
                   </p>
                 </CardContent>
               </Card>

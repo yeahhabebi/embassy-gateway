@@ -1,19 +1,46 @@
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
+import { supabase } from "@/integrations/supabase/client";
 
 const Home = () => {
+  const [content, setContent] = useState({
+    hero_title: "Welcome to the Embassy Visa Portal",
+    hero_subtitle: "Apply for your visa online - Fast, Secure, and Convenient",
+  });
+
+  useEffect(() => {
+    loadContent();
+  }, []);
+
+  const loadContent = async () => {
+    const { data } = await supabase
+      .from("cms_content")
+      .select("key, content")
+      .in("key", ["homepage_hero_title", "homepage_hero_subtitle"]);
+
+    if (data && data.length > 0) {
+      const contentMap: Record<string, string> = {};
+      data.forEach((item) => {
+        if (item.key === "homepage_hero_title") contentMap.hero_title = item.content;
+        if (item.key === "homepage_hero_subtitle") contentMap.hero_subtitle = item.content;
+      });
+      setContent((prev) => ({ ...prev, ...contentMap }));
+    }
+  };
+
   return (
     <Layout>
       {/* Hero Section */}
       <section className="gradient-hero text-primary-foreground py-20 md:py-32">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="mb-6 font-bold">Welcome to the Embassy Visa Portal</h1>
+            <h1 className="mb-6 font-bold">{content.hero_title}</h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
-              Apply for your visa online - Fast, Secure, and Convenient
+              {content.hero_subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/apply">
