@@ -6,7 +6,8 @@ import { FileText, CheckCircle, XCircle, Clock } from "lucide-react";
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
     total: 0,
-    pending: 0,
+    processing: 0,
+    in_progress: 0,
     approved: 0,
     rejected: 0,
   });
@@ -23,7 +24,8 @@ export default function AdminDashboard() {
     if (applications) {
       setStats({
         total: applications.length,
-        pending: applications.filter((a) => a.status === "pending").length,
+        processing: applications.filter((a) => a.status === "processing").length,
+        in_progress: applications.filter((a) => a.status === "in_progress").length,
         approved: applications.filter((a) => a.status === "approved").length,
         rejected: applications.filter((a) => a.status === "rejected").length,
       });
@@ -39,8 +41,15 @@ export default function AdminDashboard() {
       bg: "bg-primary/10",
     },
     {
-      title: "Pending",
-      value: stats.pending,
+      title: "Processing",
+      value: stats.processing,
+      icon: Clock,
+      color: "text-blue-600",
+      bg: "bg-blue-600/10",
+    },
+    {
+      title: "In Progress",
+      value: stats.in_progress,
       icon: Clock,
       color: "text-yellow-600",
       bg: "bg-yellow-600/10",
@@ -70,7 +79,7 @@ export default function AdminDashboard() {
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         {statCards.map((stat) => (
           <Card key={stat.title}>
             <CardHeader className="flex flex-row items-center justify-between pb-2">

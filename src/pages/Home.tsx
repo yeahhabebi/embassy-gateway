@@ -43,14 +43,14 @@ const Home = () => {
               {content.hero_subtitle}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/apply">
+              <Link to="/track">
                 <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-6 text-lg shadow-lg">
-                  Apply for Visa
+                  Track Application
                 </Button>
               </Link>
-              <Link to="/track">
+              <Link to="/contact">
                 <Button size="lg" variant="outline" className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20 text-primary-foreground font-semibold px-8 py-6 text-lg">
-                  Track Application
+                  Contact Us
                 </Button>
               </Link>
             </div>
@@ -147,13 +147,13 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-16 md:py-24 bg-primary text-primary-foreground">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-4">Ready to Apply?</h2>
+          <h2 className="mb-4">Need Assistance?</h2>
           <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
-            Start your visa application today and join thousands of successful applicants
+            Our team is here to help you with your visa application process
           </p>
-          <Link to="/apply">
+          <Link to="/contact">
             <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-6 text-lg shadow-xl">
-              Start Your Application
+              Contact Us
             </Button>
           </Link>
         </div>
@@ -164,16 +164,16 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="mb-6">How It Works</h2>
+              <h2 className="mb-6">Our Services</h2>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
                     1
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Complete Application</h3>
+                    <h3 className="text-xl font-semibold mb-2">Application Processing</h3>
                     <p className="text-muted-foreground">
-                      Fill out the online visa application form with your personal and travel information
+                      Our team handles all visa applications with professional care and attention to detail
                     </p>
                   </div>
                 </div>
@@ -183,9 +183,9 @@ const Home = () => {
                     2
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Upload Documents</h3>
+                    <h3 className="text-xl font-semibold mb-2">Document Verification</h3>
                     <p className="text-muted-foreground">
-                      Submit required documents including passport copy and supporting materials
+                      Thorough verification of all submitted documents to ensure compliance
                     </p>
                   </div>
                 </div>
@@ -195,9 +195,9 @@ const Home = () => {
                     3
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Track Status</h3>
+                    <h3 className="text-xl font-semibold mb-2">Status Updates</h3>
                     <p className="text-muted-foreground">
-                      Monitor your application progress online using your tracking information
+                      Regular updates on your application status through our tracking system
                     </p>
                   </div>
                 </div>
@@ -207,9 +207,9 @@ const Home = () => {
                     4
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Receive Decision</h3>
+                    <h3 className="text-xl font-semibold mb-2">Support & Guidance</h3>
                     <p className="text-muted-foreground">
-                      Get notified via email when your visa application has been processed
+                      Expert guidance throughout the entire visa application process
                     </p>
                   </div>
                 </div>
