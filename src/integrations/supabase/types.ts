@@ -214,12 +214,7 @@ export type Database = {
     }
     Enums: {
       admin_role: "super_admin" | "staff"
-      visa_status:
-        | "pending"
-        | "under_review"
-        | "approved"
-        | "rejected"
-        | "on_hold"
+      visa_status: "processing" | "in_progress" | "approved" | "rejected"
       visa_type:
         | "tourist"
         | "business"
@@ -355,13 +350,7 @@ export const Constants = {
   public: {
     Enums: {
       admin_role: ["super_admin", "staff"],
-      visa_status: [
-        "pending",
-        "under_review",
-        "approved",
-        "rejected",
-        "on_hold",
-      ],
+      visa_status: ["processing", "in_progress", "approved", "rejected"],
       visa_type: [
         "tourist",
         "business",
