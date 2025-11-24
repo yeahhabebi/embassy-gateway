@@ -8,8 +8,8 @@ import { supabase } from "@/integrations/supabase/client";
 
 const Home = () => {
   const [content, setContent] = useState({
-    hero_title: "Welcome to the Embassy Visa Portal",
-    hero_subtitle: "Apply for your visa online - Fast, Secure, and Convenient",
+    hero_title: "Welcome to the Embassy of Bosnia and Herzegovina",
+    hero_subtitle: "Serving the Bosnian community and promoting bilateral relations between Bosnia and Herzegovina and India",
   });
 
   useEffect(() => {
@@ -35,22 +35,46 @@ const Home = () => {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="gradient-hero text-primary-foreground py-20 md:py-32">
+      <section className="relative gradient-hero text-primary-foreground py-24 md:py-36">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6 font-bold">{content.hero_title}</h1>
-            <p className="text-xl md:text-2xl mb-8 text-primary-foreground/90">
+            <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90">
               {content.hero_subtitle}
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link to="/services">
+                <Button size="lg" variant="outline" className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/30 text-primary-foreground font-semibold px-8 py-6 text-lg">
+                  Consular Services
+                </Button>
+              </Link>
+              <Link to="/about">
+                <Button size="lg" variant="outline" className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/30 text-primary-foreground font-semibold px-8 py-6 text-lg">
+                  About Bosnia and Herzegovina
+                </Button>
+              </Link>
+            </div>
+            
+            {/* Quick Action Buttons */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
               <Link to="/track">
-                <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-6 text-lg shadow-lg">
-                  Track Application
+                <Button size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-6 shadow-lg">
+                  Track Your Application
                 </Button>
               </Link>
               <Link to="/contact">
-                <Button size="lg" variant="outline" className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20 text-primary-foreground font-semibold px-8 py-6 text-lg">
-                  Contact Us
+                <Button size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-6 shadow-lg">
+                  Emergency Contact
+                </Button>
+              </Link>
+              <Link to="/contact">
+                <Button size="lg" variant="outline" className="w-full bg-primary-foreground text-primary border-2 hover:bg-primary-foreground/90 font-semibold py-6">
+                  Office Hours & Location
+                </Button>
+              </Link>
+              <Link to="/requirements">
+                <Button size="lg" variant="outline" className="w-full bg-primary-foreground text-primary border-2 hover:bg-primary-foreground/90 font-semibold py-6">
+                  Document Requirements
                 </Button>
               </Link>
             </div>
@@ -58,85 +82,61 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      {/* Services Section */}
+      <section className="py-16 md:py-24 bg-background">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="mb-4">Why Choose Our Visa Services?</h2>
+            <h2 className="mb-4">Our Services</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We provide efficient, secure, and transparent visa processing services
+              We provide comprehensive consular and diplomatic services to support citizens and strengthen bilateral relations
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up">
               <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Shield className="h-6 w-6 text-primary" />
+                <div className="bg-primary w-14 h-14 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <FileText className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <CardTitle>Secure Process</CardTitle>
-                <CardDescription>
-                  Your data is protected with industry-standard encryption and security measures
+                <CardTitle className="text-center">Visa Services</CardTitle>
+                <CardDescription className="text-center">
+                  Apply for visas to Bosnia and Herzegovina for tourism, business, or other purposes
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up" style={{ animationDelay: "0.1s" }}>
               <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Clock className="h-6 w-6 text-primary" />
+                <div className="bg-primary w-14 h-14 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Shield className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <CardTitle>Fast Processing</CardTitle>
-                <CardDescription>
-                  Get your visa processed quickly with our streamlined online application system
+                <CardTitle className="text-center">Consular Services</CardTitle>
+                <CardDescription className="text-center">
+                  Passport renewal, document legalization, and other consular assistance
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up" style={{ animationDelay: "0.2s" }}>
               <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <FileText className="h-6 w-6 text-primary" />
+                <div className="bg-primary w-14 h-14 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Globe className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <CardTitle>Easy Application</CardTitle>
-                <CardDescription>
-                  Simple step-by-step process to complete your visa application online
+                <CardTitle className="text-center">Trade & Investment</CardTitle>
+                <CardDescription className="text-center">
+                  Explore business opportunities and investment prospects in Bosnia and Herzegovina
                 </CardDescription>
               </CardHeader>
             </Card>
 
             <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up" style={{ animationDelay: "0.3s" }}>
               <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <CheckCircle className="h-6 w-6 text-primary" />
+                <div className="bg-primary w-14 h-14 rounded-full flex items-center justify-center mb-4 mx-auto">
+                  <Award className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <CardTitle>Real-time Tracking</CardTitle>
-                <CardDescription>
-                  Track your application status anytime with your passport number and date of birth
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up" style={{ animationDelay: "0.4s" }}>
-              <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Globe className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Multiple Visa Types</CardTitle>
-                <CardDescription>
-                  Tourist, business, student, work, transit, and diplomatic visas available
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            <Card className="border-2 hover:border-primary/50 transition-all hover:shadow-lg animate-slide-up" style={{ animationDelay: "0.5s" }}>
-              <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Award className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Professional Support</CardTitle>
-                <CardDescription>
-                  Our experienced team is here to help you through every step of the process
+                <CardTitle className="text-center">Cultural Events</CardTitle>
+                <CardDescription className="text-center">
+                  Stay updated on cultural events and activities organized by the embassy
                 </CardDescription>
               </CardHeader>
             </Card>
@@ -144,103 +144,79 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 bg-primary text-primary-foreground">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="mb-4">Need Assistance?</h2>
-          <p className="text-xl mb-8 text-primary-foreground/90 max-w-2xl mx-auto">
-            Our team is here to help you with your visa application process
-          </p>
-          <Link to="/contact">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold px-8 py-6 text-lg shadow-xl">
-              Contact Us
-            </Button>
-          </Link>
-        </div>
-      </section>
 
-      {/* Information Section */}
-      <section className="py-16 md:py-24">
+      {/* Embassy Information Section */}
+      <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="mb-6">Our Services</h2>
-              <div className="space-y-6">
-                <div className="flex gap-4">
-                  <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                    1
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Application Processing</h3>
-                    <p className="text-muted-foreground">
-                      Our team handles all visa applications with professional care and attention to detail
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                    2
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Document Verification</h3>
-                    <p className="text-muted-foreground">
-                      Thorough verification of all submitted documents to ensure compliance
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                    3
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Status Updates</h3>
-                    <p className="text-muted-foreground">
-                      Regular updates on your application status through our tracking system
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex gap-4">
-                  <div className="bg-primary text-primary-foreground w-10 h-10 rounded-full flex items-center justify-center font-bold flex-shrink-0">
-                    4
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold mb-2">Support & Guidance</h3>
-                    <p className="text-muted-foreground">
-                      Expert guidance throughout the entire visa application process
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <Card className="shadow-xl">
               <CardHeader>
-                <CardTitle className="text-2xl">Need Help?</CardTitle>
+                <CardTitle className="text-2xl">Embassy Information</CardTitle>
                 <CardDescription>
-                  Our support team is ready to assist you with your visa application
+                  Contact details and office hours for the Embassy of Bosnia and Herzegovina
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <p className="font-semibold mb-1">Email</p>
-                  <p className="text-muted-foreground">info@embassy.gov</p>
+                  <p className="font-semibold mb-1">Address</p>
+                  <p className="text-muted-foreground">New Delhi - 110001, India</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Phone</p>
-                  <p className="text-muted-foreground">+1 (555) 123-4567</p>
+                  <p className="text-muted-foreground">+91-11-26147415</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Email</p>
+                  <p className="text-muted-foreground">info@bihembassy.com</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Office Hours</p>
-                  <p className="text-muted-foreground">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                  <p className="text-muted-foreground">Monday - Friday, 9:00 AM - 5:00 PM</p>
+                </div>
+                <div>
+                  <p className="font-semibold mb-1">Consular Hours</p>
+                  <p className="text-muted-foreground">Monday, Wednesday, Friday, 10:00 AM - 12:00 PM</p>
                 </div>
                 <Link to="/contact">
                   <Button className="w-full mt-4">Contact Us</Button>
                 </Link>
               </CardContent>
             </Card>
+
+            <div>
+              <h2 className="mb-8">Latest Updates</h2>
+              <div className="space-y-6">
+                <Card className="border-2 hover:border-primary/50 transition-all">
+                  <CardHeader>
+                    <CardTitle className="text-xl">New Visa Requirements</CardTitle>
+                    <CardDescription>
+                      Updated visa requirements for Indian citizens traveling to Bosnia and Herzegovina
+                    </CardDescription>
+                    <p className="text-sm text-muted-foreground mt-2">December 2024</p>
+                  </CardHeader>
+                </Card>
+
+                <Card className="border-2 hover:border-primary/50 transition-all">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Cultural Festival</CardTitle>
+                    <CardDescription>
+                      Annual Bosnia and Herzegovina Cultural Festival in New Delhi
+                    </CardDescription>
+                    <p className="text-sm text-muted-foreground mt-2">November 2024</p>
+                  </CardHeader>
+                </Card>
+
+                <Card className="border-2 hover:border-primary/50 transition-all">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Trade Delegation Visit</CardTitle>
+                    <CardDescription>
+                      Business delegation from Bosnia and Herzegovina visits India
+                    </CardDescription>
+                    <p className="text-sm text-muted-foreground mt-2">October 2024</p>
+                  </CardHeader>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
