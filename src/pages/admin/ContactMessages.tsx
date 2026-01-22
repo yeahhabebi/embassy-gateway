@@ -40,6 +40,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getSafeErrorMessage } from "@/lib/error-utils";
 
 interface ContactMessage {
   id: string;
@@ -86,7 +87,7 @@ const ContactMessages = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to load messages",
+        description: getSafeErrorMessage(error, "Failed to load messages"),
         variant: "destructive",
       });
     } finally {
@@ -150,7 +151,7 @@ const ContactMessages = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update message",
+        description: getSafeErrorMessage(error, "Failed to update message"),
         variant: "destructive",
       });
     }
@@ -180,7 +181,7 @@ const ContactMessages = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to save notes",
+        description: getSafeErrorMessage(error, "Failed to save notes"),
         variant: "destructive",
       });
     }
@@ -205,7 +206,7 @@ const ContactMessages = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete message",
+        description: getSafeErrorMessage(error, "Failed to delete message"),
         variant: "destructive",
       });
     }

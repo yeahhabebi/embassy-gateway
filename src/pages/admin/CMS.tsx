@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Save } from "lucide-react";
+import { getSafeErrorMessage } from "@/lib/error-utils";
 
 interface CMSContent {
   id: string;
@@ -50,11 +51,10 @@ export default function CMS() {
         contentMap[item.key] = item.content;
       });
       setContent(contentMap);
-    } catch (error) {
-      console.error("Error loading content:", error);
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to load content",
+        description: getSafeErrorMessage(error, "Failed to load content"),
         variant: "destructive",
       });
     } finally {
@@ -84,11 +84,10 @@ export default function CMS() {
         title: "Success",
         description: "Content updated successfully",
       });
-    } catch (error) {
-      console.error("Error saving content:", error);
+    } catch (error: any) {
       toast({
         title: "Error",
-        description: "Failed to save content",
+        description: getSafeErrorMessage(error, "Failed to save content"),
         variant: "destructive",
       });
     } finally {

@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { Shield, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getSafeErrorMessage } from "@/lib/error-utils";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -53,9 +54,12 @@ export default function AdminLogin() {
 
       navigate("/admin/dashboard");
     } catch (error: any) {
+      const message = error?.message === "Access denied. Admin privileges required."
+        ? error.message
+        : getSafeErrorMessage(error, "Login failed. Please check your credentials.");
       toast({
         title: "Login failed",
-        description: error.message,
+        description: message,
         variant: "destructive",
       });
     } finally {

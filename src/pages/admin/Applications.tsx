@@ -36,6 +36,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Tables } from "@/integrations/supabase/types";
+import { getSafeErrorMessage } from "@/lib/error-utils";
 
 type VisaApplication = Tables<"visa_applications">;
 
@@ -89,7 +90,7 @@ const Applications = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to load applications",
+        description: getSafeErrorMessage(error, "Failed to load applications"),
         variant: "destructive",
       });
     } finally {
@@ -240,7 +241,7 @@ const Applications = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to save application",
+        description: getSafeErrorMessage(error, "Failed to save application"),
         variant: "destructive",
       });
     }
@@ -265,7 +266,7 @@ const Applications = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to delete application",
+        description: getSafeErrorMessage(error, "Failed to delete application"),
         variant: "destructive",
       });
     }
@@ -289,7 +290,7 @@ const Applications = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to update status",
+        description: getSafeErrorMessage(error, "Failed to update status"),
         variant: "destructive",
       });
     }

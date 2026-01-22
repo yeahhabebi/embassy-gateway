@@ -8,6 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { Shield, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getSafeErrorMessage } from "@/lib/error-utils";
 
 export default function AdminSetup() {
   const [email, setEmail] = useState("");
@@ -71,7 +72,7 @@ export default function AdminSetup() {
     } catch (error: any) {
       toast({
         title: "Setup failed",
-        description: error.message,
+        description: getSafeErrorMessage(error, "Failed to create admin account. Please try again."),
         variant: "destructive",
       });
     } finally {
