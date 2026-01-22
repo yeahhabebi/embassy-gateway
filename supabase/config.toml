@@ -1,1 +1,7 @@
 project_id = "obxqbuafuvgyyznmzeqi"
+
+[functions.track-application]
+verify_jwt = false
+
+[functions.upload-document]
+verify_jwt = false

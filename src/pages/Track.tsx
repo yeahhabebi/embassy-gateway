@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, FileText, Calendar, User, MapPin, Plane } from "lucide-react";
+import { Search, FileText, Calendar, User } from "lucide-react";
 
 type VisaApplication = {
   id: string;
@@ -45,24 +45,25 @@ const Track = () => {
 
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("visa_applications")
-        .select("*")
-        .eq("passport_number", passportNumber.trim())
-        .eq("date_of_birth", dateOfBirth)
-        .maybeSingle();
+      // Use secure edge function instead of direct database query
+      const { data, error } = await supabase.functions.invoke('track-application', {
+        body: {
+          passport_number: passportNumber.trim(),
+          date_of_birth: dateOfBirth,
+        },
+      });
 
       if (error) throw error;
 
-      if (!data) {
+      if (data.error || !data.application) {
         toast({
           title: "Application Not Found",
-          description: "No application found with the provided details. Please check your passport number and date of birth.",
+          description: data.error || "No application found with the provided details. Please check your passport number and date of birth.",
           variant: "destructive",
         });
         setApplication(null);
       } else {
-        setApplication(data);
+        setApplication(data.application);
         toast({
           title: "Application Found",
           description: "Your visa application details are displayed below.",
