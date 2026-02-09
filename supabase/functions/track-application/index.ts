@@ -1,12 +1,21 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_ORIGINS = [
+  "https://id-preview--ff6a760a-54c1-47aa-9520-39f08e1eff6a.lovable.app",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+}
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -21,7 +30,6 @@ Deno.serve(async (req) => {
 
     const { passport_number, date_of_birth } = await req.json();
 
-    // Validate required fields
     if (!passport_number || !date_of_birth) {
       return new Response(
         JSON.stringify({ error: 'Passport number and date of birth are required' }),
@@ -29,7 +37,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate input formats
     const passportTrimmed = passport_number.trim();
     if (passportTrimmed.length < 5 || passportTrimmed.length > 20) {
       return new Response(
@@ -38,7 +45,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate date format (YYYY-MM-DD)
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(date_of_birth)) {
       return new Response(
@@ -47,13 +53,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create Supabase client with service role to bypass RLS
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Query for the application with exact match
     const { data, error } = await supabase
       .from('visa_applications')
       .select('id, application_number, first_name, last_name, nationality, visa_type, status, submission_date, intended_arrival_date, passport_number, date_of_birth')
@@ -76,10 +79,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Return only limited, non-sensitive fields
-    // Mask passport number for display (show last 4 characters only)
     const maskedPassport = '***' + data.passport_number.slice(-4);
-    
     const safeApplication = {
       application_number: data.application_number,
       first_name: data.first_name,
@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
     console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({ error: 'An unexpected error occurred' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   }
 });

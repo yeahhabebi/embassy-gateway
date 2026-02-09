@@ -1,15 +1,22 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = [
+  "https://id-preview--ff6a760a-54c1-47aa-9520-39f08e1eff6a.lovable.app",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+}
 
 // Simple in-memory rate limiting (resets on function cold start)
 const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
-
-const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
-const RATE_LIMIT_MAX = 5; // 5 submissions per hour per IP/email
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;
+const RATE_LIMIT_MAX = 5;
 
 interface ContactSubmission {
   name: string;
@@ -19,7 +26,6 @@ interface ContactSubmission {
   message: string;
 }
 
-// Validation schemas
 const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email) && email.length <= 255;
@@ -55,7 +61,8 @@ const checkRateLimit = (key: string): { allowed: boolean; retryAfter?: number } 
 };
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
@@ -68,14 +75,12 @@ Deno.serve(async (req) => {
   }
 
   try {
-    // Get client IP for rate limiting
     const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
                      req.headers.get("x-real-ip") || 
                      "unknown";
     
     console.log(`[submit-contact] Request from IP: ${clientIp}`);
     
-    // Parse and validate request body
     let body: ContactSubmission;
     try {
       body = await req.json();
@@ -88,25 +93,20 @@ Deno.serve(async (req) => {
 
     const { name, email, phone, subject, message } = body;
 
-    // Validate required fields
     const errors: string[] = [];
     
     if (!validateString(name, 2, 255)) {
       errors.push("Name must be between 2 and 255 characters");
     }
-    
     if (!email || !validateEmail(email)) {
       errors.push("Valid email address is required");
     }
-    
     if (phone && !validateString(phone, 0, 50)) {
       errors.push("Phone number is too long");
     }
-    
     if (!validateString(subject, 3, 500)) {
       errors.push("Subject must be between 3 and 500 characters");
     }
-    
     if (!validateString(message, 10, 2000)) {
       errors.push("Message must be between 10 and 2000 characters");
     }
@@ -119,53 +119,29 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Rate limiting by IP and email
     const ipRateCheck = checkRateLimit(`ip:${clientIp}`);
     const emailRateCheck = checkRateLimit(`email:${email.toLowerCase()}`);
     
     if (!ipRateCheck.allowed) {
       console.log(`[submit-contact] Rate limit exceeded for IP: ${clientIp}`);
       return new Response(
-        JSON.stringify({ 
-          error: "Too many requests. Please try again later.",
-          retryAfter: ipRateCheck.retryAfter 
-        }),
-        { 
-          status: 429, 
-          headers: { 
-            ...corsHeaders, 
-            "Content-Type": "application/json",
-            "Retry-After": String(ipRateCheck.retryAfter)
-          } 
-        }
+        JSON.stringify({ error: "Too many requests. Please try again later.", retryAfter: ipRateCheck.retryAfter }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(ipRateCheck.retryAfter) } }
       );
     }
     
     if (!emailRateCheck.allowed) {
       console.log(`[submit-contact] Rate limit exceeded for email: ${email}`);
       return new Response(
-        JSON.stringify({ 
-          error: "Too many requests from this email. Please try again later.",
-          retryAfter: emailRateCheck.retryAfter 
-        }),
-        { 
-          status: 429, 
-          headers: { 
-            ...corsHeaders, 
-            "Content-Type": "application/json",
-            "Retry-After": String(emailRateCheck.retryAfter)
-          } 
-        }
+        JSON.stringify({ error: "Too many requests from this email. Please try again later.", retryAfter: emailRateCheck.retryAfter }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(emailRateCheck.retryAfter) } }
       );
     }
 
-    // Create Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
-    
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Insert the contact message (service role bypasses RLS)
     const { error: insertError } = await supabase
       .from("contact_messages")
       .insert({
@@ -195,7 +171,7 @@ Deno.serve(async (req) => {
     console.error(`[submit-contact] Unexpected error:`, error);
     return new Response(
       JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { status: 500, headers: { ...getCorsHeaders(req), "Content-Type": "application/json" } }
     );
   }
 });
