@@ -1,16 +1,24 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_ORIGINS = [
+  "https://id-preview--ff6a760a-54c1-47aa-9520-39f08e1eff6a.lovable.app",
+];
 
-// Allowed file types and max size (5MB)
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
+  };
+}
+
 const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
 Deno.serve(async (req) => {
-  // Handle CORS preflight requests
+  const corsHeaders = getCorsHeaders(req);
+
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -30,7 +38,6 @@ Deno.serve(async (req) => {
     const passportNumber = formData.get('passport_number') as string | null;
     const dateOfBirth = formData.get('date_of_birth') as string | null;
 
-    // Validate required fields
     if (!file || !applicationId || !documentType || !passportNumber || !dateOfBirth) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields: file, application_id, document_type, passport_number, date_of_birth' }),
@@ -38,7 +45,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate file type
     if (!ALLOWED_TYPES.includes(file.type)) {
       return new Response(
         JSON.stringify({ error: 'Invalid file type. Allowed: PDF, JPG, PNG' }),
@@ -46,7 +52,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate file size
     if (file.size > MAX_FILE_SIZE) {
       return new Response(
         JSON.stringify({ error: 'File too large. Maximum size is 5MB' }),
@@ -54,7 +59,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate document type
     const validDocTypes = ['passport', 'photo', 'proof_of_funds', 'travel_itinerary', 'accommodation', 'invitation_letter', 'other'];
     if (!validDocTypes.includes(documentType)) {
       return new Response(
@@ -63,13 +67,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create Supabase client with service role to bypass RLS
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
-    // Verify the application exists and matches the provided credentials
     const { data: application, error: appError } = await supabase
       .from('visa_applications')
       .select('id')
@@ -93,12 +94,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Generate unique file path
     const timestamp = Date.now();
     const sanitizedFileName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
     const filePath = `${applicationId}/${documentType}_${timestamp}_${sanitizedFileName}`;
 
-    // Upload file to storage
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('visa-documents')
       .upload(filePath, file, {
@@ -114,7 +113,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Create record in application_documents table
     const { data: docRecord, error: docError } = await supabase
       .from('application_documents')
       .insert({
@@ -129,7 +127,6 @@ Deno.serve(async (req) => {
 
     if (docError) {
       console.error('Document record error:', docError);
-      // Try to delete the uploaded file if record creation fails
       await supabase.storage.from('visa-documents').remove([filePath]);
       return new Response(
         JSON.stringify({ error: 'Failed to save document record' }),
@@ -155,7 +152,7 @@ Deno.serve(async (req) => {
     console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({ error: 'An unexpected error occurred' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   }
 });
