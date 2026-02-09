@@ -51,11 +51,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   {link.label}
                 </Link>
               ))}
-              <Link to="/admin">
-                <Button variant="outline" size="sm" className="ml-2 bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20">
-                  Admin Login
-                </Button>
-              </Link>
             </nav>
 
             {/* Mobile Menu Button */}
@@ -85,13 +80,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   {link.label}
                 </Link>
               ))}
-              <Link
-                to="/admin"
-                className="block px-4 py-3 text-sm font-medium text-accent hover:bg-primary-foreground/5 transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Admin Login
-              </Link>
             </nav>
           )}
         </div>
