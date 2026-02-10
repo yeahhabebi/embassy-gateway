@@ -15,17 +15,18 @@ interface CMSContent {
 }
 
 const contentKeys = [
-  { key: "homepage_hero_title", label: "Homepage Hero Title" },
-  { key: "homepage_hero_subtitle", label: "Homepage Hero Subtitle" },
-  { key: "homepage_about", label: "Homepage About Section" },
-  { key: "about_page_content", label: "About Page Content" },
-  { key: "services_intro", label: "Services Introduction" },
-  { key: "requirements_intro", label: "Requirements Introduction" },
-  { key: "embassy_name", label: "Embassy Name" },
-  { key: "embassy_address", label: "Embassy Address" },
-  { key: "embassy_phone", label: "Embassy Phone" },
-  { key: "embassy_email", label: "Embassy Email" },
-  { key: "embassy_hours", label: "Embassy Hours" },
+  { key: "homepage_hero_title", label: "Homepage Hero Title", description: "Main heading on the homepage" },
+  { key: "homepage_hero_subtitle", label: "Homepage Hero Subtitle", description: "Subtitle text below the hero heading" },
+  { key: "homepage_about", label: "Homepage About Section", description: "About text on the homepage" },
+  { key: "about_page_content", label: "About Page Content", description: "Main content on the About page (use double line breaks for paragraphs)" },
+  { key: "about_page_subtitle", label: "About Page Subtitle", description: "Subtitle on the About page hero section" },
+  { key: "services_intro", label: "Services Introduction", description: "Introduction text on the Services page" },
+  { key: "requirements_intro", label: "Requirements Introduction", description: "Introduction text on the Requirements page" },
+  { key: "embassy_name", label: "Embassy Name", description: "Name displayed across the site" },
+  { key: "embassy_address", label: "Embassy Address", description: "Shown on Contact, About, and Home pages" },
+  { key: "embassy_phone", label: "Embassy Phone", description: "Shown on Contact, About, and Home pages" },
+  { key: "embassy_email", label: "Embassy Email", description: "Shown on Contact, About, and Home pages" },
+  { key: "embassy_hours", label: "Embassy Hours", description: "Shown on Contact, About, and Home pages" },
 ];
 
 export default function CMS() {
@@ -117,7 +118,7 @@ export default function CMS() {
           <Card key={key}>
             <CardHeader>
               <CardTitle>{label}</CardTitle>
-              <CardDescription>Key: {key}</CardDescription>
+              <CardDescription>{(contentKeys.find(c => c.key === key) as any)?.description || `Key: ${key}`}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">

@@ -1,43 +1,27 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
-import { supabase } from "@/integrations/supabase/client";
+import { useCMSContent } from "@/hooks/useCMSContent";
 import embassyHero from "@/assets/embassy-hero.jpg";
 
 const Home = () => {
-  const [content, setContent] = useState({
-    hero_title: "Welcome to the Embassy of Bosnia and Herzegovina",
-    hero_subtitle: "Serving the Bosnian community and promoting bilateral relations between Bosnia and Herzegovina and India",
-  });
-
-  useEffect(() => {
-    loadContent();
-  }, []);
-
-  const loadContent = async () => {
-    const { data } = await supabase
-      .from("cms_content")
-      .select("key, content")
-      .in("key", ["homepage_hero_title", "homepage_hero_subtitle"]);
-
-    if (data && data.length > 0) {
-      const contentMap: Record<string, string> = {};
-      data.forEach((item) => {
-        if (item.key === "homepage_hero_title") contentMap.hero_title = item.content;
-        if (item.key === "homepage_hero_subtitle") contentMap.hero_subtitle = item.content;
-      });
-      setContent((prev) => ({ ...prev, ...contentMap }));
-    }
-  };
+  const { get } = useCMSContent([
+    "homepage_hero_title",
+    "homepage_hero_subtitle",
+    "homepage_about",
+    "embassy_address",
+    "embassy_phone",
+    "embassy_email",
+    "embassy_hours",
+    "services_intro",
+  ]);
 
   return (
     <Layout>
       {/* Hero Section */}
       <section className="relative text-primary-foreground py-24 md:py-36 overflow-hidden">
-        {/* Background Image */}
         <div 
           className="absolute inset-0 z-0"
           style={{
@@ -47,14 +31,15 @@ const Home = () => {
             backgroundRepeat: 'no-repeat'
           }}
         />
-        {/* Gradient Overlay for text readability */}
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
         
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
-            <h1 className="mb-6 font-bold">{content.hero_title}</h1>
+            <h1 className="mb-6 font-bold">
+              {get("homepage_hero_title", "Welcome to the Embassy of Bosnia and Herzegovina")}
+            </h1>
             <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90">
-              {content.hero_subtitle}
+              {get("homepage_hero_subtitle", "Serving the Bosnian community and promoting bilateral relations between Bosnia and Herzegovina and India")}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link to="/services">
@@ -69,7 +54,6 @@ const Home = () => {
               </Link>
             </div>
             
-            {/* Quick Action Buttons */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12">
               <Link to="/track">
                 <Button size="lg" className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-semibold py-6 shadow-lg">
@@ -102,7 +86,7 @@ const Home = () => {
           <div className="text-center mb-12">
             <h2 className="mb-4">Our Services</h2>
             <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              We provide comprehensive consular and diplomatic services to support citizens and strengthen bilateral relations
+              {get("services_intro", "We provide comprehensive consular and diplomatic services to support citizens and strengthen bilateral relations")}
             </p>
           </div>
 
@@ -158,7 +142,6 @@ const Home = () => {
         </div>
       </section>
 
-
       {/* Embassy Information Section */}
       <section className="py-16 md:py-24 bg-muted/30">
         <div className="container mx-auto px-4">
@@ -173,23 +156,23 @@ const Home = () => {
               <CardContent className="space-y-4">
                 <div>
                   <p className="font-semibold mb-1">Address</p>
-                  <p className="text-muted-foreground">New Delhi - 110001, India</p>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {get("embassy_address", "New Delhi - 110001, India")}
+                  </p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Phone</p>
-                  <p className="text-muted-foreground">+91-11-26147415</p>
+                  <p className="text-muted-foreground">{get("embassy_phone", "+91-11-26147415")}</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Email</p>
-                  <p className="text-muted-foreground">info@bihembassy.com</p>
+                  <p className="text-muted-foreground">{get("embassy_email", "info@bihembassy.com")}</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Office Hours</p>
-                  <p className="text-muted-foreground">Monday - Friday, 9:00 AM - 5:00 PM</p>
-                </div>
-                <div>
-                  <p className="font-semibold mb-1">Consular Hours</p>
-                  <p className="text-muted-foreground">Monday, Wednesday, Friday, 10:00 AM - 12:00 PM</p>
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {get("embassy_hours", "Monday - Friday, 9:00 AM - 5:00 PM")}
+                  </p>
                 </div>
                 <Link to="/contact">
                   <Button className="w-full mt-4">Contact Us</Button>
