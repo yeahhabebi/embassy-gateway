@@ -3,8 +3,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Users, Globe, Award, Heart, Building, Landmark, TrendingUp } from "lucide-react";
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
+import { useCMSContent } from "@/hooks/useCMSContent";
 
 const About = () => {
+  const { get } = useCMSContent([
+    "about_page_content",
+    "about_page_subtitle",
+    "embassy_address",
+    "embassy_email",
+    "embassy_phone",
+    "embassy_hours",
+  ]);
+
   return (
     <Layout>
       {/* Hero Section */}
@@ -21,7 +31,7 @@ const About = () => {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="mb-6">About Bosnia and Herzegovina</h1>
             <p className="text-xl text-primary-foreground/90">
-              A country of rich history, diverse culture, and warm hospitality in the heart of Southeast Europe
+              {get("about_page_subtitle", "A country of rich history, diverse culture, and warm hospitality in the heart of Southeast Europe")}
             </p>
           </div>
         </div>
@@ -35,16 +45,11 @@ const About = () => {
               <div>
                 <h2 className="mb-6">About Bosnia and Herzegovina</h2>
                 <div className="space-y-4 text-muted-foreground">
-                  <p className="text-lg">
-                    Bosnia and Herzegovina is a country located in Southeast Europe, on the Balkan Peninsula. 
-                    Known for its natural beauty, cultural diversity, and historical significance, Bosnia and 
-                    Herzegovina offers a unique blend of Eastern and Western influences.
-                  </p>
-                  <p className="text-lg">
-                    The country is characterized by its stunning landscapes, ranging from the Dinaric Alps to 
-                    the Adriatic coast, medieval villages, and vibrant cities. Sarajevo, the capital, is known 
-                    as the "Jerusalem of Europe" for its religious diversity and coexistence.
-                  </p>
+                  {get("about_page_content", "Bosnia and Herzegovina is a country located in Southeast Europe, on the Balkan Peninsula. Known for its natural beauty, cultural diversity, and historical significance, Bosnia and Herzegovina offers a unique blend of Eastern and Western influences.\n\nThe country is characterized by its stunning landscapes, ranging from the Dinaric Alps to the Adriatic coast, medieval villages, and vibrant cities. Sarajevo, the capital, is known as the \"Jerusalem of Europe\" for its religious diversity and coexistence.")
+                    .split("\n\n")
+                    .map((paragraph, i) => (
+                      <p key={i} className="text-lg">{paragraph}</p>
+                    ))}
                 </div>
               </div>
               <div className="relative h-96 rounded-xl overflow-hidden shadow-2xl">
@@ -179,7 +184,7 @@ const About = () => {
                       <p className="text-muted-foreground">
                         India recognized Bosnia and Herzegovina's independence in 1992, and diplomatic 
                         relations were established shortly thereafter. The Embassy in New Delhi serves 
-                        as a vital link between our two nations, facilitating cooperation in various fields.
+                        as a vital link between our two nations.
                       </p>
                     </div>
                   </div>
@@ -195,9 +200,8 @@ const About = () => {
                     <div>
                       <h3 className="text-xl font-semibold mb-3">Economic Cooperation</h3>
                       <p className="text-muted-foreground">
-                        Both countries are actively working to enhance trade and investment opportunities. 
-                        There is growing interest in sectors such as IT, pharmaceuticals, agriculture, 
-                        and tourism, with potential for increased bilateral trade.
+                        Both countries are actively working to enhance trade and investment opportunities 
+                        in sectors such as IT, pharmaceuticals, agriculture, and tourism.
                       </p>
                     </div>
                   </div>
@@ -213,7 +217,6 @@ const About = () => {
                     <div>
                       <h3 className="text-xl font-semibold mb-3">Cultural Exchange</h3>
                       <p className="text-muted-foreground">
-                        Cultural exchanges play an important role in strengthening people-to-people ties. 
                         The embassy regularly organizes cultural events, film screenings, and art exhibitions 
                         to promote Bosnian culture in India and vice versa.
                       </p>
@@ -232,8 +235,7 @@ const About = () => {
                       <h3 className="text-xl font-semibold mb-3">Multilateral Cooperation</h3>
                       <p className="text-muted-foreground">
                         Both nations collaborate on various international platforms including the United 
-                        Nations and the Non-Aligned Movement. India has been supportive of Bosnia and 
-                        Herzegovina's European integration efforts.
+                        Nations and the Non-Aligned Movement.
                       </p>
                     </div>
                   </div>
@@ -268,23 +270,21 @@ const About = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
                 <div>
                   <h3 className="font-semibold mb-2">Address</h3>
-                  <p className="text-muted-foreground">
-                    Embassy of Bosnia and Herzegovina<br />
-                    New Delhi - 110001, India
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {get("embassy_address", "Embassy of Bosnia and Herzegovina\nNew Delhi - 110001, India")}
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Contact</h3>
                   <p className="text-muted-foreground">
-                    Email: info@bihembassy.com<br />
-                    Phone: +91-11-26147415
+                    Email: {get("embassy_email", "info@bihembassy.com")}<br />
+                    Phone: {get("embassy_phone", "+91-11-26147415")}
                   </p>
                 </div>
                 <div>
                   <h3 className="font-semibold mb-2">Office Hours</h3>
-                  <p className="text-muted-foreground">
-                    Monday - Friday<br />
-                    9:00 AM - 5:00 PM
+                  <p className="text-muted-foreground whitespace-pre-line">
+                    {get("embassy_hours", "Monday - Friday\n9:00 AM - 5:00 PM")}
                   </p>
                 </div>
                 <div>
