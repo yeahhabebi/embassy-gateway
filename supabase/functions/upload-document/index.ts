@@ -8,6 +8,29 @@ const corsHeaders = {
 const ALLOWED_TYPES = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
+// Rate limiting to prevent storage exhaustion
+const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_MAX = 20; // 20 uploads per hour
+
+const checkRateLimit = (key: string): { allowed: boolean; retryAfter?: number } => {
+  const now = Date.now();
+  const entry = rateLimitMap.get(key);
+  
+  if (!entry || now > entry.resetAt) {
+    rateLimitMap.set(key, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return { allowed: true };
+  }
+  
+  if (entry.count >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.ceil((entry.resetAt - now) / 1000);
+    return { allowed: false, retryAfter };
+  }
+  
+  entry.count++;
+  return { allowed: true };
+};
+
 Deno.serve(async (req) => {
 
   if (req.method === 'OPTIONS') {
@@ -19,6 +42,19 @@ Deno.serve(async (req) => {
       return new Response(
         JSON.stringify({ error: 'Method not allowed' }),
         { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+
+    const ipRateCheck = checkRateLimit(`ip:${clientIp}`);
+    if (!ipRateCheck.allowed) {
+      console.log(`[upload-document] Rate limit exceeded for IP: ${clientIp}`);
+      return new Response(
+        JSON.stringify({ error: "Too many upload requests. Please try again later.", retryAfter: ipRateCheck.retryAfter }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json", "Retry-After": String(ipRateCheck.retryAfter) } }
       );
     }
 
