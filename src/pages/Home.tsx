@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useCMSContent } from "@/hooks/useCMSContent";
-import embassyHero from "@/assets/embassy-hero.jpg";
+const embassyHero = "/images/embassy-hero.jpg";
 
 const Home = () => {
   const { get } = useCMSContent([
