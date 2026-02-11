@@ -22,14 +22,11 @@ const Home = () => {
     <Layout>
       {/* Hero Section */}
       <section className="relative text-primary-foreground py-24 md:py-36 overflow-hidden">
-        <div 
-          className="absolute inset-0 z-0"
-          style={{
-            backgroundImage: `url(${embassyHero})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat'
-          }}
+        <img
+          src={embassyHero}
+          alt=""
+          fetchPriority="high"
+          className="absolute inset-0 z-0 w-full h-full object-cover"
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
         
