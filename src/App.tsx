@@ -21,8 +21,8 @@ const Applications = lazy(() => import("./pages/admin/Applications"));
 const ContactMessages = lazy(() => import("./pages/admin/ContactMessages"));
 const CMS = lazy(() => import("./pages/admin/CMS"));
 
-import { AdminLayout } from "./components/admin/AdminLayout";
-import { ProtectedRoute } from "./components/admin/ProtectedRoute";
+const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
+const ProtectedRoute = lazy(() => import("./components/admin/ProtectedRoute").then(m => ({ default: m.ProtectedRoute })));
 
 const queryClient = new QueryClient();
 
