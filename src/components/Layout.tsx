@@ -31,13 +31,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <img src={bihLogo} alt="BiH Emblem" className="w-12 h-12 object-contain" width={48} height={48} decoding="async" />
               </div>
               <div>
-                <h1 className="text-xl font-bold leading-tight">Embassy of Bosnia and Herzegovina</h1>
+                <span className="text-xl font-bold leading-tight">Embassy of Bosnia and Herzegovina</span>
                 <p className="text-xs text-primary-foreground/80">New Delhi, India</p>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1" aria-label="Main navigation">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
@@ -65,7 +65,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
           {/* Mobile Navigation */}
           {mobileMenuOpen && (
-            <nav className="lg:hidden py-4 border-t border-primary-foreground/10 animate-slide-down">
+            <nav className="lg:hidden py-4 border-t border-primary-foreground/10 animate-slide-down" aria-label="Mobile navigation">
               {navLinks.map((link) => (
                 <Link
                   key={link.to}
@@ -86,7 +86,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1">{children}</main>
+      <main className="flex-1" id="main-content">{children}</main>
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground mt-auto">
@@ -116,7 +116,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             </div>
 
             {/* Quick Links */}
-            <div>
+              <nav aria-label="Footer quick links">
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <div className="space-y-2 text-sm">
                 <Link to="/track" className="block text-primary-foreground/80 hover:text-primary-foreground transition-colors">
@@ -129,7 +129,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   Contact Us
                 </Link>
               </div>
-            </div>
+              </nav>
           </div>
 
           <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center text-sm text-primary-foreground/60">

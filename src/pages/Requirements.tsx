@@ -4,10 +4,20 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, FileText, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
 
 const Requirements = () => {
   return (
     <Layout>
+      <SEOHead
+        title="Visa Requirements – Documents & Eligibility"
+        description="Complete list of visa requirements for Bosnia and Herzegovina: passport, photos, financial proof, travel insurance. Requirements for tourist, business, student & work visas."
+        canonical="/requirements"
+        jsonLd={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Visa Requirements", url: "/requirements" },
+        ])}
+      />
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
