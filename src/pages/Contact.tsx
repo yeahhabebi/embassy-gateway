@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { MapPin, Phone, Mail, Clock, FileText, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import SEOHead, { breadcrumbSchema, faqSchema } from "@/components/SEOHead";
 
 const contactFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(255, "Name is too long"),
@@ -104,6 +105,23 @@ const Contact = () => {
   };
   return (
     <Layout>
+      <SEOHead
+        title="Contact Us – Embassy of Bosnia and Herzegovina"
+        description="Contact the Embassy of Bosnia and Herzegovina in New Delhi, India. Find our address, phone, email, office hours, and send us a message for visa or consular inquiries."
+        canonical="/contact"
+        jsonLd={[
+          breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "Contact", url: "/contact" },
+          ]),
+          faqSchema([
+            { question: "How long does visa processing take?", answer: "Processing times vary depending on the visa type. Tourist visas typically take 5-7 business days, while work visas may take 14-21 business days." },
+            { question: "Can I apply for a visa online?", answer: "Yes! Our online visa portal allows you to complete your entire application, upload documents, and track your status from anywhere in the world." },
+            { question: "What if my application is rejected?", answer: "If your application is rejected, you will receive a detailed explanation. You may reapply after addressing the issues mentioned in the rejection notice." },
+            { question: "Do you offer expedited processing?", answer: "Yes, express processing is available for certain visa types with additional fees. Please contact us directly for more information." },
+          ]),
+        ]}
+      />
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">

@@ -4,6 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useCMSContent } from "@/hooks/useCMSContent";
+import SEOHead, { embassyOrganizationSchema, breadcrumbSchema } from "@/components/SEOHead";
 const embassyHero = "/images/embassy-hero.jpg";
 
 const Home = () => {
@@ -20,6 +21,15 @@ const Home = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Embassy of Bosnia and Herzegovina in New Delhi, India"
+        description="Official website of the Embassy of Bosnia and Herzegovina in New Delhi. Apply for visas, access consular services, track applications, and learn about BiH-India relations."
+        canonical="/"
+        jsonLd={[
+          embassyOrganizationSchema,
+          breadcrumbSchema([{ name: "Home", url: "/" }]),
+        ]}
+      />
       {/* Hero Section */}
       <section className="relative text-primary-foreground py-24 md:py-36 overflow-hidden">
         <img

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Plane, Briefcase, GraduationCap, Building, Globe, Users } from "lucide-react";
+import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
 
 const Services = () => {
   const visaTypes = [
@@ -52,6 +53,15 @@ const Services = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Visa Services – Tourist, Business, Student & Work Visas"
+        description="Apply for Bosnia and Herzegovina visas: tourist, business, student, work, transit, and diplomatic. Fast processing, online application, and document verification."
+        canonical="/services"
+        jsonLd={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Visa Services", url: "/services" },
+        ])}
+      />
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">

@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, FileText, Calendar, User } from "lucide-react";
+import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
 
 type VisaApplication = {
   id: string;
@@ -102,6 +103,15 @@ const Track = () => {
 
   return (
     <Layout>
+      <SEOHead
+        title="Track Your Visa Application"
+        description="Track your Bosnia and Herzegovina visa application status online. Enter your passport number and date of birth to check the current status of your application."
+        canonical="/track"
+        jsonLd={breadcrumbSchema([
+          { name: "Home", url: "/" },
+          { name: "Track Application", url: "/track" },
+        ])}
+      />
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
