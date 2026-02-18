@@ -27,6 +27,14 @@ const contentKeys = [
   { key: "embassy_phone", label: "Embassy Phone", description: "Shown on Contact, About, and Home pages" },
   { key: "embassy_email", label: "Embassy Email", description: "Shown on Contact, About, and Home pages" },
   { key: "embassy_hours", label: "Embassy Hours", description: "Shown on Contact, About, and Home pages" },
+  { key: "track_hero_title", label: "Track Page Hero Title", description: "Main heading on the Track Application page" },
+  { key: "track_hero_subtitle", label: "Track Page Hero Subtitle", description: "Subtitle on the Track Application page" },
+  { key: "track_form_title", label: "Track Form Title", description: "Title above the search form" },
+  { key: "track_form_description", label: "Track Form Description", description: "Description text below the form title" },
+  { key: "track_button_text", label: "Track Button Text", description: "Text on the track/search button" },
+  { key: "track_help_email", label: "Track Help Email", description: "Email shown in the help section" },
+  { key: "track_help_phone", label: "Track Help Phone", description: "Phone shown in the help section" },
+  { key: "track_help_hours", label: "Track Help Hours", description: "Office hours shown in the help section" },
 ];
 
 export default function CMS() {
