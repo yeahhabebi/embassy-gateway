@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Search, FileText, Calendar, User } from "lucide-react";
 import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import { useCMSContent } from "@/hooks/useCMSContent";
 
 type VisaApplication = {
   id: string;
@@ -32,6 +33,17 @@ const Track = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [application, setApplication] = useState<VisaApplication | null>(null);
 
+  const { get } = useCMSContent([
+    "track_hero_title",
+    "track_hero_subtitle",
+    "track_form_title",
+    "track_form_description",
+    "track_button_text",
+    "track_help_email",
+    "track_help_phone",
+    "track_help_hours",
+  ]);
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -46,7 +58,6 @@ const Track = () => {
 
     setLoading(true);
     try {
-      // Use secure edge function instead of direct database query
       const { data, error } = await supabase.functions.invoke('track-application', {
         body: {
           passport_number: passportNumber.trim(),
@@ -116,9 +127,9 @@ const Track = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <FileText className="h-16 w-16 mx-auto mb-6" />
-            <h1 className="mb-6">Track Your Application</h1>
+            <h1 className="mb-6">{get("track_hero_title", "Track Your Application")}</h1>
             <p className="text-xl text-primary-foreground/90">
-              Check the status of your visa application
+              {get("track_hero_subtitle", "Check the status of your visa application")}
             </p>
           </div>
         </div>
@@ -130,9 +141,9 @@ const Track = () => {
             {/* Search Form */}
             <Card className="mb-8">
               <CardHeader>
-                <CardTitle>Enter Your Details</CardTitle>
+                <CardTitle>{get("track_form_title", "Enter Your Details")}</CardTitle>
                 <CardDescription>
-                  Please provide your passport number and date of birth to track your application
+                  {get("track_form_description", "Please provide your passport number and date of birth to track your application")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -159,13 +170,17 @@ const Track = () => {
                     />
                   </div>
 
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button
+                    type="submit"
+                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+                    disabled={loading}
+                  >
                     {loading ? (
                       "Searching..."
                     ) : (
                       <>
-                        <Search className="mr-2 h-4 w-4" />
-                        Search Application
+                        <Search className="mr-2 h-5 w-5" />
+                        {get("track_button_text", "Track Your Application")}
                       </>
                     )}
                   </Button>
@@ -269,9 +284,9 @@ const Track = () => {
                   If you have questions about your application or need assistance, please contact us:
                 </p>
                 <div className="space-y-2 text-sm">
-                  <p><strong>Email:</strong> visa@embassy.gov</p>
-                  <p><strong>Phone:</strong> +1 (555) 123-4567</p>
-                  <p><strong>Office Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM</p>
+                  <p><strong>Email:</strong> {get("track_help_email", "visa@embassy.gov")}</p>
+                  <p><strong>Phone:</strong> {get("track_help_phone", "+1 (555) 123-4567")}</p>
+                  <p><strong>Office Hours:</strong> {get("track_help_hours", "Monday - Friday, 9:00 AM - 5:00 PM")}</p>
                 </div>
               </CardContent>
             </Card>
