@@ -5,19 +5,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MapPin, Phone, Mail, Clock, FileText, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, FileText, Search, AlertCircle, CalendarClock, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 import SEOHead, { breadcrumbSchema, faqSchema } from "@/components/SEOHead";
 
 const contactFormSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters").max(255, "Name is too long"),
   email: z.string().trim().email("Invalid email address").max(255, "Email is too long"),
   phone: z.string().trim().max(50, "Phone number is too long").optional(),
-  subject: z.string().trim().min(3, "Subject must be at least 3 characters").max(500, "Subject is too long"),
+  subject: z.string().min(1, "Please select a subject"),
   message: z.string().trim().min(10, "Message must be at least 10 characters").max(2000, "Message is too long"),
 });
 
@@ -27,11 +29,11 @@ const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [contactInfo, setContactInfo] = useState({
-    address: "123 Embassy Street\nCapital City, 12345\nCountry Name",
-    phone: "+1 (555) 123-4567",
-    email: "info@embassy.gov",
+    address: "New Delhi, India",
+    phone: "+91-11-26147415",
+    email: "info@bihembassy.asia",
     hours: "Monday - Friday\n9:00 AM - 5:00 PM",
-    fax: "+1 (555) 123-4568",
+    fax: "+91-11-26147416",
     emergency: "Available 24/7 for citizens in distress",
   });
 
@@ -40,6 +42,7 @@ const Contact = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    control,
   } = useForm<ContactFormData>({
     resolver: zodResolver(contactFormSchema),
   });
@@ -93,7 +96,6 @@ const Contact = () => {
       });
       reset();
     } catch (error: any) {
-      // Don't log sensitive data - just the fact that an error occurred
       const errorMessage = error?.message?.includes('rate') || error?.message?.includes('Too many')
         ? error.message
         : "Failed to send message. Please try again.";
@@ -107,6 +109,7 @@ const Contact = () => {
       setIsSubmitting(false);
     }
   };
+
   return (
     <Layout>
       <SEOHead
@@ -126,213 +129,244 @@ const Contact = () => {
           ]),
         ]}
       />
+
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="mb-6">Contact Us</h1>
             <p className="text-xl text-primary-foreground/90">
-              Get in touch with our embassy team
+              Get in touch with the Embassy of Bosnia and Herzegovina
             </p>
           </div>
         </div>
       </section>
 
-      {/* Contact Information */}
-      <section className="py-16 md:py-24">
+      {/* Quick Actions */}
+      <section className="bg-primary-foreground border-b">
         <div className="container mx-auto px-4">
-          <div className="max-w-5xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle>Visit Us</CardTitle>
-                  <CardDescription>Our embassy location</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground whitespace-pre-line">
-                    {contactInfo.address}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <Clock className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle>Office Hours</CardTitle>
-                  <CardDescription>When we're available</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground whitespace-pre-line">
-                    {contactInfo.hours}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <Phone className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle>Phone</CardTitle>
-                  <CardDescription>Call us directly</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground">
-                    {contactInfo.phone}
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="shadow-lg">
-                <CardHeader>
-                  <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                    <Mail className="h-6 w-6 text-primary" />
-                  </div>
-                  <CardTitle>Email</CardTitle>
-                  <CardDescription>Send us a message</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-foreground">
-                    {contactInfo.email}
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Additional Contact Info */}
-            <Card className="shadow-lg">
-              <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <FileText className="h-6 w-6 text-primary" />
-                </div>
-                <CardTitle>Additional Contact Methods</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <p className="font-semibold mb-2">Fax</p>
-                    <p className="text-muted-foreground">{contactInfo.fax}</p>
-                  </div>
-                  <div>
-                    <p className="font-semibold mb-2">Emergency Consular Services</p>
-                    <p className="text-muted-foreground">{contactInfo.emergency}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+          <div className="grid grid-cols-2 md:grid-cols-4">
+            <Link
+              to="/track"
+              className="flex items-center justify-center gap-2 py-4 px-3 bg-accent text-accent-foreground font-semibold text-sm md:text-base hover:brightness-110 transition-all text-center"
+            >
+              <Search className="h-4 w-4 shrink-0" />
+              <span>Track Your Application</span>
+            </Link>
+            <Link
+              to="/contact"
+              className="flex items-center justify-center gap-2 py-4 px-3 bg-accent text-accent-foreground font-semibold text-sm md:text-base hover:brightness-110 transition-all text-center"
+            >
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              <span>Emergency Contact</span>
+            </Link>
+            <Link
+              to="/contact"
+              className="flex items-center justify-center gap-2 py-4 px-3 bg-primary/10 text-foreground font-semibold text-sm md:text-base hover:bg-primary/20 transition-all text-center"
+            >
+              <CalendarClock className="h-4 w-4 shrink-0" />
+              <span>Office Hours & Location</span>
+            </Link>
+            <Link
+              to="/requirements"
+              className="flex items-center justify-center gap-2 py-4 px-3 bg-primary/10 text-foreground font-semibold text-sm md:text-base hover:bg-primary/20 transition-all text-center"
+            >
+              <FileText className="h-4 w-4 shrink-0" />
+              <span>Document Requirements</span>
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Contact Form Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      {/* Main Content: Contact Info + Send a Message Form */}
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="mb-4">Send Us a Message</h2>
-              <p className="text-muted-foreground text-lg">
-                Have a question or inquiry? Fill out the form below and we'll get back to you shortly.
-              </p>
-            </div>
-
-            <Card className="shadow-lg">
-              <CardHeader>
-                <div className="bg-primary/10 w-12 h-12 rounded-lg flex items-center justify-center mb-4">
-                  <Send className="h-6 w-6 text-primary" />
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+              {/* Left: Contact Information */}
+              <div className="lg:col-span-2 space-y-6">
+                <div>
+                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">Get In Touch</h2>
+                  <p className="text-muted-foreground">
+                    We're here to help with any questions about visas, consular services, or general inquiries.
+                  </p>
                 </div>
-                <CardTitle>Contact Form</CardTitle>
-                <CardDescription>
-                  All fields marked with * are required
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Full Name *</Label>
-                    <Input
-                      id="name"
-                      placeholder="John Doe"
-                      {...register("name")}
-                      className={errors.name ? "border-destructive" : ""}
-                    />
-                    {errors.name && (
-                      <p className="text-sm text-destructive">{errors.name.message}</p>
-                    )}
-                  </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="john@example.com"
-                        {...register("email")}
-                        className={errors.email ? "border-destructive" : ""}
-                      />
-                      {errors.email && (
-                        <p className="text-sm text-destructive">{errors.email.message}</p>
-                      )}
+                <div className="space-y-5">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <MapPin className="h-5 w-5 text-primary-foreground" />
                     </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+91 98765 43210"
-                        {...register("phone")}
-                        className={errors.phone ? "border-destructive" : ""}
-                      />
-                      {errors.phone && (
-                        <p className="text-sm text-destructive">{errors.phone.message}</p>
-                      )}
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Address</h3>
+                      <p className="text-muted-foreground text-sm whitespace-pre-line">{contactInfo.address}</p>
                     </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="subject">Subject *</Label>
-                    <Input
-                      id="subject"
-                      placeholder="Visa inquiry, general question, etc."
-                      {...register("subject")}
-                      className={errors.subject ? "border-destructive" : ""}
-                    />
-                    {errors.subject && (
-                      <p className="text-sm text-destructive">{errors.subject.message}</p>
-                    )}
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <Phone className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Phone</h3>
+                      <p className="text-muted-foreground text-sm">{contactInfo.phone}</p>
+                    </div>
                   </div>
 
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message *</Label>
-                    <Textarea
-                      id="message"
-                      placeholder="Please provide details about your inquiry..."
-                      rows={6}
-                      {...register("message")}
-                      className={errors.message ? "border-destructive" : ""}
-                    />
-                    {errors.message && (
-                      <p className="text-sm text-destructive">{errors.message.message}</p>
-                    )}
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <Mail className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Email</h3>
+                      <p className="text-muted-foreground text-sm">{contactInfo.email}</p>
+                    </div>
                   </div>
 
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="w-full"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <Clock className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Office Hours</h3>
+                      <p className="text-muted-foreground text-sm whitespace-pre-line">{contactInfo.hours}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <FileText className="h-5 w-5 text-primary-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Fax</h3>
+                      <p className="text-muted-foreground text-sm">{contactInfo.fax}</p>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-4">
+                    <div className="bg-destructive w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                      <AlertCircle className="h-5 w-5 text-destructive-foreground" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-foreground text-base mb-1">Emergency Consular Services</h3>
+                      <p className="text-muted-foreground text-sm">{contactInfo.emergency}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Send a Message Form */}
+              <div className="lg:col-span-3">
+                <Card className="shadow-lg border-t-4 border-t-primary">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-primary">
+                      <Send className="h-5 w-5" />
+                      Send Us a Message
+                    </CardTitle>
+                    <CardDescription>
+                      Fill out the form below and we'll get back to you as soon as possible. Fields marked with * are required.
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <Label htmlFor="name">Full Name *</Label>
+                          <Input
+                            id="name"
+                            placeholder="Enter your full name"
+                            {...register("name")}
+                            className={errors.name ? "border-destructive" : ""}
+                          />
+                          {errors.name && (
+                            <p className="text-sm text-destructive">{errors.name.message}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="email">Email Address *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            {...register("email")}
+                            className={errors.email ? "border-destructive" : ""}
+                          />
+                          {errors.email && (
+                            <p className="text-sm text-destructive">{errors.email.message}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div className="space-y-2">
+                          <Label htmlFor="phone">Phone Number</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            placeholder="Enter your phone number"
+                            {...register("phone")}
+                            className={errors.phone ? "border-destructive" : ""}
+                          />
+                          {errors.phone && (
+                            <p className="text-sm text-destructive">{errors.phone.message}</p>
+                          )}
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label htmlFor="subject">Subject *</Label>
+                          <Controller
+                            name="subject"
+                            control={control}
+                            render={({ field }) => (
+                              <Select onValueChange={field.onChange} value={field.value}>
+                                <SelectTrigger className={errors.subject ? "border-destructive" : ""}>
+                                  <SelectValue placeholder="Select a subject" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="Visa Inquiry">Visa Inquiry</SelectItem>
+                                  <SelectItem value="Consular Services">Consular Services</SelectItem>
+                                  <SelectItem value="Document Legalization">Document Legalization</SelectItem>
+                                  <SelectItem value="Trade & Investment">Trade & Investment</SelectItem>
+                                  <SelectItem value="General Inquiry">General Inquiry</SelectItem>
+                                  <SelectItem value="Other">Other</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            )}
+                          />
+                          {errors.subject && (
+                            <p className="text-sm text-destructive">{errors.subject.message}</p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="message">Message *</Label>
+                        <Textarea
+                          id="message"
+                          placeholder="Please provide details about your inquiry..."
+                          rows={5}
+                          {...register("message")}
+                          className={errors.message ? "border-destructive" : ""}
+                        />
+                        {errors.message && (
+                          <p className="text-sm text-destructive">{errors.message.message}</p>
+                        )}
+                      </div>
+
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="w-full bg-accent text-accent-foreground hover:brightness-110 font-semibold"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Sending..." : "Send Message"}
+                      </Button>
+                    </form>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
           </div>
         </div>
       </section>
