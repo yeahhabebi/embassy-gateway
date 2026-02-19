@@ -1,6 +1,6 @@
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Users, Globe, Award, Heart, Building, Landmark, TrendingUp } from "lucide-react";
+import { Shield, Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } from "lucide-react";
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 import { useCMSContent } from "@/hooks/useCMSContent";
@@ -73,43 +73,47 @@ const About = () => {
 
             {/* Key Facts Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <Card className="border-2 hover:border-primary/50 transition-all">
-                <CardContent className="pt-6 text-center">
-                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <Globe className="h-6 w-6 text-primary" />
+              <Card className="border hover:shadow-lg transition-all">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Globe className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h3 className="font-semibold mb-2">Capital</h3>
-                  <p className="text-muted-foreground">Sarajevo</p>
+                  <h3 className="font-semibold text-primary mb-3">Capital</h3>
+                  <p className="text-accent text-xl font-bold mb-2">Sarajevo</p>
+                  <p className="text-muted-foreground text-sm">A historic city at the crossroads of East and West</p>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 hover:border-primary/50 transition-all">
-                <CardContent className="pt-6 text-center">
-                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <Users className="h-6 w-6 text-primary" />
+              <Card className="border hover:shadow-lg transition-all">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Users className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h3 className="font-semibold mb-2">Population</h3>
-                  <p className="text-muted-foreground">~3.2 Million</p>
+                  <h3 className="font-semibold text-primary mb-3">Population</h3>
+                  <p className="text-accent text-xl font-bold mb-2">3.2 Million</p>
+                  <p className="text-muted-foreground text-sm">Diverse ethnic groups living in harmony</p>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 hover:border-primary/50 transition-all">
-                <CardContent className="pt-6 text-center">
-                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <Landmark className="h-6 w-6 text-primary" />
+              <Card className="border hover:shadow-lg transition-all">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Globe className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h3 className="font-semibold mb-2">Area</h3>
-                  <p className="text-muted-foreground">51,197 km²</p>
+                  <h3 className="font-semibold text-primary mb-3">Languages</h3>
+                  <p className="text-accent text-xl font-bold mb-2">Bosnian, Croatian, Serbian</p>
+                  <p className="text-muted-foreground text-sm">Three official languages with Latin and Cyrillic scripts</p>
                 </CardContent>
               </Card>
 
-              <Card className="border-2 hover:border-primary/50 transition-all">
-                <CardContent className="pt-6 text-center">
-                  <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mb-4 mx-auto">
-                    <Award className="h-6 w-6 text-primary" />
+              <Card className="border hover:shadow-lg transition-all">
+                <CardContent className="pt-8 pb-6 text-center">
+                  <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center mb-4 mx-auto">
+                    <Mountain className="h-7 w-7 text-primary-foreground" />
                   </div>
-                  <h3 className="font-semibold mb-2">Languages</h3>
-                  <p className="text-muted-foreground">Bosnian, Croatian, Serbian</p>
+                  <h3 className="font-semibold text-primary mb-3">Geography</h3>
+                  <p className="text-accent text-xl font-bold mb-2">51,197 km²</p>
+                  <p className="text-muted-foreground text-sm">Mountainous country with stunning natural landscapes</p>
                 </CardContent>
               </Card>
             </div>
