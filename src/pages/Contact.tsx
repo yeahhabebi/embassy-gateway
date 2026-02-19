@@ -31,6 +31,8 @@ const Contact = () => {
     phone: "+1 (555) 123-4567",
     email: "info@embassy.gov",
     hours: "Monday - Friday\n9:00 AM - 5:00 PM",
+    fax: "+1 (555) 123-4568",
+    emergency: "Available 24/7 for citizens in distress",
   });
 
   const {
@@ -50,7 +52,7 @@ const Contact = () => {
     const { data } = await supabase
       .from("cms_content")
       .select("key, content")
-      .in("key", ["embassy_address", "embassy_phone", "embassy_email", "embassy_hours"]);
+      .in("key", ["embassy_address", "embassy_phone", "embassy_email", "embassy_hours", "embassy_fax", "embassy_emergency"]);
 
     if (data && data.length > 0) {
       const contentMap: Record<string, string> = {};
@@ -59,6 +61,8 @@ const Contact = () => {
         if (item.key === "embassy_phone") contentMap.phone = item.content;
         if (item.key === "embassy_email") contentMap.email = item.content;
         if (item.key === "embassy_hours") contentMap.hours = item.content;
+        if (item.key === "embassy_fax") contentMap.fax = item.content;
+        if (item.key === "embassy_emergency") contentMap.emergency = item.content;
       });
       setContactInfo((prev) => ({ ...prev, ...contentMap }));
     }
@@ -212,11 +216,11 @@ const Contact = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <p className="font-semibold mb-2">Fax</p>
-                    <p className="text-muted-foreground">+1 (555) 123-4568</p>
+                    <p className="text-muted-foreground">{contactInfo.fax}</p>
                   </div>
                   <div>
                     <p className="font-semibold mb-2">Emergency Consular Services</p>
-                    <p className="text-muted-foreground">Available 24/7 for citizens in distress</p>
+                    <p className="text-muted-foreground">{contactInfo.emergency}</p>
                   </div>
                 </div>
               </CardContent>
