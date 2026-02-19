@@ -10,9 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { MapPin, Phone, Mail, Clock, FileText, Search, AlertCircle, CalendarClock, Send } from "lucide-react";
+import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Link } from "react-router-dom";
 import SEOHead, { breadcrumbSchema, faqSchema } from "@/components/SEOHead";
 
 const contactFormSchema = z.object({
@@ -208,42 +207,6 @@ const Contact = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* Quick Actions */}
-      <section className="bg-accent/10 border-y">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4">
-            <Link
-              to="/track"
-              className="flex items-center justify-center gap-2 py-4 px-3 bg-accent text-accent-foreground font-semibold text-sm md:text-base hover:brightness-110 transition-all text-center"
-            >
-              <Search className="h-4 w-4 shrink-0" />
-              <span>Track Your Application</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="flex items-center justify-center gap-2 py-4 px-3 bg-accent text-accent-foreground font-semibold text-sm md:text-base hover:brightness-110 transition-all text-center"
-            >
-              <AlertCircle className="h-4 w-4 shrink-0" />
-              <span>Emergency Contact</span>
-            </Link>
-            <Link
-              to="/contact"
-              className="flex items-center justify-center gap-2 py-4 px-3 bg-primary/10 text-foreground font-semibold text-sm md:text-base hover:bg-primary/20 transition-all text-center"
-            >
-              <CalendarClock className="h-4 w-4 shrink-0" />
-              <span>Office Hours & Location</span>
-            </Link>
-            <Link
-              to="/requirements"
-              className="flex items-center justify-center gap-2 py-4 px-3 bg-primary/10 text-foreground font-semibold text-sm md:text-base hover:bg-primary/20 transition-all text-center"
-            >
-              <FileText className="h-4 w-4 shrink-0" />
-              <span>Document Requirements</span>
-            </Link>
           </div>
         </div>
       </section>
