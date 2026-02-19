@@ -27,6 +27,8 @@ const contentKeys = [
   { key: "embassy_phone", label: "Embassy Phone", description: "Shown on Contact, About, and Home pages" },
   { key: "embassy_email", label: "Embassy Email", description: "Shown on Contact, About, and Home pages" },
   { key: "embassy_hours", label: "Embassy Hours", description: "Shown on Contact, About, and Home pages" },
+  { key: "embassy_fax", label: "Embassy Fax Number", description: "Fax number shown on Contact page" },
+  { key: "embassy_emergency", label: "Emergency Consular Services", description: "Emergency contact info shown on Contact page" },
   { key: "track_hero_title", label: "Track Page Hero Title", description: "Main heading on the Track Application page" },
   { key: "track_hero_subtitle", label: "Track Page Hero Subtitle", description: "Subtitle on the Track Application page" },
   { key: "track_form_title", label: "Track Form Title", description: "Title above the search form" },
