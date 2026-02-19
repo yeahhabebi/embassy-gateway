@@ -21,13 +21,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Contact Bar */}
-      <div className="bg-background border-b border-border text-foreground text-sm py-2">
+      <div className="bg-primary-dark text-primary-foreground text-sm py-2">
         <div className="container mx-auto px-4 flex items-center gap-6">
-          <a href="tel:+911126147415" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+          <a href="tel:+911126147415" className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Phone className="h-3.5 w-3.5" />
             <span>+91-11-26147415</span>
           </a>
-          <a href="mailto:info@bihembassy.asia" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+          <a href="mailto:info@bihembassy.asia" className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Mail className="h-3.5 w-3.5" />
             <span>info@bihembassy.asia</span>
           </a>
