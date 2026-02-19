@@ -11,7 +11,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/about", label: "About" },
-    { to: "/services", label: "Services" },
+    { to: "/services", label: "Consular Services" },
     { to: "/requirements", label: "Requirements" },
     { to: "/track", label: "Track Application" },
     { to: "/contact", label: "Contact" },
