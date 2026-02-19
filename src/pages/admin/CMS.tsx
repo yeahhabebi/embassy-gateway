@@ -35,6 +35,20 @@ const contentKeys = [
   { key: "track_help_email", label: "Track Help Email", description: "Email shown in the help section" },
   { key: "track_help_phone", label: "Track Help Phone", description: "Phone shown in the help section" },
   { key: "track_help_hours", label: "Track Help Hours", description: "Office hours shown in the help section" },
+  { key: "apply_hero_title", label: "Apply Page Hero Title", description: "Main heading on the Apply for Visa page" },
+  { key: "apply_hero_subtitle", label: "Apply Page Hero Subtitle", description: "Subtitle on the Apply for Visa page" },
+  { key: "apply_step1_title", label: "Apply Step 1 Title", description: "Title for the Personal Information step" },
+  { key: "apply_step1_description", label: "Apply Step 1 Description", description: "Description for the Personal Information step" },
+  { key: "apply_step2_title", label: "Apply Step 2 Title", description: "Title for the Passport Details step" },
+  { key: "apply_step2_description", label: "Apply Step 2 Description", description: "Description for the Passport Details step" },
+  { key: "apply_step3_title", label: "Apply Step 3 Title", description: "Title for the Travel Information step" },
+  { key: "apply_step3_description", label: "Apply Step 3 Description", description: "Description for the Travel Information step" },
+  { key: "apply_step4_title", label: "Apply Step 4 Title", description: "Title for the Review & Submit step" },
+  { key: "apply_step4_description", label: "Apply Step 4 Description", description: "Description for the Review & Submit step" },
+  { key: "apply_submit_button", label: "Apply Submit Button Text", description: "Text on the final submit button" },
+  { key: "apply_success_title", label: "Apply Success Title", description: "Heading shown after successful submission" },
+  { key: "apply_success_message", label: "Apply Success Message", description: "Message shown after successful submission" },
+  { key: "apply_disclaimer", label: "Apply Disclaimer", description: "Legal disclaimer text shown before submission" },
 ];
 
 export default function CMS() {
