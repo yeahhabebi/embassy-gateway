@@ -116,7 +116,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    const maskedPassport = '***' + data.passport_number.slice(-4);
     const safeApplication = {
       application_number: data.application_number,
       first_name: data.first_name,
@@ -126,11 +125,12 @@ Deno.serve(async (req) => {
       status: data.status,
       submission_date: data.submission_date,
       intended_arrival_date: data.intended_arrival_date,
-      passport_number: maskedPassport,
+      passport_number: data.passport_number,
       date_of_birth: data.date_of_birth,
     };
 
-    console.log(`Application lookup successful for: ${maskedPassport}`);
+    const maskedLog = '***' + data.passport_number.slice(-4);
+    console.log(`Application lookup successful for: ${maskedLog}`);
 
     return new Response(
       JSON.stringify({ application: safeApplication }),

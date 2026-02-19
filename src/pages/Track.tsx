@@ -139,40 +139,49 @@ const Track = () => {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
             {/* Search Form */}
-            <Card className="mb-8">
-              <CardHeader>
-                <CardTitle>{get("track_form_title", "Enter Your Details")}</CardTitle>
-                <CardDescription>
-                  {get("track_form_description", "Please provide your passport number and date of birth to track your application")}
+            <Card className="mb-8 border-0 shadow-lg">
+              <CardHeader className="text-center pb-2">
+                <div className="flex justify-center mb-4">
+                  <div className="w-14 h-14 rounded-full bg-primary flex items-center justify-center">
+                    <Search className="h-7 w-7 text-primary-foreground" />
+                  </div>
+                </div>
+                <CardTitle className="text-2xl font-bold">
+                  {get("track_form_title", "Application Tracking")}
+                </CardTitle>
+                <CardDescription className="text-center mt-2">
+                  {get("track_form_description", "Enter your passport number and date of birth to check the current status.")}
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSearch} className="space-y-4">
+                <form onSubmit={handleSearch} className="space-y-5">
                   <div className="space-y-2">
-                    <Label htmlFor="passport_number">Passport Number</Label>
+                    <Label htmlFor="passport_number" className="font-semibold">Passport Number</Label>
                     <Input
                       id="passport_number"
                       value={passportNumber}
                       onChange={(e) => setPassportNumber(e.target.value)}
                       placeholder="Enter your passport number"
+                      className="rounded-xl h-12"
                       required
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="dob">Date of Birth</Label>
+                    <Label htmlFor="dob" className="font-semibold">Date of Birth</Label>
                     <Input
                       id="dob"
                       type="date"
                       value={dateOfBirth}
                       onChange={(e) => setDateOfBirth(e.target.value)}
+                      className="rounded-xl h-12"
                       required
                     />
                   </div>
 
                   <Button
                     type="submit"
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white font-semibold text-base py-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+                    className="w-full bg-amber-400 hover:bg-amber-500 text-foreground font-bold text-base py-6 rounded-full shadow-lg hover:shadow-xl transition-all duration-300"
                     disabled={loading}
                   >
                     {loading ? (
@@ -180,7 +189,7 @@ const Track = () => {
                     ) : (
                       <>
                         <Search className="mr-2 h-5 w-5" />
-                        {get("track_button_text", "Track Your Application")}
+                        {get("track_button_text", "Track Application")}
                       </>
                     )}
                   </Button>
