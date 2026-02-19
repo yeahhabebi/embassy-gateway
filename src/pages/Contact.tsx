@@ -29,11 +29,11 @@ const Contact = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [contactInfo, setContactInfo] = useState({
-    address: "New Delhi, India",
+    address: "E8/5, Vasant Vihar, New Delhi\nNew Delhi - 110057\nIndia",
     phone: "+91-11-26147415",
     email: "info@bihembassy.asia",
-    hours: "Monday - Friday\n9:00 AM - 5:00 PM",
-    fax: "+91-11-26147416",
+    hours: "General Office: Mon-Fri 9:00-17:00\nConsular Services: Mon, Wed, Fri 10:00-12:00\nClosed: Weekends & Public Holidays",
+    fax: "+91-11-26147415",
     emergency: "Available 24/7 for citizens in distress",
   });
 
@@ -131,19 +131,89 @@ const Contact = () => {
       />
 
       {/* Hero Section */}
-      <section className="bg-primary text-primary-foreground py-16 md:py-24">
+      <section className="bg-gradient-to-b from-primary to-primary/90 text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="mb-6">Contact Us</h1>
             <p className="text-xl text-primary-foreground/90">
-              Get in touch with the Embassy of Bosnia and Herzegovina
+              Get in touch with the Embassy of Bosnia and Herzegovina in New Delhi
             </p>
           </div>
         </div>
       </section>
 
+      {/* Contact Information Section */}
+      <section className="py-16 md:py-24">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-3">Contact Information</h2>
+            <p className="text-muted-foreground text-lg">Multiple ways to reach us for all your needs</p>
+          </div>
+
+          <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Embassy Address Card */}
+            <Card className="text-center py-10 px-6">
+              <CardContent className="flex flex-col items-center gap-4 p-0">
+                <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center">
+                  <MapPin className="h-7 w-7 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Embassy Address</h3>
+                <div className="text-muted-foreground space-y-1">
+                  {contactInfo.address.split("\n").map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Phone & Fax Card */}
+            <Card className="text-center py-10 px-6">
+              <CardContent className="flex flex-col items-center gap-4 p-0">
+                <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center">
+                  <Phone className="h-7 w-7 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Phone & Fax</h3>
+                <div className="text-muted-foreground space-y-1">
+                  <p>Phone: {contactInfo.phone}</p>
+                  <p>Fax: {contactInfo.fax}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Email Addresses Card */}
+            <Card className="text-center py-10 px-6">
+              <CardContent className="flex flex-col items-center gap-4 p-0">
+                <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center">
+                  <Mail className="h-7 w-7 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Email Addresses</h3>
+                <div className="text-muted-foreground space-y-1">
+                  <p>General: {contactInfo.email}</p>
+                  <p>Consular: {contactInfo.email}</p>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Office Hours Card */}
+            <Card className="text-center py-10 px-6">
+              <CardContent className="flex flex-col items-center gap-4 p-0">
+                <div className="bg-primary w-16 h-16 rounded-full flex items-center justify-center">
+                  <Clock className="h-7 w-7 text-primary-foreground" />
+                </div>
+                <h3 className="text-xl font-bold text-foreground">Office Hours</h3>
+                <div className="text-muted-foreground space-y-1">
+                  {contactInfo.hours.split("\n").map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* Quick Actions */}
-      <section className="bg-primary-foreground border-b">
+      <section className="bg-accent/10 border-y">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4">
             <Link
@@ -178,195 +248,118 @@ const Contact = () => {
         </div>
       </section>
 
-      {/* Main Content: Contact Info + Send a Message Form */}
+      {/* Send Us a Message */}
       <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-              {/* Left: Contact Information */}
-              <div className="lg:col-span-2 space-y-6">
-                <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-primary mb-2">Get In Touch</h2>
-                  <p className="text-muted-foreground">
-                    We're here to help with any questions about visas, consular services, or general inquiries.
-                  </p>
-                </div>
-
-                <div className="space-y-5">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <MapPin className="h-5 w-5 text-primary-foreground" />
+          <div className="max-w-3xl mx-auto">
+            <Card className="shadow-lg border-t-4 border-t-primary">
+              <CardHeader className="text-center">
+                <CardTitle className="flex items-center justify-center gap-2 text-primary text-2xl">
+                  <Send className="h-5 w-5" />
+                  Send Us a Message
+                </CardTitle>
+                <CardDescription>
+                  Fill out the form below and we'll get back to you as soon as possible. Fields marked with * are required.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Full Name *</Label>
+                      <Input
+                        id="name"
+                        placeholder="Enter your full name"
+                        {...register("name")}
+                        className={errors.name ? "border-destructive" : ""}
+                      />
+                      {errors.name && (
+                        <p className="text-sm text-destructive">{errors.name.message}</p>
+                      )}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Address</h3>
-                      <p className="text-muted-foreground text-sm whitespace-pre-line">{contactInfo.address}</p>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Email Address *</Label>
+                      <Input
+                        id="email"
+                        type="email"
+                        placeholder="Enter your email"
+                        {...register("email")}
+                        className={errors.email ? "border-destructive" : ""}
+                      />
+                      {errors.email && (
+                        <p className="text-sm text-destructive">{errors.email.message}</p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <Phone className="h-5 w-5 text-primary-foreground" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        placeholder="Enter your phone number"
+                        {...register("phone")}
+                        className={errors.phone ? "border-destructive" : ""}
+                      />
+                      {errors.phone && (
+                        <p className="text-sm text-destructive">{errors.phone.message}</p>
+                      )}
                     </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Phone</h3>
-                      <p className="text-muted-foreground text-sm">{contactInfo.phone}</p>
-                    </div>
-                  </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <Mail className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Email</h3>
-                      <p className="text-muted-foreground text-sm">{contactInfo.email}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <Clock className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Office Hours</h3>
-                      <p className="text-muted-foreground text-sm whitespace-pre-line">{contactInfo.hours}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <FileText className="h-5 w-5 text-primary-foreground" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Fax</h3>
-                      <p className="text-muted-foreground text-sm">{contactInfo.fax}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-4">
-                    <div className="bg-destructive w-10 h-10 rounded-full flex items-center justify-center shrink-0">
-                      <AlertCircle className="h-5 w-5 text-destructive-foreground" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-foreground text-base mb-1">Emergency Consular Services</h3>
-                      <p className="text-muted-foreground text-sm">{contactInfo.emergency}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Right: Send a Message Form */}
-              <div className="lg:col-span-3">
-                <Card className="shadow-lg border-t-4 border-t-primary">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-primary">
-                      <Send className="h-5 w-5" />
-                      Send Us a Message
-                    </CardTitle>
-                    <CardDescription>
-                      Fill out the form below and we'll get back to you as soon as possible. Fields marked with * are required.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                          <Label htmlFor="name">Full Name *</Label>
-                          <Input
-                            id="name"
-                            placeholder="Enter your full name"
-                            {...register("name")}
-                            className={errors.name ? "border-destructive" : ""}
-                          />
-                          {errors.name && (
-                            <p className="text-sm text-destructive">{errors.name.message}</p>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="email">Email Address *</Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            placeholder="Enter your email"
-                            {...register("email")}
-                            className={errors.email ? "border-destructive" : ""}
-                          />
-                          {errors.email && (
-                            <p className="text-sm text-destructive">{errors.email.message}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div className="space-y-2">
-                          <Label htmlFor="phone">Phone Number</Label>
-                          <Input
-                            id="phone"
-                            type="tel"
-                            placeholder="Enter your phone number"
-                            {...register("phone")}
-                            className={errors.phone ? "border-destructive" : ""}
-                          />
-                          {errors.phone && (
-                            <p className="text-sm text-destructive">{errors.phone.message}</p>
-                          )}
-                        </div>
-
-                        <div className="space-y-2">
-                          <Label htmlFor="subject">Subject *</Label>
-                          <Controller
-                            name="subject"
-                            control={control}
-                            render={({ field }) => (
-                              <Select onValueChange={field.onChange} value={field.value}>
-                                <SelectTrigger className={errors.subject ? "border-destructive" : ""}>
-                                  <SelectValue placeholder="Select a subject" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="Visa Inquiry">Visa Inquiry</SelectItem>
-                                  <SelectItem value="Consular Services">Consular Services</SelectItem>
-                                  <SelectItem value="Document Legalization">Document Legalization</SelectItem>
-                                  <SelectItem value="Trade & Investment">Trade & Investment</SelectItem>
-                                  <SelectItem value="General Inquiry">General Inquiry</SelectItem>
-                                  <SelectItem value="Other">Other</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            )}
-                          />
-                          {errors.subject && (
-                            <p className="text-sm text-destructive">{errors.subject.message}</p>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="message">Message *</Label>
-                        <Textarea
-                          id="message"
-                          placeholder="Please provide details about your inquiry..."
-                          rows={5}
-                          {...register("message")}
-                          className={errors.message ? "border-destructive" : ""}
-                        />
-                        {errors.message && (
-                          <p className="text-sm text-destructive">{errors.message.message}</p>
+                    <div className="space-y-2">
+                      <Label htmlFor="subject">Subject *</Label>
+                      <Controller
+                        name="subject"
+                        control={control}
+                        render={({ field }) => (
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <SelectTrigger className={errors.subject ? "border-destructive" : ""}>
+                              <SelectValue placeholder="Select a subject" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="Visa Inquiry">Visa Inquiry</SelectItem>
+                              <SelectItem value="Consular Services">Consular Services</SelectItem>
+                              <SelectItem value="Document Legalization">Document Legalization</SelectItem>
+                              <SelectItem value="Trade & Investment">Trade & Investment</SelectItem>
+                              <SelectItem value="General Inquiry">General Inquiry</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
+                            </SelectContent>
+                          </Select>
                         )}
-                      </div>
+                      />
+                      {errors.subject && (
+                        <p className="text-sm text-destructive">{errors.subject.message}</p>
+                      )}
+                    </div>
+                  </div>
 
-                      <Button
-                        type="submit"
-                        size="lg"
-                        className="w-full bg-accent text-accent-foreground hover:brightness-110 font-semibold"
-                        disabled={isSubmitting}
-                      >
-                        {isSubmitting ? "Sending..." : "Send Message"}
-                      </Button>
-                    </form>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="message">Message *</Label>
+                    <Textarea
+                      id="message"
+                      placeholder="Please provide details about your inquiry..."
+                      rows={5}
+                      {...register("message")}
+                      className={errors.message ? "border-destructive" : ""}
+                    />
+                    {errors.message && (
+                      <p className="text-sm text-destructive">{errors.message.message}</p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    size="lg"
+                    className="w-full bg-accent text-accent-foreground hover:brightness-110 font-semibold"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
