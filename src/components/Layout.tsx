@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Shield, Menu, X } from "lucide-react";
+import { Shield, Menu, X, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import bihLogo from "@/assets/bih-logo.png";
@@ -10,8 +10,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   const navLinks = [
     { to: "/", label: "Home" },
-    { to: "/about", label: "About BiH" },
     { to: "/services", label: "Consular Services" },
+    { to: "/about", label: "About BiH" },
     { to: "/track", label: "Track Application" },
     { to: "/contact", label: "Contact" },
   ];
@@ -20,6 +20,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Top Contact Bar */}
+      <div className="bg-background border-b border-border text-foreground text-sm py-2">
+        <div className="container mx-auto px-4 flex items-center gap-6">
+          <a href="tel:+911126147415" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <Phone className="h-3.5 w-3.5" />
+            <span>+91-11-26147415</span>
+          </a>
+          <a href="mailto:info@bihembassy.asia" className="flex items-center gap-1.5 hover:text-primary transition-colors">
+            <Mail className="h-3.5 w-3.5" />
+            <span>info@bihembassy.asia</span>
+          </a>
+        </div>
+      </div>
+
       {/* Header */}
       <header className="bg-primary text-primary-foreground shadow-lg sticky top-0 z-50">
         <div className="container mx-auto px-4">
@@ -43,7 +57,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   to={link.to}
                   className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                     isActive(link.to)
-                      ? "bg-primary-foreground/10 text-primary-foreground"
+                      ? "bg-accent text-accent-foreground font-bold"
                       : "text-primary-foreground/80 hover:bg-primary-foreground/5 hover:text-primary-foreground"
                   }`}
                 >
@@ -69,9 +83,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                 <Link
                   key={link.to}
                   to={link.to}
-                  className={`block px-4 py-3 text-sm font-medium transition-colors ${
+                  className={`block px-4 py-3 rounded-md text-sm font-medium transition-colors mb-1 ${
                     isActive(link.to)
-                      ? "bg-primary-foreground/10 text-primary-foreground"
+                      ? "bg-accent text-accent-foreground font-bold"
                       : "text-primary-foreground/80 hover:bg-primary-foreground/5"
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
@@ -97,7 +111,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="space-y-2 text-sm text-primary-foreground/80">
                 <p>Embassy of Bosnia and Herzegovina</p>
                 <p>New Delhi - 110001, India</p>
-                <p>Email: info@bihembassy.com</p>
+                <p>Email: info@bihembassy.asia</p>
                 <p>Phone: +91-11-26147415</p>
               </div>
             </div>
