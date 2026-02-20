@@ -5,7 +5,10 @@ import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react
 import Layout from "@/components/Layout";
 import { useCMSContent } from "@/hooks/useCMSContent";
 import SEOHead, { embassyOrganizationSchema, breadcrumbSchema } from "@/components/SEOHead";
-const embassyHero = "/images/embassy-hero.jpg";
+const embassyHeroWebp = "/images/embassy-hero.webp";
+const embassyHero1280Webp = "/images/embassy-hero-1280.webp";
+const embassyHero768Webp = "/images/embassy-hero-768.webp";
+const embassyHeroJpg = "/images/embassy-hero.jpg";
 
 const Home = () => {
   const { get } = useCMSContent([
@@ -32,14 +35,23 @@ const Home = () => {
       />
       {/* Hero Section */}
       <section className="relative text-primary-foreground py-24 md:py-36 overflow-hidden">
-        <img
-          src={embassyHero}
-          alt=""
-          fetchPriority="high"
-          className="absolute inset-0 z-0 w-full h-full object-cover"
-          width={1920}
-          height={988}
-        />
+        <picture>
+          <source
+            type="image/webp"
+            srcSet={`${embassyHero768Webp} 768w, ${embassyHero1280Webp} 1280w, ${embassyHeroWebp} 1920w`}
+            sizes="100vw"
+          />
+          <img
+            src={embassyHeroJpg}
+            alt=""
+            fetchPriority="high"
+            className="absolute inset-0 z-0 w-full h-full object-cover"
+            width={1920}
+            height={988}
+            sizes="100vw"
+            srcSet={`${embassyHeroJpg} 1920w`}
+          />
+        </picture>
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
         
         <div className="container mx-auto px-4 relative z-20">
