@@ -39,8 +39,6 @@ const Home = () => {
           className="absolute inset-0 z-0 w-full h-full object-cover"
           width={1920}
           height={988}
-          sizes="100vw"
-          srcSet={`${embassyHero} 1920w`}
         />
         <div className="absolute inset-0 z-10 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/75" />
         
