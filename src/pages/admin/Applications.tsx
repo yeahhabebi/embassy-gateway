@@ -207,7 +207,7 @@ const Applications = () => {
         postal_code: formData.postal_code || null,
         application_number: formData.application_number,
         visa_type: formData.visa_type as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
-        status: formData.status as "processing" | "in_progress" | "approved" | "rejected",
+        status: formData.status as "processing" | "in_progress" | "documents_incomplete" | "pending" | "approved" | "visa_fee_pending" | "visa_fee_paid" | "issue" | "rejected",
       };
 
       if (editingApp) {
@@ -272,11 +272,11 @@ const Applications = () => {
     }
   };
 
-  const updateStatus = async (id: string, newStatus: "processing" | "in_progress" | "approved" | "rejected") => {
+  const updateStatus = async (id: string, newStatus: string) => {
     try {
       const { error } = await supabase
         .from("visa_applications")
-        .update({ status: newStatus })
+        .update({ status: newStatus as any })
         .eq("id", id);
 
       if (error) throw error;
@@ -300,7 +300,12 @@ const Applications = () => {
     const colors: Record<string, string> = {
       processing: "bg-blue-500",
       in_progress: "bg-yellow-500",
+      documents_incomplete: "bg-orange-500",
+      pending: "bg-amber-500",
       approved: "bg-green-500",
+      visa_fee_pending: "bg-purple-500",
+      visa_fee_paid: "bg-teal-500",
+      issue: "bg-rose-500",
       rejected: "bg-red-500",
     };
     return colors[status] || "bg-gray-500";
@@ -523,7 +528,12 @@ const Applications = () => {
                       <SelectContent>
                         <SelectItem value="processing">Processing</SelectItem>
                         <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="documents_incomplete">Documents Incomplete</SelectItem>
+                        <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="approved">Approved</SelectItem>
+                        <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
+                        <SelectItem value="visa_fee_paid">Visa Fee Paid</SelectItem>
+                        <SelectItem value="issue">Issue</SelectItem>
                         <SelectItem value="rejected">Rejected</SelectItem>
                       </SelectContent>
                     </Select>
@@ -619,17 +629,22 @@ const Applications = () => {
                   <TableCell>
                     <Select
                       value={app.status}
-                      onValueChange={(value) => updateStatus(app.id, value as "processing" | "in_progress" | "approved" | "rejected")}
+                      onValueChange={(value) => updateStatus(app.id, value)}
                     >
-                      <SelectTrigger className="w-[140px]">
+                      <SelectTrigger className="w-[180px]">
                         <Badge className={getStatusColor(app.status)}>
-                          {app.status.replace('_', ' ')}
+                          {app.status.replace(/_/g, ' ')}
                         </Badge>
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="processing">Processing</SelectItem>
                         <SelectItem value="in_progress">In Progress</SelectItem>
+                        <SelectItem value="documents_incomplete">Documents Incomplete</SelectItem>
+                        <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="approved">Approved</SelectItem>
+                        <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
+                        <SelectItem value="visa_fee_paid">Visa Fee Paid</SelectItem>
+                        <SelectItem value="issue">Issue</SelectItem>
                         <SelectItem value="rejected">Rejected</SelectItem>
                       </SelectContent>
                     </Select>
