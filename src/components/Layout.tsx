@@ -47,8 +47,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <span className="truncate">{get("embassy_email", "info@bihembassy.asia")}</span>
             </a>
           </div>
-          <div className="flex items-center gap-1 sm:gap-1.5 text-primary-foreground/90 font-mono text-[9px] sm:text-[11px] shrink-0">
-            <Clock className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+          <div className="flex items-center gap-1 sm:gap-1.5 text-primary-foreground/90 font-mono text-xs sm:text-sm shrink-0">
+            <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
             <span>{currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}</span>
           </div>
         </div>
