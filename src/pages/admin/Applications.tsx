@@ -221,6 +221,63 @@ const Applications = () => {
         status: formData.status as "processing" | "in_progress" | "documents_incomplete" | "pending" | "approved" | "visa_fee_pending" | "visa_fee_paid" | "issue" | "rejected" | "additional_documents_required",
       };
 
+      if (!editingApp) {
+        // Check for duplicate application number
+        const existingByAppNum = applications.find(
+          (app) => app.application_number.toLowerCase() === formData.application_number.trim().toLowerCase()
+        );
+        if (existingByAppNum) {
+          const serialNo = applications.indexOf(existingByAppNum) + 1;
+          toast({
+            title: "Duplicate Record Found",
+            description: `Serial No. ${serialNo} — Application tracking number "${existingByAppNum.application_number}" already exists for ${existingByAppNum.first_name} ${existingByAppNum.last_name}. Duplicate applications cannot be created.`,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        // Check for duplicate passport number
+        const existingByPassport = applications.find(
+          (app) => app.passport_number.toLowerCase() === formData.passport_number.trim().toLowerCase()
+        );
+        if (existingByPassport) {
+          const serialNo = applications.indexOf(existingByPassport) + 1;
+          toast({
+            title: "Duplicate Record Found",
+            description: `Serial No. ${serialNo} — Passport number "${existingByPassport.passport_number}" is already on record for ${existingByPassport.first_name} ${existingByPassport.last_name} (${existingByPassport.application_number}). Duplicate applications cannot be created.`,
+            variant: "destructive",
+          });
+          return;
+        }
+      } else {
+        // When editing, check duplicates excluding current record
+        const existingByAppNum = applications.find(
+          (app) => app.id !== editingApp.id && app.application_number.toLowerCase() === formData.application_number.trim().toLowerCase()
+        );
+        if (existingByAppNum) {
+          const serialNo = applications.indexOf(existingByAppNum) + 1;
+          toast({
+            title: "Duplicate Record Found",
+            description: `Serial No. ${serialNo} — Application tracking number "${existingByAppNum.application_number}" already exists. Cannot use a duplicate tracking number.`,
+            variant: "destructive",
+          });
+          return;
+        }
+
+        const existingByPassport = applications.find(
+          (app) => app.id !== editingApp.id && app.passport_number.toLowerCase() === formData.passport_number.trim().toLowerCase()
+        );
+        if (existingByPassport) {
+          const serialNo = applications.indexOf(existingByPassport) + 1;
+          toast({
+            title: "Duplicate Record Found",
+            description: `Serial No. ${serialNo} — Passport number "${existingByPassport.passport_number}" is already on record for ${existingByPassport.first_name} ${existingByPassport.last_name}. Cannot use a duplicate passport number.`,
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+
       if (editingApp) {
         const { error } = await supabase
           .from("visa_applications")
@@ -250,11 +307,27 @@ const Applications = () => {
       resetForm();
       loadApplications();
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: getSafeErrorMessage(error, "Failed to save application"),
-        variant: "destructive",
-      });
+      // Handle database-level unique constraint violations as fallback
+      const errMsg = typeof error?.message === "string" ? error.message : "";
+      if (errMsg.includes("idx_visa_applications_application_number_unique") || errMsg.includes("visa_applications_application_number")) {
+        toast({
+          title: "Duplicate Record",
+          description: `This application tracking number already exists in the system. Duplicate applications cannot be created.`,
+          variant: "destructive",
+        });
+      } else if (errMsg.includes("idx_visa_applications_passport_number_unique") || errMsg.includes("visa_applications_passport_number")) {
+        toast({
+          title: "Duplicate Record",
+          description: `This passport number already exists in the system. Duplicate applications cannot be created.`,
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: getSafeErrorMessage(error, "Failed to save application"),
+          variant: "destructive",
+        });
+      }
     }
   };
 
