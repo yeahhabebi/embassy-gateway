@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
+import { RefreshCw, Plus, Pencil, Trash2, Search, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -46,7 +46,18 @@ const Applications = () => {
   const [editingApp, setEditingApp] = useState<VisaApplication | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
   const { toast } = useToast();
+
+  const filteredApplications = applications.filter((app) => {
+    const matchesSearch = searchQuery === "" ||
+      `${app.first_name} ${app.last_name}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.passport_number.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.application_number.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesStatus = statusFilter === "all" || app.status === statusFilter;
+    return matchesSearch && matchesStatus;
+  });
 
   const [formData, setFormData] = useState({
     application_number: "",
@@ -597,7 +608,41 @@ const Applications = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>All Applications ({applications.length})</CardTitle>
+          <CardTitle>All Applications ({filteredApplications.length})</CardTitle>
+          <div className="flex flex-col sm:flex-row gap-3 pt-3">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search by name, passport or tracking number..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9 pr-9"
+              />
+              {searchQuery && (
+                <Button variant="ghost" size="sm" className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0" onClick={() => setSearchQuery("")}>
+                  <X className="h-4 w-4" />
+                </Button>
+              )}
+            </div>
+            <Select value={statusFilter} onValueChange={setStatusFilter}>
+              <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectValue placeholder="Filter by status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Statuses</SelectItem>
+                <SelectItem value="processing">Processing</SelectItem>
+                <SelectItem value="in_progress">In Progress</SelectItem>
+                <SelectItem value="documents_incomplete">Documents Incomplete</SelectItem>
+                <SelectItem value="additional_documents_required">Additional Documents Required</SelectItem>
+                <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="approved">Approved</SelectItem>
+                <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
+                <SelectItem value="visa_fee_paid">Visa Fee Paid</SelectItem>
+                <SelectItem value="issue">Visa Issued</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </CardHeader>
         <CardContent>
           <Table>
@@ -614,7 +659,13 @@ const Applications = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {applications.map((app, index) => (
+              {filteredApplications.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                    No applications found
+                  </TableCell>
+                </TableRow>
+              ) : filteredApplications.map((app, index) => (
                 <TableRow key={app.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell className="font-mono text-sm">
