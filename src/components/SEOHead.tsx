@@ -10,7 +10,7 @@ interface SEOHeadProps {
   noindex?: boolean;
 }
 
-const BASE_URL = "https://bihembassy.lovable.app";
+const BASE_URL = "https://www.bihembassy.asia";
 
 const SEOHead = ({
   title,
@@ -66,9 +66,9 @@ export const embassyOrganizationSchema = {
   "@type": "GovernmentOffice",
   name: "Embassy of Bosnia and Herzegovina in New Delhi",
   alternateName: "BiH Embassy India",
-  url: "https://bihembassy.lovable.app",
-  logo: "https://bihembassy.lovable.app/favicon.png",
-  image: "https://bihembassy.lovable.app/images/embassy-hero.jpg",
+  url: "https://www.bihembassy.asia",
+  logo: "https://www.bihembassy.asia/favicon.png",
+  image: "https://www.bihembassy.asia/images/embassy-hero.jpg",
   description:
     "Official Embassy of Bosnia and Herzegovina in New Delhi, India. Providing consular services, visa processing, and promoting bilateral relations.",
   address: {
@@ -105,7 +105,7 @@ export const breadcrumbSchema = (
     "@type": "ListItem",
     position: index + 1,
     name: item.name,
-    item: `https://bihembassy.lovable.app${item.url}`,
+    item: `https://www.bihembassy.asia${item.url}`,
   })),
 });
 
