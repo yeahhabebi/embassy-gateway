@@ -16,7 +16,7 @@ const Apply = lazy(() => import("./pages/Apply"));
 const Track = lazy(() => import("./pages/Track"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
-const AdminSetup = lazy(() => import("./pages/admin/Setup"));
+
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const Applications = lazy(() => import("./pages/admin/Applications"));
 const ContactMessages = lazy(() => import("./pages/admin/ContactMessages"));
@@ -66,7 +66,7 @@ const App = () => (
             <Route path="/track" element={<Track />} />
             
             {/* Admin Routes */}
-            <Route path="/admin/setup" element={<AdminSetup />} />
+            
             <Route path="/admin/login" element={<AdminLogin />} />
             <Route path="/admin" element={
               <ProtectedRoute>
