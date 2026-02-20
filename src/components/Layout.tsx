@@ -61,7 +61,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
               <div className="w-12 h-12 flex items-center justify-center">
-                <img src={bihLogo} alt="BiH Emblem" className="w-12 h-12 object-contain" width={48} height={48} decoding="async" />
+                <img src={bihLogo} alt="BiH Emblem" className="w-12 h-12 object-contain" width={48} height={48} decoding="async" loading="eager" srcSet={`${bihLogo} 512w`} sizes="48px" />
               </div>
               <div>
                 <span className="text-xl font-bold leading-tight">Embassy of Bosnia and Herzegovina</span>
