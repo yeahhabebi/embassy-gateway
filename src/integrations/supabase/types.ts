@@ -262,6 +262,7 @@ export type Database = {
         | "visa_fee_pending"
         | "visa_fee_paid"
         | "issue"
+        | "additional_documents_required"
       visa_type:
         | "tourist"
         | "business"
@@ -407,6 +408,7 @@ export const Constants = {
         "visa_fee_pending",
         "visa_fee_paid",
         "issue",
+        "additional_documents_required",
       ],
       visa_type: [
         "tourist",

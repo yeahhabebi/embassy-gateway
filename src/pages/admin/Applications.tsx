@@ -207,7 +207,7 @@ const Applications = () => {
         postal_code: formData.postal_code || null,
         application_number: formData.application_number,
         visa_type: formData.visa_type as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
-        status: formData.status as "processing" | "in_progress" | "documents_incomplete" | "pending" | "approved" | "visa_fee_pending" | "visa_fee_paid" | "issue" | "rejected",
+        status: formData.status as "processing" | "in_progress" | "documents_incomplete" | "pending" | "approved" | "visa_fee_pending" | "visa_fee_paid" | "issue" | "rejected" | "additional_documents_required",
       };
 
       if (editingApp) {
@@ -301,6 +301,7 @@ const Applications = () => {
       processing: "bg-blue-500",
       in_progress: "bg-yellow-500",
       documents_incomplete: "bg-orange-500",
+      additional_documents_required: "bg-indigo-500",
       pending: "bg-amber-500",
       approved: "bg-green-500",
       visa_fee_pending: "bg-purple-500",
@@ -529,6 +530,7 @@ const Applications = () => {
                         <SelectItem value="processing">Processing</SelectItem>
                         <SelectItem value="in_progress">In Progress</SelectItem>
                         <SelectItem value="documents_incomplete">Documents Incomplete</SelectItem>
+                        <SelectItem value="additional_documents_required">Additional Documents Required</SelectItem>
                         <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="approved">Approved</SelectItem>
                         <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
@@ -640,6 +642,7 @@ const Applications = () => {
                         <SelectItem value="processing">Processing</SelectItem>
                         <SelectItem value="in_progress">In Progress</SelectItem>
                         <SelectItem value="documents_incomplete">Documents Incomplete</SelectItem>
+                        <SelectItem value="additional_documents_required">Additional Documents Required</SelectItem>
                         <SelectItem value="pending">Pending</SelectItem>
                         <SelectItem value="approved">Approved</SelectItem>
                         <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>

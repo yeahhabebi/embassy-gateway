@@ -1,0 +1,1 @@
+ALTER TYPE public.visa_status ADD VALUE IF NOT EXISTS 'additional_documents_required';

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FileText, CheckCircle, XCircle, Clock, AlertTriangle, FileWarning, CreditCard, BadgeCheck, AlertCircle } from "lucide-react";
+import { FileText, CheckCircle, XCircle, Clock, AlertTriangle, FileWarning, CreditCard, BadgeCheck, AlertCircle, FilePlus } from "lucide-react";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -9,6 +9,7 @@ export default function AdminDashboard() {
     processing: 0,
     in_progress: 0,
     documents_incomplete: 0,
+    additional_documents_required: 0,
     pending: 0,
     approved: 0,
     visa_fee_pending: 0,
@@ -32,6 +33,7 @@ export default function AdminDashboard() {
         processing: applications.filter((a) => a.status === "processing").length,
         in_progress: applications.filter((a) => a.status === "in_progress").length,
         documents_incomplete: applications.filter((a) => a.status === "documents_incomplete").length,
+        additional_documents_required: applications.filter((a) => a.status === "additional_documents_required").length,
         pending: applications.filter((a) => a.status === "pending").length,
         approved: applications.filter((a) => a.status === "approved").length,
         visa_fee_pending: applications.filter((a) => a.status === "visa_fee_pending").length,
@@ -47,6 +49,7 @@ export default function AdminDashboard() {
     { title: "Processing", value: stats.processing, icon: Clock, color: "text-blue-600", bg: "bg-blue-600/10" },
     { title: "In Progress", value: stats.in_progress, icon: Clock, color: "text-yellow-600", bg: "bg-yellow-600/10" },
     { title: "Documents Incomplete", value: stats.documents_incomplete, icon: FileWarning, color: "text-orange-600", bg: "bg-orange-600/10" },
+    { title: "Additional Docs Required", value: stats.additional_documents_required, icon: FilePlus, color: "text-indigo-600", bg: "bg-indigo-600/10" },
     { title: "Pending", value: stats.pending, icon: AlertCircle, color: "text-amber-600", bg: "bg-amber-600/10" },
     { title: "Approved", value: stats.approved, icon: CheckCircle, color: "text-green-600", bg: "bg-green-600/10" },
     { title: "Visa Fee Pending", value: stats.visa_fee_pending, icon: CreditCard, color: "text-purple-600", bg: "bg-purple-600/10" },
