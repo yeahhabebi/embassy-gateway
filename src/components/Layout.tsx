@@ -3,10 +3,18 @@ import { Shield, Menu, X, Phone, Mail } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import bihLogo from "@/assets/bih-logo.png";
+import { useCMSContent } from "@/hooks/useCMSContent";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { get } = useCMSContent([
+    "embassy_phone",
+    "embassy_email",
+    "embassy_address",
+    "embassy_hours",
+    "embassy_fax",
+  ]);
 
   const navLinks = [
     { to: "/", label: "Home" },
@@ -23,13 +31,13 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       {/* Top Contact Bar */}
       <div className="bg-primary-dark text-primary-foreground text-sm py-2">
         <div className="container mx-auto px-4 flex items-center gap-6">
-          <a href="tel:+911126147415" className="flex items-center gap-1.5 hover:text-accent transition-colors">
+          <a href={`tel:${get("embassy_phone", "+91-11-26147415").replace(/\s/g, '')}`} className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Phone className="h-3.5 w-3.5" />
-            <span>+91-11-26147415</span>
+            <span>{get("embassy_phone", "+91-11-26147415")}</span>
           </a>
-          <a href="mailto:info@bihembassy.asia" className="flex items-center gap-1.5 hover:text-accent transition-colors">
+          <a href={`mailto:${get("embassy_email", "info@bihembassy.asia")}`} className="flex items-center gap-1.5 hover:text-accent transition-colors">
             <Mail className="h-3.5 w-3.5" />
-            <span>info@bihembassy.asia</span>
+            <span>{get("embassy_email", "info@bihembassy.asia")}</span>
           </a>
         </div>
       </div>
@@ -110,21 +118,18 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
               <div className="space-y-2 text-sm text-primary-foreground/80">
                 <p>Embassy of Bosnia and Herzegovina</p>
-                <p>New Delhi - 110001, India</p>
-                <p>Email: info@bihembassy.asia</p>
-                <p>Phone: +91-11-26147415</p>
+                <p className="whitespace-pre-line">{get("embassy_address", "New Delhi - 110001, India")}</p>
+                <p>Email: {get("embassy_email", "info@bihembassy.asia")}</p>
+                <p>Phone: {get("embassy_phone", "+91-11-26147415")}</p>
+                <p>Fax: {get("embassy_fax", "+91-11-26147415")}</p>
               </div>
             </div>
 
             {/* Office Hours */}
             <div>
               <h3 className="text-lg font-semibold mb-4">Office Hours</h3>
-              <div className="space-y-2 text-sm text-primary-foreground/80">
-                <p>Monday - Friday</p>
-                <p>9:00 AM - 5:00 PM</p>
-                <p className="mt-4">Consular Hours</p>
-                <p>Monday, Wednesday, Friday</p>
-                <p>10:00 AM - 12:00 PM</p>
+              <div className="space-y-2 text-sm text-primary-foreground/80 whitespace-pre-line">
+                {get("embassy_hours", "Monday - Friday\n9:00 AM - 5:00 PM\n\nConsular Hours\nMonday, Wednesday, Friday\n10:00 AM - 12:00 PM")}
               </div>
             </div>
 
