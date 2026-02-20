@@ -178,26 +178,15 @@ const Applications = () => {
   };
 
   const handleSubmit = async () => {
-    // Validate required fields
+    // Validate required fields (only mandatory ones)
     const requiredFields = {
       application_number: "Visa Tracking Number",
       first_name: "First Name",
       last_name: "Last Name",
-      email: "Email",
-      phone: "Phone",
-      date_of_birth: "Date of Birth",
-      gender: "Gender",
-      nationality: "Nationality",
       passport_number: "Passport Number",
-      passport_issue_date: "Passport Issue Date",
-      passport_expiry_date: "Passport Expiry Date",
-      passport_issue_country: "Passport Issue Country",
-      address: "Address",
-      city: "City",
+      date_of_birth: "Date of Birth",
+      status: "Status",
       country: "Country",
-      visa_type: "Visa Type",
-      purpose_of_visit: "Purpose of Visit",
-      intended_arrival_date: "Intended Arrival Date",
     };
 
     const missingFields = Object.entries(requiredFields)
@@ -215,12 +204,29 @@ const Applications = () => {
 
     try {
       const applicationData = {
-        ...formData,
-        duration_of_stay: formData.duration_of_stay ? parseInt(formData.duration_of_stay) : null,
-        postal_code: formData.postal_code || null,
         application_number: formData.application_number,
-        visa_type: formData.visa_type as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
+        first_name: formData.first_name,
+        last_name: formData.last_name,
+        passport_number: formData.passport_number,
+        date_of_birth: formData.date_of_birth,
+        country: formData.country,
         status: formData.status as "processing" | "in_progress" | "documents_incomplete" | "pending" | "approved" | "visa_fee_pending" | "visa_fee_paid" | "issue" | "rejected" | "additional_documents_required",
+        email: formData.email || null,
+        phone: formData.phone || null,
+        gender: formData.gender || null,
+        nationality: formData.nationality || null,
+        passport_issue_date: formData.passport_issue_date || null,
+        passport_expiry_date: formData.passport_expiry_date || null,
+        passport_issue_country: formData.passport_issue_country || null,
+        address: formData.address || null,
+        city: formData.city || null,
+        postal_code: formData.postal_code || null,
+        visa_type: (formData.visa_type || "tourist") as "tourist" | "business" | "student" | "work" | "transit" | "diplomatic",
+        purpose_of_visit: formData.purpose_of_visit || null,
+        intended_arrival_date: formData.intended_arrival_date || null,
+        duration_of_stay: formData.duration_of_stay ? parseInt(formData.duration_of_stay) : null,
+        admin_notes: formData.admin_notes || null,
+        notes: null,
       };
 
       if (!editingApp) {
@@ -508,7 +514,7 @@ const Applications = () => {
               <DialogHeader>
                 <DialogTitle>{editingApp ? "Edit Application" : "Create New Application"}</DialogTitle>
                 <DialogDescription>
-                  {editingApp ? "Update application details below" : "Fill in the application details below"}
+                  {editingApp ? "Update application details below" : "Fill in mandatory fields (*) to create. Other details can be added later."}
                 </DialogDescription>
               </DialogHeader>
 
@@ -544,7 +550,7 @@ const Applications = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="email">Email *</Label>
+                    <Label htmlFor="email">Email</Label>
                     <Input
                       id="email"
                       type="email"
@@ -553,7 +559,7 @@ const Applications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="phone">Phone *</Label>
+                    <Label htmlFor="phone">Phone</Label>
                     <Input
                       id="phone"
                       value={formData.phone}
@@ -573,7 +579,7 @@ const Applications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="gender">Gender *</Label>
+                    <Label htmlFor="gender">Gender</Label>
                     <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select" />
@@ -586,7 +592,7 @@ const Applications = () => {
                     </Select>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="nationality">Nationality *</Label>
+                    <Label htmlFor="nationality">Nationality</Label>
                     <Input
                       id="nationality"
                       value={formData.nationality}
@@ -605,7 +611,7 @@ const Applications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="passport_issue_country">Issue Country *</Label>
+                    <Label htmlFor="passport_issue_country">Issue Country</Label>
                     <Input
                       id="passport_issue_country"
                       value={formData.passport_issue_country}
@@ -616,7 +622,7 @@ const Applications = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="passport_issue_date">Passport Issue Date *</Label>
+                    <Label htmlFor="passport_issue_date">Passport Issue Date</Label>
                     <Input
                       id="passport_issue_date"
                       type="date"
@@ -625,7 +631,7 @@ const Applications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="passport_expiry_date">Passport Expiry Date *</Label>
+                    <Label htmlFor="passport_expiry_date">Passport Expiry Date</Label>
                     <Input
                       id="passport_expiry_date"
                       type="date"
@@ -636,7 +642,7 @@ const Applications = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="address">Address *</Label>
+                  <Label htmlFor="address">Address</Label>
                   <Textarea
                     id="address"
                     value={formData.address}
@@ -646,7 +652,7 @@ const Applications = () => {
 
                 <div className="grid grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="city">City *</Label>
+                    <Label htmlFor="city">City</Label>
                     <Input
                       id="city"
                       value={formData.city}
@@ -673,7 +679,7 @@ const Applications = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="visa_type">Visa Type *</Label>
+                    <Label htmlFor="visa_type">Visa Type</Label>
                     <Select value={formData.visa_type} onValueChange={(value) => handleInputChange("visa_type", value)}>
                       <SelectTrigger>
                         <SelectValue />
@@ -711,7 +717,7 @@ const Applications = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="purpose_of_visit">Purpose of Visit *</Label>
+                  <Label htmlFor="purpose_of_visit">Purpose of Visit</Label>
                   <Textarea
                     id="purpose_of_visit"
                     value={formData.purpose_of_visit}
@@ -721,7 +727,7 @@ const Applications = () => {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="intended_arrival_date">Intended Arrival Date *</Label>
+                    <Label htmlFor="intended_arrival_date">Intended Arrival Date</Label>
                     <Input
                       id="intended_arrival_date"
                       type="date"

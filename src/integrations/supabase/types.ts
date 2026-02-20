@@ -149,94 +149,94 @@ export type Database = {
       }
       visa_applications: {
         Row: {
-          address: string
+          address: string | null
           admin_notes: string | null
           application_number: string
-          city: string
+          city: string | null
           country: string
           created_at: string
           date_of_birth: string
           duration_of_stay: number | null
-          email: string
+          email: string | null
           first_name: string
-          gender: string
+          gender: string | null
           id: string
-          intended_arrival_date: string
+          intended_arrival_date: string | null
           intended_departure_date: string | null
           last_name: string
           last_updated: string
-          nationality: string
+          nationality: string | null
           notes: string | null
-          passport_expiry_date: string
-          passport_issue_country: string
-          passport_issue_date: string
+          passport_expiry_date: string | null
+          passport_issue_country: string | null
+          passport_issue_date: string | null
           passport_number: string
-          phone: string
+          phone: string | null
           postal_code: string | null
-          purpose_of_visit: string
+          purpose_of_visit: string | null
           status: Database["public"]["Enums"]["visa_status"]
           submission_date: string
-          visa_type: Database["public"]["Enums"]["visa_type"]
+          visa_type: Database["public"]["Enums"]["visa_type"] | null
         }
         Insert: {
-          address: string
+          address?: string | null
           admin_notes?: string | null
           application_number: string
-          city: string
+          city?: string | null
           country: string
           created_at?: string
           date_of_birth: string
           duration_of_stay?: number | null
-          email: string
+          email?: string | null
           first_name: string
-          gender: string
+          gender?: string | null
           id?: string
-          intended_arrival_date: string
+          intended_arrival_date?: string | null
           intended_departure_date?: string | null
           last_name: string
           last_updated?: string
-          nationality: string
+          nationality?: string | null
           notes?: string | null
-          passport_expiry_date: string
-          passport_issue_country: string
-          passport_issue_date: string
+          passport_expiry_date?: string | null
+          passport_issue_country?: string | null
+          passport_issue_date?: string | null
           passport_number: string
-          phone: string
+          phone?: string | null
           postal_code?: string | null
-          purpose_of_visit: string
+          purpose_of_visit?: string | null
           status?: Database["public"]["Enums"]["visa_status"]
           submission_date?: string
-          visa_type: Database["public"]["Enums"]["visa_type"]
+          visa_type?: Database["public"]["Enums"]["visa_type"] | null
         }
         Update: {
-          address?: string
+          address?: string | null
           admin_notes?: string | null
           application_number?: string
-          city?: string
+          city?: string | null
           country?: string
           created_at?: string
           date_of_birth?: string
           duration_of_stay?: number | null
-          email?: string
+          email?: string | null
           first_name?: string
-          gender?: string
+          gender?: string | null
           id?: string
-          intended_arrival_date?: string
+          intended_arrival_date?: string | null
           intended_departure_date?: string | null
           last_name?: string
           last_updated?: string
-          nationality?: string
+          nationality?: string | null
           notes?: string | null
-          passport_expiry_date?: string
-          passport_issue_country?: string
-          passport_issue_date?: string
+          passport_expiry_date?: string | null
+          passport_issue_country?: string | null
+          passport_issue_date?: string | null
           passport_number?: string
-          phone?: string
+          phone?: string | null
           postal_code?: string | null
-          purpose_of_visit?: string
+          purpose_of_visit?: string | null
           status?: Database["public"]["Enums"]["visa_status"]
           submission_date?: string
-          visa_type?: Database["public"]["Enums"]["visa_type"]
+          visa_type?: Database["public"]["Enums"]["visa_type"] | null
         }
         Relationships: []
       }
