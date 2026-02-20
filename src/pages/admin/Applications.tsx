@@ -603,28 +603,28 @@ const Applications = () => {
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead>Serial No</TableHead>
                 <TableHead>Visa Tracking Number</TableHead>
                 <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Nationality</TableHead>
-                <TableHead>Visa Type</TableHead>
+                <TableHead>Passport Number</TableHead>
+                <TableHead>Date of Birth</TableHead>
                 <TableHead>Submitted</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {applications.map((app) => (
+              {applications.map((app, index) => (
                 <TableRow key={app.id}>
+                  <TableCell>{index + 1}</TableCell>
                   <TableCell className="font-mono text-sm">
                     {app.application_number}
                   </TableCell>
                   <TableCell>
                     {app.first_name} {app.last_name}
                   </TableCell>
-                  <TableCell>{app.email}</TableCell>
-                  <TableCell>{app.nationality}</TableCell>
-                  <TableCell className="capitalize">{app.visa_type}</TableCell>
+                  <TableCell className="font-mono text-sm">{app.passport_number}</TableCell>
+                  <TableCell>{app.date_of_birth}</TableCell>
                   <TableCell>
                     {new Date(app.submission_date).toLocaleDateString()}
                   </TableCell>
