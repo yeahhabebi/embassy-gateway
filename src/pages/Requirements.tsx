@@ -4,7 +4,18 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle, FileText, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, faqSchema } from "@/components/SEOHead";
+
+const visaFAQs = [
+  { question: "What documents are required for a Bosnia and Herzegovina visa?", answer: "You need a valid passport (6+ months validity), passport-sized photo, completed application form, proof of travel arrangements, proof of accommodation, bank statements for the last 3 months, and travel insurance." },
+  { question: "What photo specifications are required for the visa application?", answer: "A recent passport-sized photograph of 2x2 inches with a white background is required." },
+  { question: "Do I need travel insurance for a Bosnia and Herzegovina visa?", answer: "Yes, a valid travel insurance certificate is mandatory for all visa applications." },
+  { question: "What additional documents are needed for a tourist visa?", answer: "Tourist visa applicants need a detailed travel itinerary, hotel reservations for the entire stay, and return flight tickets." },
+  { question: "What additional documents are needed for a business visa?", answer: "Business visa applicants need an invitation letter from the host company, company registration documents, business meeting schedule, and an employment letter from their employer." },
+  { question: "What file formats are accepted for document uploads?", answer: "All documents must be uploaded in PDF or JPG format with a maximum file size of 5MB per document." },
+  { question: "Do documents need to be translated?", answer: "Yes, documents not in English must be accompanied by certified translations." },
+  { question: "Are visa application fees refundable?", answer: "No, visa application fees are non-refundable regardless of the outcome of your application." },
+];
 
 const Requirements = () => {
   return (
@@ -13,10 +24,13 @@ const Requirements = () => {
         title="Visa Requirements – Documents & Eligibility"
         description="Complete list of visa requirements for Bosnia and Herzegovina: passport, photos, financial proof, travel insurance. Requirements for tourist, business, student & work visas."
         canonical="/requirements"
-        jsonLd={breadcrumbSchema([
-          { name: "Home", url: "/" },
-          { name: "Visa Requirements", url: "/requirements" },
-        ])}
+        jsonLd={[
+          breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "Visa Requirements", url: "/requirements" },
+          ]),
+          faqSchema(visaFAQs),
+        ]}
       />
       {/* Hero Section */}
       <section className="bg-primary text-primary-foreground py-16 md:py-24">

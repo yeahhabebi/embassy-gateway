@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Shield, Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } from "lucide-react";
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 import { useCMSContent } from "@/hooks/useCMSContent";
@@ -65,8 +67,11 @@ const About = () => {
               <div className="relative h-96 rounded-xl overflow-hidden shadow-2xl">
                 <img 
                   src={mostarBridge} 
-                  alt="Mostar Old Bridge" 
+                  alt="Mostar Old Bridge – UNESCO World Heritage site in Bosnia and Herzegovina" 
                   className="w-full h-full object-cover"
+                  loading="lazy"
+                  width={600}
+                  height={400}
                 />
               </div>
             </div>
@@ -260,12 +265,24 @@ const About = () => {
             <Card className="bg-primary text-primary-foreground">
               <CardContent className="pt-6">
                 <h3 className="text-2xl font-semibold mb-4 text-center">Our Mission</h3>
-                <p className="text-primary-foreground/90 text-center text-lg">
+                <p className="text-primary-foreground/90 text-center text-lg mb-6">
                   The Embassy of Bosnia and Herzegovina in New Delhi is committed to strengthening the bonds 
                   of friendship between our two nations, promoting mutual understanding, and providing excellent 
                   consular services to both Bosnian citizens in India and Indian citizens interested in visiting 
                   Bosnia and Herzegovina.
                 </p>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/services">
+                    <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground font-semibold">
+                      View Our Services
+                    </Button>
+                  </Link>
+                  <Link to="/apply">
+                    <Button size="lg" variant="outline" className="bg-primary-foreground/10 hover:bg-primary-foreground/20 border-primary-foreground/20 text-primary-foreground font-semibold">
+                      Apply for Visa
+                    </Button>
+                  </Link>
+                </div>
               </CardContent>
             </Card>
           </div>
