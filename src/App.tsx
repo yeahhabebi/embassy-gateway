@@ -25,7 +25,16 @@ const CMS = lazy(() => import("./pages/admin/CMS"));
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
 const ProtectedRoute = lazy(() => import("./components/admin/ProtectedRoute").then(m => ({ default: m.ProtectedRoute })));
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      gcTime: 10 * 60 * 1000,
+      refetchOnWindowFocus: false,
+      retry: 1,
+    },
+  },
+});
 
 // Error boundary to handle lazy loading failures (stale chunks after deploy)
 class LazyErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {

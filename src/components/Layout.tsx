@@ -1,13 +1,34 @@
 import { Link, useLocation } from "react-router-dom";
-import { Shield, Menu, X, Phone, Mail, Clock } from "lucide-react";
-import { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Menu, X, Phone, Mail, Clock } from "lucide-react";
+import { useState, useEffect, useRef, memo } from "react";
 import bihLogo from "@/assets/bih-logo.png";
 import { useCMSContent } from "@/hooks/useCMSContent";
 
+/** Isolated clock component – re-renders only itself every 60s */
+const LiveClock = memo(() => {
+  const ref = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    const update = () => {
+      if (ref.current) {
+        ref.current.textContent = new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+      }
+    };
+    update();
+    const id = setInterval(update, 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  return <span ref={ref} />;
+});
+LiveClock.displayName = "LiveClock";
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [currentTime, setCurrentTime] = useState(new Date());
   const location = useLocation();
   const { get } = useCMSContent([
     "embassy_phone",
@@ -16,11 +37,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     "embassy_hours",
     "embassy_fax",
   ]);
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   const navLinks = [
     { to: "/", label: "Home" },
@@ -49,7 +65,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5 text-primary-foreground/90 font-mono text-xs sm:text-sm shrink-0">
             <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-            <span>{currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}</span>
+            <LiveClock />
           </div>
         </div>
       </div>
