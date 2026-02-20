@@ -8,7 +8,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useToast } from "@/hooks/use-toast";
 import { Shield, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getSafeErrorMessage } from "@/lib/error-utils";
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -22,30 +21,28 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
+      const { data, error } = await supabase.functions.invoke("admin-login", {
+        body: { email, password },
       });
 
-      if (authError) throw authError;
-
-      // Check if user is admin
-      const { data: adminData, error: adminError } = await supabase
-        .from("admin_users")
-        .select("*")
-        .eq("id", authData.user.id)
-        .single();
-
-      if (adminError || !adminData) {
-        await supabase.auth.signOut();
-        throw new Error("Access denied. Admin privileges required.");
+      if (error) {
+        // Edge function invocation error
+        throw new Error("Login failed. Please try again.");
       }
 
-      // Update last login
-      await supabase
-        .from("admin_users")
-        .update({ last_login: new Date().toISOString() })
-        .eq("id", authData.user.id);
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      if (!data?.session) {
+        throw new Error("Login failed. Please try again.");
+      }
+
+      // Set the session from the edge function response
+      await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
 
       toast({
         title: "Welcome back!",
@@ -54,12 +51,9 @@ export default function AdminLogin() {
 
       navigate("/admin/dashboard");
     } catch (error: any) {
-      const message = error?.message === "Access denied. Admin privileges required."
-        ? error.message
-        : getSafeErrorMessage(error, "Login failed. Please check your credentials.");
       toast({
         title: "Login failed",
-        description: message,
+        description: error?.message || "Login failed. Please check your credentials.",
         variant: "destructive",
       });
     } finally {
