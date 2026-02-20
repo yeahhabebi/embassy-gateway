@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Shield, AlertCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Shield } from "lucide-react";
+
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("");
@@ -76,12 +76,6 @@ export default function AdminLogin() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <Alert className="mb-4">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>
-              First time here? <a href="/admin/setup" className="font-medium underline">Create your admin account</a>
-            </AlertDescription>
-          </Alert>
           
           <form onSubmit={handleLogin} className="space-y-4">
             <div className="space-y-2">
