@@ -12,7 +12,9 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, Plus, Pencil, Trash2, Search, X } from "lucide-react";
+import { RefreshCw, Plus, Pencil, Trash2, Search, X, Download } from "lucide-react";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import {
   Dialog,
   DialogContent,
@@ -396,6 +398,84 @@ const Applications = () => {
     return colors[status] || "bg-gray-500";
   };
 
+  const getStatusLabel = (status: string) => {
+    return status === 'issue' ? 'Visa Issued' : status.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  };
+
+  const downloadPDF = () => {
+    const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
+    const dataToExport = filteredApplications;
+
+    const statusColorMap: Record<string, [number, number, number]> = {
+      processing: [59, 130, 246],
+      in_progress: [234, 179, 8],
+      documents_incomplete: [249, 115, 22],
+      additional_documents_required: [99, 102, 241],
+      pending: [245, 158, 11],
+      approved: [34, 197, 94],
+      visa_fee_pending: [168, 85, 247],
+      visa_fee_paid: [20, 184, 166],
+      issue: [5, 150, 105],
+      rejected: [239, 68, 68],
+    };
+
+    const rows = dataToExport.map((app, i) => [
+      (i + 1).toString(),
+      app.application_number,
+      `${app.first_name} ${app.last_name}`,
+      app.passport_number,
+      app.date_of_birth,
+      new Date(app.submission_date).toLocaleDateString("en-GB"),
+      getStatusLabel(app.status),
+    ]);
+
+    const title = `Visa Applications — ${dataToExport.length} Records`;
+    const generatedDate = `Generated: ${new Date().toLocaleDateString("en-GB")} ${new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
+
+    autoTable(doc, {
+      head: [["Serial\nNo", "Visa Tracking\nNumber", "Name", "Passport\nNumber", "Date of\nBirth", "Submitted", "Status"]],
+      body: rows,
+      startY: 22,
+      theme: "grid",
+      styles: { fontSize: 9, cellPadding: 3, overflow: "linebreak", lineWidth: 0.2 },
+      headStyles: { fillColor: [30, 64, 100], textColor: 255, fontStyle: "bold", halign: "left", fontSize: 9 },
+      columnStyles: {
+        0: { cellWidth: 14, halign: "center" },
+        1: { cellWidth: 32 },
+        2: { cellWidth: 36 },
+        3: { cellWidth: 26 },
+        4: { cellWidth: 22 },
+        5: { cellWidth: 24 },
+        6: { cellWidth: 28 },
+      },
+      didParseCell: (data) => {
+        if (data.section === "body" && data.column.index === 6) {
+          const status = dataToExport[data.row.index]?.status;
+          const color = statusColorMap[status] || [107, 114, 128];
+          data.cell.styles.textColor = color;
+          data.cell.styles.fontStyle = "bold";
+        }
+      },
+      didDrawPage: (data) => {
+        doc.setFontSize(14);
+        doc.setFont("helvetica", "bold");
+        doc.text(title, 14, 12);
+        doc.setFontSize(8);
+        doc.setFont("helvetica", "normal");
+        doc.text(generatedDate, 14, 18);
+
+        const pageCount = doc.getNumberOfPages();
+        doc.setFontSize(8);
+        doc.text(`Page ${data.pageNumber} of ${pageCount}`, doc.internal.pageSize.getWidth() - 14, doc.internal.pageSize.getHeight() - 8, { align: "right" });
+      },
+      margin: { top: 22, bottom: 14 },
+    });
+
+    doc.save(`visa-applications-${new Date().toISOString().split("T")[0]}.pdf`);
+
+    toast({ title: "PDF Downloaded", description: `${dataToExport.length} application records exported.` });
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -412,6 +492,10 @@ const Applications = () => {
           <Button onClick={loadApplications} variant="outline" size="sm">
             <RefreshCw className="h-4 w-4 mr-2" />
             Refresh
+          </Button>
+          <Button onClick={downloadPDF} variant="outline" size="sm">
+            <Download className="h-4 w-4 mr-2" />
+            Download PDF
           </Button>
           <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
             <DialogTrigger asChild>
