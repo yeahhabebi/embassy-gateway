@@ -35,20 +35,20 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Top Contact Bar */}
-      <div className="bg-primary-dark text-primary-foreground text-sm py-2">
+      <div className="bg-primary-dark text-primary-foreground text-sm py-1.5 sm:py-2">
         <div className="container mx-auto px-4 flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <a href={`tel:${get("embassy_phone", "+91-11-26147415").replace(/\s/g, '')}`} className="flex items-center gap-1.5 hover:text-accent transition-colors">
-              <Phone className="h-3.5 w-3.5" />
-              <span>{get("embassy_phone", "+91-11-26147415")}</span>
+          <div className="flex items-center gap-3 sm:gap-6 min-w-0">
+            <a href={`tel:${get("embassy_phone", "+91-11-26147415").replace(/\s/g, '')}`} className="flex items-center gap-1 sm:gap-1.5 hover:text-accent transition-colors shrink-0">
+              <Phone className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+              <span className="text-xs sm:text-sm">{get("embassy_phone", "+91-11-26147415")}</span>
             </a>
-            <a href={`mailto:${get("embassy_email", "info@bihembassy.asia")}`} className="flex items-center gap-1.5 hover:text-accent transition-colors">
-              <Mail className="h-3.5 w-3.5" />
-              <span>{get("embassy_email", "info@bihembassy.asia")}</span>
+            <a href={`mailto:${get("embassy_email", "info@bihembassy.asia")}`} className="hidden sm:flex items-center gap-1.5 hover:text-accent transition-colors min-w-0">
+              <Mail className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{get("embassy_email", "info@bihembassy.asia")}</span>
             </a>
           </div>
-          <div className="flex items-center gap-1.5 text-primary-foreground/90 font-mono text-xs">
-            <Clock className="h-3.5 w-3.5" />
+          <div className="flex items-center gap-1 sm:gap-1.5 text-primary-foreground/90 font-mono text-[10px] sm:text-xs shrink-0">
+            <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
             <span>{currentTime.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true })}</span>
           </div>
         </div>
