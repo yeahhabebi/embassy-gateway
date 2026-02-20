@@ -306,7 +306,7 @@ const Applications = () => {
       approved: "bg-green-500",
       visa_fee_pending: "bg-purple-500",
       visa_fee_paid: "bg-teal-500",
-      issue: "bg-rose-500",
+      issue: "bg-emerald-600",
       rejected: "bg-red-500",
     };
     return colors[status] || "bg-gray-500";
@@ -535,7 +535,7 @@ const Applications = () => {
                         <SelectItem value="approved">Approved</SelectItem>
                         <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
                         <SelectItem value="visa_fee_paid">Visa Fee Paid</SelectItem>
-                        <SelectItem value="issue">Issue</SelectItem>
+                        <SelectItem value="issue">Visa Issued</SelectItem>
                         <SelectItem value="rejected">Rejected</SelectItem>
                       </SelectContent>
                     </Select>
@@ -635,7 +635,7 @@ const Applications = () => {
                     >
                       <SelectTrigger className="w-[180px]">
                         <Badge className={getStatusColor(app.status)}>
-                          {app.status.replace(/_/g, ' ')}
+                          {app.status === 'issue' ? 'Visa Issued' : app.status.replace(/_/g, ' ')}
                         </Badge>
                       </SelectTrigger>
                       <SelectContent>
@@ -647,7 +647,7 @@ const Applications = () => {
                         <SelectItem value="approved">Approved</SelectItem>
                         <SelectItem value="visa_fee_pending">Visa Fee Pending</SelectItem>
                         <SelectItem value="visa_fee_paid">Visa Fee Paid</SelectItem>
-                        <SelectItem value="issue">Issue</SelectItem>
+                        <SelectItem value="issue">Visa Issued</SelectItem>
                         <SelectItem value="rejected">Rejected</SelectItem>
                       </SelectContent>
                     </Select>

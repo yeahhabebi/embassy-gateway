@@ -54,7 +54,7 @@ export default function AdminDashboard() {
     { title: "Approved", value: stats.approved, icon: CheckCircle, color: "text-green-600", bg: "bg-green-600/10" },
     { title: "Visa Fee Pending", value: stats.visa_fee_pending, icon: CreditCard, color: "text-purple-600", bg: "bg-purple-600/10" },
     { title: "Visa Fee Paid", value: stats.visa_fee_paid, icon: BadgeCheck, color: "text-teal-600", bg: "bg-teal-600/10" },
-    { title: "Issue", value: stats.issue, icon: AlertTriangle, color: "text-rose-600", bg: "bg-rose-600/10" },
+    { title: "Visa Issued", value: stats.issue, icon: BadgeCheck, color: "text-emerald-600", bg: "bg-emerald-600/10" },
     { title: "Rejected", value: stats.rejected, icon: XCircle, color: "text-red-600", bg: "bg-red-600/10" },
   ];
 
