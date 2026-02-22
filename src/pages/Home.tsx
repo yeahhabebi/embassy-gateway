@@ -45,6 +45,7 @@ const Home = () => {
             src={embassyHeroJpg}
             alt=""
             fetchPriority="high"
+            decoding="async"
             className="absolute inset-0 z-0 w-full h-full object-cover"
             width={1920}
             height={988}

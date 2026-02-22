@@ -31,13 +31,14 @@ const About = () => {
       />
       {/* Hero Section */}
       <section className="relative bg-primary text-primary-foreground py-16 md:py-24 overflow-hidden">
-        <div 
-          className="absolute inset-0 z-0 opacity-20"
-          style={{
-            backgroundImage: `url(${sarajevoCityscape})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+        <img
+          src={sarajevoCityscape}
+          alt=""
+          className="absolute inset-0 z-0 w-full h-full object-cover opacity-20"
+          loading="lazy"
+          decoding="async"
+          width={1920}
+          height={1080}
         />
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-4xl mx-auto text-center">
@@ -70,6 +71,7 @@ const About = () => {
                   alt="Mostar Old Bridge – UNESCO World Heritage site in Bosnia and Herzegovina" 
                   className="w-full h-full object-cover"
                   loading="lazy"
+                  decoding="async"
                   width={600}
                   height={400}
                 />
