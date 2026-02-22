@@ -67,7 +67,7 @@ export const embassyOrganizationSchema = {
   name: "Embassy of Bosnia and Herzegovina in New Delhi",
   alternateName: "BiH Embassy India",
   url: "https://www.bihembassy.asia",
-  logo: "https://www.bihembassy.asia/favicon.png",
+  logo: "https://www.bihembassy.asia/images/bih-logo.png",
   image: "https://www.bihembassy.asia/images/embassy-hero.jpg",
   description:
     "Official Embassy of Bosnia and Herzegovina in New Delhi, India. Providing consular services, visa processing, and promoting bilateral relations.",
