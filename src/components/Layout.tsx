@@ -1,6 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Phone, Mail, Clock } from "lucide-react";
 import { useState, useEffect, useRef, memo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import bihLogo from "@/assets/bih-logo.png";
 import { useCMSContent } from "@/hooks/useCMSContent";
 
@@ -135,7 +136,19 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </header>
 
       {/* Main Content */}
-      <main className="flex-1" id="main-content">{children}</main>
+      <main className="flex-1" id="main-content">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
+      </main>
 
       {/* Footer */}
       <footer className="bg-primary text-primary-foreground mt-auto">
