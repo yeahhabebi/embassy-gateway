@@ -453,7 +453,7 @@ const Applications = () => {
         5: { cellWidth: 32 },
       },
       didParseCell: (data) => {
-        if (data.section === "body" && data.column.index === 6) {
+        if (data.section === "body" && data.column.index === 5) {
           const status = dataToExport[data.row.index]?.status;
           const color = statusColorMap[status] || [107, 114, 128];
           data.cell.styles.textColor = color;
