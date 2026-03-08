@@ -431,7 +431,6 @@ const Applications = () => {
       `${app.first_name} ${app.last_name}`,
       app.passport_number,
       app.date_of_birth,
-      new Date(app.submission_date).toLocaleDateString("en-GB"),
       getStatusLabel(app.status),
     ]);
 
@@ -439,7 +438,7 @@ const Applications = () => {
     const generatedDate = `Generated: ${new Date().toLocaleDateString("en-GB")} ${new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
 
     autoTable(doc, {
-      head: [["Serial\nNo", "Visa Tracking\nNumber", "Name", "Passport\nNumber", "Date of\nBirth", "Submitted", "Status"]],
+      head: [["Serial\nNo", "Visa Tracking\nNumber", "Name", "Passport\nNumber", "Date of\nBirth", "Status"]],
       body: rows,
       startY: 22,
       theme: "grid",
@@ -447,15 +446,14 @@ const Applications = () => {
       headStyles: { fillColor: [30, 64, 100], textColor: 255, fontStyle: "bold", halign: "left", fontSize: 9 },
       columnStyles: {
         0: { cellWidth: 14, halign: "center" },
-        1: { cellWidth: 32 },
-        2: { cellWidth: 36 },
-        3: { cellWidth: 26 },
-        4: { cellWidth: 22 },
-        5: { cellWidth: 24 },
-        6: { cellWidth: 28 },
+        1: { cellWidth: 36 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 26 },
+        5: { cellWidth: 32 },
       },
       didParseCell: (data) => {
-        if (data.section === "body" && data.column.index === 6) {
+        if (data.section === "body" && data.column.index === 5) {
           const status = dataToExport[data.row.index]?.status;
           const color = statusColorMap[status] || [107, 114, 128];
           data.cell.styles.textColor = color;
@@ -816,7 +814,7 @@ const Applications = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Passport Number</TableHead>
                 <TableHead>Date of Birth</TableHead>
-                <TableHead>Submitted</TableHead>
+                
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
@@ -824,7 +822,7 @@ const Applications = () => {
             <TableBody>
               {filteredApplications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                  <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                     No applications found
                   </TableCell>
                 </TableRow>
@@ -839,9 +837,6 @@ const Applications = () => {
                   </TableCell>
                   <TableCell className="font-mono text-sm">{app.passport_number}</TableCell>
                   <TableCell>{app.date_of_birth}</TableCell>
-                  <TableCell>
-                    {new Date(app.submission_date).toLocaleDateString()}
-                  </TableCell>
                   <TableCell>
                     <Select
                       value={app.status}
