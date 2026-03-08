@@ -446,12 +446,11 @@ const Applications = () => {
       headStyles: { fillColor: [30, 64, 100], textColor: 255, fontStyle: "bold", halign: "left", fontSize: 9 },
       columnStyles: {
         0: { cellWidth: 14, halign: "center" },
-        1: { cellWidth: 32 },
-        2: { cellWidth: 36 },
-        3: { cellWidth: 26 },
-        4: { cellWidth: 22 },
-        5: { cellWidth: 24 },
-        6: { cellWidth: 28 },
+        1: { cellWidth: 36 },
+        2: { cellWidth: 40 },
+        3: { cellWidth: 30 },
+        4: { cellWidth: 26 },
+        5: { cellWidth: 32 },
       },
       didParseCell: (data) => {
         if (data.section === "body" && data.column.index === 6) {
