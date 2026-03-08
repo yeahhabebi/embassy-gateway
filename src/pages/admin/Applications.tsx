@@ -438,7 +438,7 @@ const Applications = () => {
     const generatedDate = `Generated: ${new Date().toLocaleDateString("en-GB")} ${new Date().toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })}`;
 
     autoTable(doc, {
-      head: [["Serial\nNo", "Visa Tracking\nNumber", "Name", "Passport\nNumber", "Date of\nBirth", "Submitted", "Status"]],
+      head: [["Serial\nNo", "Visa Tracking\nNumber", "Name", "Passport\nNumber", "Date of\nBirth", "Status"]],
       body: rows,
       startY: 22,
       theme: "grid",
