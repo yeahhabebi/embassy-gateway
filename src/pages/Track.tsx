@@ -353,7 +353,7 @@ const Track = () => {
                   <div className="bg-muted/50 p-4 rounded-lg">
                     {(() => {
                       const msg = getStatusMessage(application.status);
-                      return <p className={`text-sm ${msg.color}`}>{msg.text}</p>;
+                      return <p className={`text-sm font-bold ${msg.color}`}>{msg.text}</p>;
                     })()}
                   </div>
 
