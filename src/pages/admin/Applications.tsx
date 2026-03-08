@@ -840,9 +840,6 @@ const Applications = () => {
                   <TableCell className="font-mono text-sm">{app.passport_number}</TableCell>
                   <TableCell>{app.date_of_birth}</TableCell>
                   <TableCell>
-                    {new Date(app.submission_date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
                     <Select
                       value={app.status}
                       onValueChange={(value) => updateStatus(app.id, value)}
