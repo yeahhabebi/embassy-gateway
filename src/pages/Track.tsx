@@ -95,21 +95,61 @@ const Track = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "approved":
-        return "bg-green-500";
-      case "rejected":
-        return "bg-red-500";
-      case "under_review":
-        return "bg-blue-500";
-      case "on_hold":
-        return "bg-yellow-500";
-      default:
-        return "bg-gray-500";
+      case "approved": return "bg-green-500";
+      case "rejected": return "bg-red-500";
+      case "processing": return "bg-blue-500";
+      case "in_progress": return "bg-blue-600";
+      case "pending": return "bg-yellow-500";
+      case "documents_incomplete": return "bg-orange-500";
+      case "additional_documents_required": return "bg-orange-600";
+      case "visa_fee_pending": return "bg-amber-500";
+      case "visa_fee_paid": return "bg-teal-500";
+      case "issue": return "bg-emerald-600";
+      default: return "bg-gray-500";
     }
   };
 
   const getStatusLabel = (status: string) => {
-    return status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    const labels: Record<string, string> = {
+      processing: "Processing",
+      in_progress: "In Progress",
+      approved: "Approved",
+      rejected: "Rejected",
+      documents_incomplete: "Documents Incomplete",
+      additional_documents_required: "Additional Documents Required",
+      pending: "Pending",
+      visa_fee_pending: "Visa Fee Pending",
+      visa_fee_paid: "Visa Fee Paid",
+      issue: "Visa Issued",
+    };
+    return labels[status] || status.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+  };
+
+  const getStatusMessage = (status: string) => {
+    switch (status) {
+      case "processing":
+        return { text: "Your application is currently being processed. Please allow some time for our team to review your submission.", color: "text-blue-600 dark:text-blue-400" };
+      case "in_progress":
+        return { text: "Your application is in progress. Our team is actively working on your visa request.", color: "text-blue-600 dark:text-blue-400" };
+      case "pending":
+        return { text: "Your application is pending review. We will notify you once it is being processed.", color: "text-yellow-600 dark:text-yellow-400" };
+      case "documents_incomplete":
+        return { text: "Your submitted documents are incomplete. Please submit the missing documents to proceed with your application.", color: "text-orange-600 dark:text-orange-400" };
+      case "additional_documents_required":
+        return { text: "Additional documents are required for your application. Please check your email for details on what documents to submit.", color: "text-orange-600 dark:text-orange-400" };
+      case "visa_fee_pending":
+        return { text: "Your visa fee payment is pending. Please complete the payment to continue processing your application.", color: "text-amber-600 dark:text-amber-400" };
+      case "visa_fee_paid":
+        return { text: "Your visa fee has been received. Your application is now being processed for final review.", color: "text-teal-600 dark:text-teal-400" };
+      case "approved":
+        return { text: "Congratulations! Your visa application has been approved. You will receive further instructions via email.", color: "text-green-600 dark:text-green-400 font-medium" };
+      case "issue":
+        return { text: "Congratulations! Your visa has been issued. Please check your email for collection or delivery instructions.", color: "text-emerald-600 dark:text-emerald-400 font-medium" };
+      case "rejected":
+        return { text: "Unfortunately, your visa application has been rejected. Please contact our embassy for more information or to discuss reapplication options.", color: "text-red-600 dark:text-red-400" };
+      default:
+        return { text: "Your application status is being updated. Please check back later.", color: "text-muted-foreground" };
+    }
   };
 
   return (
@@ -251,33 +291,12 @@ const Track = () => {
                     </div>
                   </div>
 
-                  {/* Status-specific messages */}
+                  {/* Status Message */}
                   <div className="bg-muted/50 p-4 rounded-lg">
-                    {application.status === "pending" && (
-                      <p className="text-sm">
-                        Your application is pending review. We will notify you once it is being processed.
-                      </p>
-                    )}
-                    {application.status === "under_review" && (
-                      <p className="text-sm">
-                        Your application is currently under review. Our team is evaluating your documents.
-                      </p>
-                    )}
-                    {application.status === "approved" && (
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">
-                        Congratulations! Your visa application has been approved. You will receive further instructions via email.
-                      </p>
-                    )}
-                    {application.status === "rejected" && (
-                      <p className="text-sm text-red-600 dark:text-red-400">
-                        Unfortunately, your visa application has been rejected. Please contact our embassy for more information.
-                      </p>
-                    )}
-                    {application.status === "on_hold" && (
-                      <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                        Your application is currently on hold. Additional information or documents may be required.
-                      </p>
-                    )}
+                    {(() => {
+                      const msg = getStatusMessage(application.status);
+                      return <p className={`text-sm ${msg.color}`}>{msg.text}</p>;
+                    })()}
                   </div>
                 </CardContent>
               </Card>
