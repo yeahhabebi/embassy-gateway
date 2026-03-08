@@ -104,8 +104,8 @@ const Track = () => {
       case "documents_incomplete": return "bg-orange-500";
       case "additional_documents_required": return "bg-orange-600";
       case "visa_fee_pending": return "bg-amber-500";
-      case "visa_fee_paid": return "bg-teal-500";
-      case "issue": return "bg-emerald-600";
+      case "visa_fee_paid": return "bg-blue-800";
+      case "issue": return "bg-blue-800";
       default: return "bg-gray-500";
     }
   };
