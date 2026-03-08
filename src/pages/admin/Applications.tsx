@@ -816,7 +816,7 @@ const Applications = () => {
                 <TableHead>Name</TableHead>
                 <TableHead>Passport Number</TableHead>
                 <TableHead>Date of Birth</TableHead>
-                <TableHead>Submitted</TableHead>
+                
                 <TableHead>Status</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
