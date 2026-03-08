@@ -431,7 +431,6 @@ const Applications = () => {
       `${app.first_name} ${app.last_name}`,
       app.passport_number,
       app.date_of_birth,
-      new Date(app.submission_date).toLocaleDateString("en-GB"),
       getStatusLabel(app.status),
     ]);
 
