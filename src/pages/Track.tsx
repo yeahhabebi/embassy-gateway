@@ -104,8 +104,8 @@ const Track = () => {
       case "documents_incomplete": return "bg-orange-500";
       case "additional_documents_required": return "bg-orange-600";
       case "visa_fee_pending": return "bg-amber-500";
-      case "visa_fee_paid": return "bg-teal-500";
-      case "issue": return "bg-emerald-600";
+      case "visa_fee_paid": return "bg-blue-800";
+      case "issue": return "bg-blue-800";
       default: return "bg-gray-500";
     }
   };
@@ -120,8 +120,8 @@ const Track = () => {
       case "documents_incomplete": return "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800";
       case "additional_documents_required": return "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800";
       case "visa_fee_pending": return "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800";
-      case "visa_fee_paid": return "bg-teal-50 border-teal-200 dark:bg-teal-950/30 dark:border-teal-800";
-      case "issue": return "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800";
+      case "visa_fee_paid": return "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800";
+      case "issue": return "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800";
       default: return "bg-muted/50 border-border";
     }
   };
