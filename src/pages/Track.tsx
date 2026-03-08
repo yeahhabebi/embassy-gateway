@@ -145,25 +145,25 @@ const Track = () => {
   const getStatusMessage = (status: string) => {
     switch (status) {
       case "processing":
-        return { text: "Your application is currently being processed. Please allow some time for our team to review your submission.", color: "text-blue-600 dark:text-blue-400" };
+        return { text: "Your application is currently being processed. Please allow some time for our team to review your submission.", color: "text-blue-700 dark:text-blue-300" };
       case "in_progress":
-        return { text: "Your application is in progress. Our team is actively working on your visa request.", color: "text-blue-600 dark:text-blue-400" };
+        return { text: "Your application is in progress. Our team is actively working on your visa request.", color: "text-blue-700 dark:text-blue-300" };
       case "pending":
-        return { text: "Your application is pending review. We will notify you once it is being processed.", color: "text-yellow-600 dark:text-yellow-400" };
+        return { text: "Your application is pending review. We will notify you once it is being processed.", color: "text-yellow-700 dark:text-yellow-300" };
       case "documents_incomplete":
-        return { text: "Your submitted documents are incomplete. Please submit the missing documents to proceed with your application.", color: "text-orange-600 dark:text-orange-400" };
+        return { text: "Your submitted documents are incomplete. Please submit the missing documents to proceed with your application.", color: "text-orange-700 dark:text-orange-300" };
       case "additional_documents_required":
-        return { text: "Additional documents are required for your application. Please check your email for details on what documents to submit.", color: "text-orange-600 dark:text-orange-400" };
+        return { text: "Additional documents are required for your application. Please check your email for details on what documents to submit.", color: "text-orange-700 dark:text-orange-300" };
       case "visa_fee_pending":
-        return { text: "Your visa fee payment is pending. Please complete the payment to continue processing your application.", color: "text-amber-600 dark:text-amber-400" };
+        return { text: "Your visa fee payment is pending. Please complete the payment to continue processing your application.", color: "text-amber-700 dark:text-amber-300" };
       case "visa_fee_paid":
         return { text: "Your visa fee has been received. Your application is now being processed for final review.", color: "text-blue-800 dark:text-blue-300" };
       case "approved":
-        return { text: "Congratulations! Your visa application has been approved. You will receive further instructions via email.", color: "text-green-600 dark:text-green-400 font-medium" };
+        return { text: "Congratulations! Your visa application has been approved. You will receive further instructions via email.", color: "text-green-700 dark:text-green-300 font-medium" };
       case "issue":
         return { text: "Congratulations! Your visa has been issued. Please check your email for collection or delivery instructions.", color: "text-blue-800 dark:text-blue-300 font-medium" };
       case "rejected":
-        return { text: "Unfortunately, your visa application has been rejected. Please contact our embassy for more information or to discuss reapplication options.", color: "text-red-600 dark:text-red-400" };
+        return { text: "Unfortunately, your visa application has been rejected. Please contact our embassy for more information or to discuss reapplication options.", color: "text-red-700 dark:text-red-300" };
       default:
         return { text: "Your application status is being updated. Please check back later.", color: "text-muted-foreground" };
     }
