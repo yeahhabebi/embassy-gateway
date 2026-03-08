@@ -157,11 +157,11 @@ const Track = () => {
       case "visa_fee_pending":
         return { text: "Your visa fee payment is pending. Please complete the payment to continue processing your application.", color: "text-amber-600 dark:text-amber-400" };
       case "visa_fee_paid":
-        return { text: "Your visa fee has been received. Your application is now being processed for final review.", color: "text-teal-600 dark:text-teal-400" };
+        return { text: "Your visa fee has been received. Your application is now being processed for final review.", color: "text-blue-800 dark:text-blue-300" };
       case "approved":
         return { text: "Congratulations! Your visa application has been approved. You will receive further instructions via email.", color: "text-green-600 dark:text-green-400 font-medium" };
       case "issue":
-        return { text: "Congratulations! Your visa has been issued. Please check your email for collection or delivery instructions.", color: "text-emerald-600 dark:text-emerald-400 font-medium" };
+        return { text: "Congratulations! Your visa has been issued. Please check your email for collection or delivery instructions.", color: "text-blue-800 dark:text-blue-300 font-medium" };
       case "rejected":
         return { text: "Unfortunately, your visa application has been rejected. Please contact our embassy for more information or to discuss reapplication options.", color: "text-red-600 dark:text-red-400" };
       default:
