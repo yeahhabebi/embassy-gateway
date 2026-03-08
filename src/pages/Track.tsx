@@ -153,6 +153,63 @@ const Track = () => {
     }
   };
 
+  const handleDownloadPDF = (app: VisaApplication) => {
+    const doc = new jsPDF();
+    const statusMsg = getStatusMessage(app.status);
+
+    // Header
+    doc.setFontSize(18);
+    doc.setFont("helvetica", "bold");
+    doc.text("Embassy of Bosnia and Herzegovina", 105, 20, { align: "center" });
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "normal");
+    doc.text("Visa Application Status Report", 105, 28, { align: "center" });
+
+    // Line
+    doc.setDrawColor(0, 35, 149);
+    doc.setLineWidth(0.5);
+    doc.line(20, 33, 190, 33);
+
+    // Application info
+    let y = 45;
+    const addRow = (label: string, value: string) => {
+      doc.setFont("helvetica", "bold");
+      doc.text(label, 25, y);
+      doc.setFont("helvetica", "normal");
+      doc.text(value, 80, y);
+      y += 8;
+    };
+
+    addRow("Tracking No:", app.application_number);
+    addRow("Status:", getStatusLabel(app.status));
+    addRow("Full Name:", `${app.first_name} ${app.last_name}`);
+    addRow("Passport No:", app.passport_number);
+    addRow("Date of Birth:", new Date(app.date_of_birth).toLocaleDateString());
+    if (app.nationality) addRow("Nationality:", app.nationality);
+    if (app.visa_type) addRow("Visa Type:", app.visa_type.charAt(0).toUpperCase() + app.visa_type.slice(1));
+    if (app.submission_date) addRow("Submitted:", new Date(app.submission_date).toLocaleDateString());
+
+    // Status message
+    y += 5;
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(20, y, 190, y);
+    y += 10;
+    doc.setFontSize(11);
+    doc.setFont("helvetica", "italic");
+    const lines = doc.splitTextToSize(statusMsg.text, 160);
+    doc.text(lines, 25, y);
+    y += lines.length * 6 + 10;
+
+    // Footer
+    doc.setFontSize(9);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(120);
+    doc.text(`Generated on ${new Date().toLocaleString()}`, 105, 280, { align: "center" });
+
+    doc.save(`visa-status-${app.application_number}.pdf`);
+  };
+
   return (
     <Layout>
       <SEOHead
