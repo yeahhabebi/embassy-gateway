@@ -110,6 +110,22 @@ const Track = () => {
     }
   };
 
+  const getStatusBgLight = (status: string) => {
+    switch (status) {
+      case "approved": return "bg-green-50 border-green-200 dark:bg-green-950/30 dark:border-green-800";
+      case "rejected": return "bg-red-50 border-red-200 dark:bg-red-950/30 dark:border-red-800";
+      case "processing": return "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800";
+      case "in_progress": return "bg-blue-50 border-blue-200 dark:bg-blue-950/30 dark:border-blue-800";
+      case "pending": return "bg-yellow-50 border-yellow-200 dark:bg-yellow-950/30 dark:border-yellow-800";
+      case "documents_incomplete": return "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800";
+      case "additional_documents_required": return "bg-orange-50 border-orange-200 dark:bg-orange-950/30 dark:border-orange-800";
+      case "visa_fee_pending": return "bg-amber-50 border-amber-200 dark:bg-amber-950/30 dark:border-amber-800";
+      case "visa_fee_paid": return "bg-teal-50 border-teal-200 dark:bg-teal-950/30 dark:border-teal-800";
+      case "issue": return "bg-emerald-50 border-emerald-200 dark:bg-emerald-950/30 dark:border-emerald-800";
+      default: return "bg-muted/50 border-border";
+    }
+  };
+
   const getStatusLabel = (status: string) => {
     const labels: Record<string, string> = {
       processing: "Processing",
@@ -350,7 +366,7 @@ const Track = () => {
                   </div>
 
                   {/* Status Message */}
-                  <div className="bg-muted/50 p-4 rounded-lg">
+                  <div className={`p-4 rounded-lg border ${getStatusBgLight(application.status)}`}>
                     {(() => {
                       const msg = getStatusMessage(application.status);
                       return <p className={`text-sm font-bold ${msg.color}`}>{msg.text}</p>;
