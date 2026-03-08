@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Search, FileText, Calendar, User } from "lucide-react";
+import { Search, FileText, Calendar, User, Download } from "lucide-react";
+import jsPDF from "jspdf";
 import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
 import { useCMSContent } from "@/hooks/useCMSContent";
 
