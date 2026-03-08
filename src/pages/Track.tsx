@@ -373,15 +373,6 @@ const Track = () => {
                     })()}
                   </div>
 
-                  {/* Download Button */}
-                  <Button
-                    onClick={() => handleDownloadPDF(application)}
-                    variant="outline"
-                    className="w-full rounded-full"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Status Report
-                  </Button>
                 </CardContent>
               </Card>
             )}
