@@ -291,33 +291,12 @@ const Track = () => {
                     </div>
                   </div>
 
-                  {/* Status-specific messages */}
+                  {/* Status Message */}
                   <div className="bg-muted/50 p-4 rounded-lg">
-                    {application.status === "pending" && (
-                      <p className="text-sm">
-                        Your application is pending review. We will notify you once it is being processed.
-                      </p>
-                    )}
-                    {application.status === "under_review" && (
-                      <p className="text-sm">
-                        Your application is currently under review. Our team is evaluating your documents.
-                      </p>
-                    )}
-                    {application.status === "approved" && (
-                      <p className="text-sm text-green-600 dark:text-green-400 font-medium">
-                        Congratulations! Your visa application has been approved. You will receive further instructions via email.
-                      </p>
-                    )}
-                    {application.status === "rejected" && (
-                      <p className="text-sm text-red-600 dark:text-red-400">
-                        Unfortunately, your visa application has been rejected. Please contact our embassy for more information.
-                      </p>
-                    )}
-                    {application.status === "on_hold" && (
-                      <p className="text-sm text-yellow-600 dark:text-yellow-400">
-                        Your application is currently on hold. Additional information or documents may be required.
-                      </p>
-                    )}
+                    {(() => {
+                      const msg = getStatusMessage(application.status);
+                      return <p className={`text-sm ${msg.color}`}>{msg.text}</p>;
+                    })()}
                   </div>
                 </CardContent>
               </Card>
