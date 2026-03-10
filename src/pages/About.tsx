@@ -6,7 +6,7 @@ import { Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } 
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 import { useCMSContent } from "@/hooks/useCMSContent";
-import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, embassyOrganizationSchema } from "@/components/SEOHead";
 
 const About = () => {
   const { get } = useCMSContent([
