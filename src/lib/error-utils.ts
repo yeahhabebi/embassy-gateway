@@ -69,7 +69,7 @@ export const getSafeErrorMessage = (error: any, fallback = "An error occurred. P
 export const logError = (context: string, error: any): void => {
   // In development, log to console
   // In production, this should send to a secure logging service
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     console.error(`[${context}]`, error);
   }
   // Production: would send to logging service here
