@@ -30,6 +30,7 @@ const Home = () => {
         canonical="/"
         jsonLd={[
           embassyOrganizationSchema,
+          websiteSchema,
           breadcrumbSchema([{ name: "Home", url: "/" }]),
         ]}
       />

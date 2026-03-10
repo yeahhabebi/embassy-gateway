@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { FileText, Stamp, Scale, BookOpen, Globe, Users, Shield, Briefcase, GraduationCap, Plane, Building, ChevronRight } from "lucide-react";
-import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, serviceSchema } from "@/components/SEOHead";
 
 const Services = () => {
   const mainServices = [
