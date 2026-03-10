@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Shield, FileText, Clock, CheckCircle, Globe, Award } from "lucide-react";
 import Layout from "@/components/Layout";
 import { useCMSContent } from "@/hooks/useCMSContent";
-import SEOHead, { embassyOrganizationSchema, breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { embassyOrganizationSchema, breadcrumbSchema, websiteSchema } from "@/components/SEOHead";
 const embassyHeroWebp = "/images/embassy-hero.webp";
 const embassyHero1280Webp = "/images/embassy-hero-1280.webp";
 const embassyHero768Webp = "/images/embassy-hero-768.webp";
@@ -30,6 +30,7 @@ const Home = () => {
         canonical="/"
         jsonLd={[
           embassyOrganizationSchema,
+          websiteSchema,
           breadcrumbSchema([{ name: "Home", url: "/" }]),
         ]}
       />

@@ -3,7 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { FileText, Stamp, Scale, BookOpen, Globe, Users, Shield, Briefcase, GraduationCap, Plane, Building, ChevronRight } from "lucide-react";
-import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, serviceSchema } from "@/components/SEOHead";
 
 const Services = () => {
   const mainServices = [
@@ -121,10 +121,20 @@ const Services = () => {
         title="Consular Services – Visa, Document Legalisation & Citizen Services"
         description="Embassy of Bosnia and Herzegovina consular services: visa applications, document legalisation, passport services, civil registration, trade and investment facilitation."
         canonical="/services"
-        jsonLd={breadcrumbSchema([
-          { name: "Home", url: "/" },
-          { name: "Consular Services", url: "/services" },
-        ])}
+        jsonLd={[
+          breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "Consular Services", url: "/services" },
+          ]),
+          ...serviceSchema([
+            { name: "Visa Services", description: "Apply for visas to Bosnia and Herzegovina for tourism, business, study, work, transit, or diplomatic purposes.", url: "/apply" },
+            { name: "Document Legalisation", description: "Authentication and legalisation of official documents for use in Bosnia and Herzegovina.", url: "/requirements" },
+            { name: "Consular Assistance", description: "Passport renewal, civil registration, power of attorney, and other consular services for BiH citizens.", url: "/contact" },
+            { name: "Passport Services", description: "New passport applications, renewals, and emergency travel documents for citizens of Bosnia and Herzegovina." },
+            { name: "Document Attestation", description: "Attestation and authentication of documents including educational certificates, commercial documents, and personal documents." },
+            { name: "Trade & Investment Facilitation", description: "Support for businesses exploring trade opportunities between India and Bosnia and Herzegovina." },
+          ]),
+        ]}
       />
 
       {/* Hero Section */}

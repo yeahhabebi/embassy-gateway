@@ -67,7 +67,7 @@ export const embassyOrganizationSchema = {
   name: "Embassy of Bosnia and Herzegovina in New Delhi",
   alternateName: "BiH Embassy India",
   url: "https://www.bihembassy.asia",
-  logo: "https://www.bihembassy.asia/images/bih-logo.png",
+  logo: "https://www.bihembassy.asia/favicon.png",
   image: "https://www.bihembassy.asia/images/embassy-hero.jpg",
   description:
     "Official Embassy of Bosnia and Herzegovina in New Delhi, India. Providing consular services, visa processing, and promoting bilateral relations.",
@@ -94,6 +94,19 @@ export const embassyOrganizationSchema = {
     longitude: "77.2090",
   },
   sameAs: [],
+};
+
+export const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Embassy of Bosnia and Herzegovina in New Delhi, India",
+  alternateName: "BiH Embassy India",
+  url: "https://www.bihembassy.asia",
+  publisher: {
+    "@type": "GovernmentOffice",
+    name: "Embassy of Bosnia and Herzegovina in New Delhi",
+  },
+  inLanguage: "en",
 };
 
 export const breadcrumbSchema = (
@@ -123,3 +136,23 @@ export const faqSchema = (
     },
   })),
 });
+
+export const serviceSchema = (
+  services: { name: string; description: string; url?: string }[]
+) => services.map((service) => ({
+  "@context": "https://schema.org",
+  "@type": "GovernmentService",
+  name: service.name,
+  description: service.description,
+  serviceType: "Consular Service",
+  provider: {
+    "@type": "GovernmentOffice",
+    name: "Embassy of Bosnia and Herzegovina in New Delhi",
+    url: "https://www.bihembassy.asia",
+  },
+  areaServed: {
+    "@type": "Country",
+    name: "India",
+  },
+  ...(service.url ? { url: `https://www.bihembassy.asia${service.url}` } : {}),
+}));

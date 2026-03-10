@@ -6,7 +6,7 @@ import { Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } 
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 import { useCMSContent } from "@/hooks/useCMSContent";
-import SEOHead, { breadcrumbSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, embassyOrganizationSchema } from "@/components/SEOHead";
 
 const About = () => {
   const { get } = useCMSContent([
@@ -24,10 +24,13 @@ const About = () => {
         title="About Bosnia and Herzegovina"
         description="Learn about Bosnia and Herzegovina – its rich history, cultural diversity, natural beauty, and diplomatic relations with India. Discover Sarajevo, Mostar, and more."
         canonical="/about"
-        jsonLd={breadcrumbSchema([
-          { name: "Home", url: "/" },
-          { name: "About", url: "/about" },
-        ])}
+        jsonLd={[
+          embassyOrganizationSchema,
+          breadcrumbSchema([
+            { name: "Home", url: "/" },
+            { name: "About", url: "/about" },
+          ]),
+        ]}
       />
       {/* Hero Section */}
       <section className="relative bg-primary text-primary-foreground py-16 md:py-24 overflow-hidden">
