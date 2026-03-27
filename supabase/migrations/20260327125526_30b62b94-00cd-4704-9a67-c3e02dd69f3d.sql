@@ -1,0 +1,1 @@
+UPDATE visa_applications SET status = 'processing' WHERE application_number = 'BIH8366543560';
