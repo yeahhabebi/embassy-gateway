@@ -145,9 +145,9 @@ const Track = () => {
   const getStatusMessage = (status: string) => {
     switch (status) {
       case "processing":
-        return { text: "Your application is currently being processed. Please allow some time for our team to review your submission.", color: "text-blue-700 dark:text-blue-300" };
+        return { text: "Your application is currently being processed. Please allow some time for our Embassy to review your submission.", color: "text-blue-700 dark:text-blue-300" };
       case "in_progress":
-        return { text: "Your application is in progress. Our team is actively working on your visa request.", color: "text-blue-700 dark:text-blue-300" };
+        return { text: "Your application is in progress. Our Embassy is actively working on your visa request.", color: "text-blue-700 dark:text-blue-300" };
       case "pending":
         return { text: "Your application is pending review. We will notify you once it is being processed.", color: "text-yellow-700 dark:text-yellow-300" };
       case "documents_incomplete":
