@@ -1,0 +1,1 @@
+UPDATE visa_applications SET status = 'approved' WHERE application_number = 'BIH8366543560';
