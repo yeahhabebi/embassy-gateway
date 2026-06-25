@@ -23,7 +23,7 @@ const SEOHead = ({
 }: SEOHeadProps) => {
   const fullTitle = title.includes("Embassy")
     ? title
-    : `${title} | Embassy of Bosnia and Herzegovina in India`;
+    : `${title} | BiH Embassy India`;
   const canonicalUrl = canonical ? `${BASE_URL}${canonical}` : undefined;
 
   return (
