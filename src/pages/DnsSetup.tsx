@@ -248,14 +248,8 @@ function VerifySection({ domain }: { domain: string }) {
         setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
         return { ok: false, found: [] as string[] };
       }
-
-        setter({ status: ok ? "ok" : "fail", found, expected });
-        return { ok, found };
-      } catch (e: any) {
-        setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
-        return { ok: false, found: [] as string[] };
-      }
     }));
+
     // AAAA is advisory — don't block "all OK" on it, but record it
     const requiredOk = checks.slice(0, 3).map((c) => c.ok);
     const entry: HistoryEntry = {
