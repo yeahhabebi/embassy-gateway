@@ -195,6 +195,20 @@ function VerifySection({ domain }: { domain: string }) {
   const [showHistory, setShowHistory] = useState(false);
   const runningRef = useRef(false);
 
+  // Parse a TXT data field returned by Google DNS. RFC 1035 allows a TXT record
+  // to contain multiple character strings, each ≤255 bytes, that must be
+  // concatenated. Google returns them as space-separated quoted segments
+  // (e.g. `"part1" "part2"`). Some clients return a single quoted blob.
+  const parseTxt = (raw: string): string => {
+    const segments = raw.match(/"((?:[^"\\]|\\.)*)"/g);
+    if (segments && segments.length > 0) {
+      return segments
+        .map((s) => s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\"))
+        .join("");
+    }
+    return raw.replace(/^"|"$/g, "");
+  };
+
   const query = async (name: string, type: "A" | "AAAA" | "TXT"): Promise<string[]> => {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
     const json = await res.json();
@@ -202,8 +216,9 @@ function VerifySection({ domain }: { domain: string }) {
     const code = type === "A" ? 1 : type === "AAAA" ? 28 : 16;
     return answers
       .filter((a) => a.type === code)
-      .map((a) => String(a.data).replace(/^"|"$/g, ""));
+      .map((a) => (type === "TXT" ? parseTxt(String(a.data)) : String(a.data).replace(/^"|"$/g, "")));
   };
+
 
   const runAll = async () => {
     if (!domain || runningRef.current) return;
@@ -225,7 +240,7 @@ function VerifySection({ domain }: { domain: string }) {
         const found = await query(name, type);
         let ok: boolean;
         if (type === "A") ok = found.includes(expected);
-        else if (type === "TXT") ok = found.some((v) => v.includes("lovable_verify"));
+        else if (type === "TXT") ok = found.some((v) => v.trim() === expected.trim());
         else ok = found.length === 0; // AAAA: clean (no conflicting IPv6)
         setter({ status: ok ? "ok" : "fail", found, expected });
         return { ok, found };
@@ -234,6 +249,7 @@ function VerifySection({ domain }: { domain: string }) {
         return { ok: false, found: [] as string[] };
       }
     }));
+
     // AAAA is advisory — don't block "all OK" on it, but record it
     const requiredOk = checks.slice(0, 3).map((c) => c.ok);
     const entry: HistoryEntry = {
@@ -301,36 +317,91 @@ function VerifySection({ domain }: { domain: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPoll, domain]);
 
-  const Row = ({ label, name, state, optional, emptyOk }: { label: string; name: string; state: CheckState; optional?: boolean; emptyOk?: boolean }) => (
-    <div className="border rounded-lg p-3 flex items-start gap-3">
-      <div className="mt-0.5">
-        {state.status === "idle" && <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />}
-        {state.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
-        {state.status === "ok" && <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
-        {state.status === "fail" && <div className={`w-5 h-5 rounded-full ${optional ? "bg-amber-500" : "bg-destructive"} flex items-center justify-center`}><X className="w-3 h-3 text-white" /></div>}
-      </div>
-      <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm flex items-center gap-2 flex-wrap">
-          {label} <span className="font-mono text-muted-foreground">({name})</span>
-          {optional && <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-muted text-muted-foreground">optional</span>}
+  const Row = ({ label, name, state, optional, emptyOk, isTxt }: { label: string; name: string; state: CheckState; optional?: boolean; emptyOk?: boolean; isTxt?: boolean }) => {
+    const expected = state.expected;
+    const diffChars = (a: string, b: string) => {
+      // First common prefix length, then highlight differing tail
+      let i = 0;
+      const max = Math.min(a.length, b.length);
+      while (i < max && a[i] === b[i]) i++;
+      return { prefix: a.slice(0, i), aTail: a.slice(i), bTail: b.slice(i) };
+    };
+    return (
+      <div className="border rounded-lg p-3 flex items-start gap-3">
+        <div className="mt-0.5">
+          {state.status === "idle" && <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />}
+          {state.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
+          {state.status === "ok" && <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
+          {state.status === "fail" && <div className={`w-5 h-5 rounded-full ${optional ? "bg-amber-500" : "bg-destructive"} flex items-center justify-center`}><X className="w-3 h-3 text-white" /></div>}
         </div>
-        <div className="text-xs text-muted-foreground mt-1">Expected: <span className="font-mono">{state.expected}</span></div>
-        {state.status !== "idle" && (
-          <div className="text-xs mt-1">
-            Found: {state.found.length === 0
-              ? <span className={`font-mono ${emptyOk ? "text-green-600" : "text-destructive"}`}>{emptyOk ? "— none (good) —" : "— no record —"}</span>
-              : <span className={`font-mono break-all ${optional && state.status === "fail" ? "text-amber-600" : ""}`}>{state.found.join(", ")}</span>}
+        <div className="flex-1 min-w-0">
+          <div className="font-medium text-sm flex items-center gap-2 flex-wrap">
+            {label} <span className="font-mono text-muted-foreground">({name})</span>
+            {optional && <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-muted text-muted-foreground">optional</span>}
           </div>
-        )}
-        {optional && state.status === "fail" && state.found.length > 0 && (
-          <div className="text-xs text-amber-600 mt-1">
-            A stale IPv6 address is set. Remove this AAAA record at your registrar so all traffic resolves to Lovable's IPv4 endpoint.
-          </div>
-        )}
-        {state.error && <div className="text-xs text-destructive mt-1">{state.error}</div>}
+          <div className="text-xs text-muted-foreground mt-1">Expected: <span className="font-mono break-all">{expected}</span></div>
+
+          {state.status !== "idle" && !isTxt && (
+            <div className="text-xs mt-1">
+              Found: {state.found.length === 0
+                ? <span className={`font-mono ${emptyOk ? "text-green-600" : "text-destructive"}`}>{emptyOk ? "— none (good) —" : "— no record —"}</span>
+                : <span className={`font-mono break-all ${optional && state.status === "fail" ? "text-amber-600" : ""}`}>{state.found.join(", ")}</span>}
+            </div>
+          )}
+
+          {state.status !== "idle" && isTxt && (
+            <div className="text-xs mt-1 space-y-1">
+              {state.found.length === 0 ? (
+                <span className="font-mono text-destructive">— no TXT record —</span>
+              ) : (
+                <>
+                  <div className="text-muted-foreground">Found {state.found.length} TXT value{state.found.length === 1 ? "" : "s"}:</div>
+                  <ul className="space-y-1">
+                    {state.found.map((v, idx) => {
+                      const match = v.trim() === expected.trim();
+                      const { prefix, aTail, bTail } = diffChars(v, expected);
+                      return (
+                        <li key={idx} className="border rounded p-1.5 bg-muted/30">
+                          <div className="flex items-center gap-1.5">
+                            {match
+                              ? <Check className="w-3 h-3 text-green-600 shrink-0" />
+                              : <X className="w-3 h-3 text-destructive shrink-0" />}
+                            <span className={`font-mono break-all ${match ? "text-green-700 dark:text-green-400" : ""}`}>
+                              {match ? v : (<>
+                                <span>{prefix}</span>
+                                <span className="bg-red-100 dark:bg-red-950/40 text-destructive px-0.5 rounded">{aTail || "∅"}</span>
+                              </>)}
+                            </span>
+                          </div>
+                          {!match && (
+                            <div className="mt-1 pl-4.5 text-[11px] text-muted-foreground">
+                              expected tail: <span className="font-mono bg-green-100 dark:bg-green-950/40 text-green-700 dark:text-green-400 px-0.5 rounded">{bTail || "∅"}</span>
+                              {v.length !== expected.length && <span className="ml-2">(len {v.length} vs {expected.length})</span>}
+                            </div>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  {state.status === "fail" && (
+                    <div className="text-[11px] text-destructive">No TXT value exactly matches the expected verification string.</div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {optional && state.status === "fail" && state.found.length > 0 && (
+            <div className="text-xs text-amber-600 mt-1">
+              A stale IPv6 address is set. Remove this AAAA record at your registrar so all traffic resolves to Lovable's IPv4 endpoint.
+            </div>
+          )}
+          {state.error && <div className="text-xs text-destructive mt-1">{state.error}</div>}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
+
 
 
   const allOk = root.status === "ok" && www.status === "ok" && txt.status === "ok";
@@ -382,7 +453,7 @@ function VerifySection({ domain }: { domain: string }) {
 
         <Row label="A record (root)" name={domain} state={root} />
         <Row label="A record (www)" name={`www.${domain}`} state={www} />
-        <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} />
+        <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} isTxt />
         <Row label="AAAA record (IPv6, root)" name={domain} state={aaaaRoot} optional emptyOk />
         <Row label="AAAA record (IPv6, www)" name={`www.${domain}`} state={aaaaWww} optional emptyOk />
 
