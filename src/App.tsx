@@ -15,6 +15,7 @@ const Contact = lazy(() => import("./pages/Contact"));
 const Apply = lazy(() => import("./pages/Apply"));
 const Track = lazy(() => import("./pages/Track"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const DnsSetup = lazy(() => import("./pages/DnsSetup"));
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
 
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
@@ -73,7 +74,8 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/apply" element={<Apply />} />
             <Route path="/track" element={<Track />} />
-            
+            <Route path="/dns-setup" element={<DnsSetup />} />
+
             {/* Admin Routes */}
             
             <Route path="/admin/login" element={<AdminLogin />} />
