@@ -313,7 +313,7 @@ const About = () => {
                 <div>
                   <h3 className="font-semibold mb-2">Contact</h3>
                   <p className="text-muted-foreground">
-                    Email: {get("embassy_email", "info@bhiembassy.com")}<br />
+                    Email: {get("embassy_email", "info@bhiembassy.asia")}<br />
                     Phone: {get("embassy_phone", "+91-11-26147415")}
                   </p>
                 </div>
