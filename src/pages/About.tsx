@@ -6,7 +6,16 @@ import { Users, Globe, Award, Heart, Building, Landmark, TrendingUp, Mountain } 
 import mostarBridge from "@/assets/mostar-bridge.jpg";
 import sarajevoCityscape from "@/assets/sarajevo-cityscape.jpg";
 import { useCMSContent } from "@/hooks/useCMSContent";
-import SEOHead, { breadcrumbSchema, embassyOrganizationSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, embassyOrganizationSchema, faqSchema } from "@/components/SEOHead";
+
+const aboutFAQs = [
+  { question: "Where is Bosnia and Herzegovina located?", answer: "Bosnia and Herzegovina is a country in Southeast Europe, located on the Balkan Peninsula. It borders Croatia to the north and west, Serbia to the east, and Montenegro to the southeast." },
+  { question: "What is the capital of Bosnia and Herzegovina?", answer: "Sarajevo is the capital and largest city of Bosnia and Herzegovina, known for its rich cultural heritage and historical significance as a meeting point of Eastern and Western civilizations." },
+  { question: "What languages are spoken in Bosnia and Herzegovina?", answer: "The official languages are Bosnian, Croatian, and Serbian. English is widely understood in tourist areas and among younger generations." },
+  { question: "What is the currency of Bosnia and Herzegovina?", answer: "The official currency is the Convertible Mark (BAM), which is pegged to the Euro at a fixed rate of approximately 1 EUR = 1.95583 BAM." },
+  { question: "Do Indian citizens need a visa to visit Bosnia and Herzegovina?", answer: "Yes, Indian citizens require a visa to enter Bosnia and Herzegovina. You can apply through the Embassy of Bosnia and Herzegovina in New Delhi." },
+  { question: "What are the main tourist attractions in Bosnia and Herzegovina?", answer: "Popular destinations include the historic Old Bridge in Mostar, Sarajevo's old town (Baščaršija), Kravica Waterfalls, Jajce, Blagaj Tekke, and the national parks of Sutjeska and Una." },
+];
 
 const About = () => {
   const { get } = useCMSContent([
@@ -30,6 +39,7 @@ const About = () => {
             { name: "Home", url: "/" },
             { name: "About", url: "/about" },
           ]),
+          faqSchema(aboutFAQs),
         ]}
       />
       {/* Hero Section */}
