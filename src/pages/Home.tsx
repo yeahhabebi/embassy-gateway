@@ -26,7 +26,7 @@ const Home = () => {
     <Layout>
       <SEOHead
         title="Embassy of Bosnia and Herzegovina in New Delhi, India"
-        description="Official website of the Embassy of Bosnia and Herzegovina in New Delhi. Apply for visas, access consular services, track applications, and learn about BiH-India relations."
+        description="Official Embassy of Bosnia and Herzegovina in New Delhi. Visas, consular services, and BiH-India bilateral relations."
         canonical="/"
         jsonLd={[
           embassyOrganizationSchema,
