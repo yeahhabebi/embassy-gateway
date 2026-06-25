@@ -137,8 +137,6 @@ describe("parseTxt — property-based fuzz tests", () => {
         expect(parseTxt(encodeSegments(parts))).toBe(whole);
       }),
       { numRuns: 300 }
-      ),
-      { numRuns: 300 }
     );
   });
 });
