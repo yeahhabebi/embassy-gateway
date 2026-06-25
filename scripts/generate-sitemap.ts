@@ -1,36 +1,38 @@
-// Runs before `vite dev` and `vite build` (predev/prebuild hooks); writes public/sitemap.xml.
-// Re-run automatically when routes change or CMS content is edited (dev/build hooks).
+// Generates public/sitemap.xml. Runs before `vite dev` / `vite build` (predev/prebuild)
+// and is also invoked by scripts/verify-sitemap.ts after CMS edits.
 
 import { writeFileSync } from "fs";
 import { resolve } from "path";
 
-const BASE_URL = "https://www.bhiembassy.asia";
+export const BASE_URL = "https://www.bhiembassy.asia";
 
-interface SitemapEntry {
+export interface SitemapEntry {
   path: string;
   lastmod?: string;
   changefreq?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority?: string;
 }
 
-const today = new Date().toISOString().slice(0, 10);
+const today = () => new Date().toISOString().slice(0, 10);
 
 // Public, indexable routes. Admin, /dns-setup, and 404 are intentionally excluded.
-const entries: SitemapEntry[] = [
-  { path: "/", lastmod: today, changefreq: "weekly", priority: "1.0" },
-  { path: "/about", lastmod: today, changefreq: "monthly", priority: "0.8" },
-  { path: "/services", lastmod: today, changefreq: "monthly", priority: "0.9" },
-  { path: "/requirements", lastmod: today, changefreq: "monthly", priority: "0.9" },
-  { path: "/apply", lastmod: today, changefreq: "monthly", priority: "0.9" },
-  { path: "/track", lastmod: today, changefreq: "monthly", priority: "0.7" },
-  { path: "/contact", lastmod: today, changefreq: "monthly", priority: "0.8" },
-];
+export function getStaticEntries(lastmod: string): SitemapEntry[] {
+  return [
+    { path: "/", lastmod, changefreq: "weekly", priority: "1.0" },
+    { path: "/about", lastmod, changefreq: "monthly", priority: "0.8" },
+    { path: "/services", lastmod, changefreq: "monthly", priority: "0.9" },
+    { path: "/requirements", lastmod, changefreq: "monthly", priority: "0.9" },
+    { path: "/apply", lastmod, changefreq: "monthly", priority: "0.9" },
+    { path: "/track", lastmod, changefreq: "monthly", priority: "0.7" },
+    { path: "/contact", lastmod, changefreq: "monthly", priority: "0.8" },
+  ];
+}
 
-// Pull lastmod from CMS so the sitemap refreshes whenever editable content changes.
-async function fetchCmsLastmod(): Promise<string | null> {
-  const url = process.env.VITE_SUPABASE_URL;
-  const key = process.env.VITE_SUPABASE_PUBLISHABLE_KEY;
-  if (!url || !key) return null;
+export async function fetchCmsLastmod(): Promise<string | null> {
+  const url = process.env.VITE_SUPABASE_URL ?? "https://obxqbuafuvgyyznmzeqi.supabase.co";
+  const key =
+    process.env.VITE_SUPABASE_PUBLISHABLE_KEY ??
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9ieHFidWFmdXZneXl6bm16ZXFpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjM5MzYzNjMsImV4cCI6MjA3OTUxMjM2M30.YMb5luVLM30FBjQq34vgp76jghLg_mHs1BqCRJ2Vhs0";
   try {
     const res = await fetch(
       `${url}/rest/v1/cms_content?select=updated_at&order=updated_at.desc&limit=1`,
@@ -44,7 +46,7 @@ async function fetchCmsLastmod(): Promise<string | null> {
   }
 }
 
-function generateSitemap(items: SitemapEntry[]) {
+export function generateSitemap(items: SitemapEntry[]): string {
   const urls = items.map((e) =>
     [
       `  <url>`,
@@ -67,16 +69,18 @@ function generateSitemap(items: SitemapEntry[]) {
   ].join("\n");
 }
 
-async function main() {
+export async function buildSitemap(): Promise<{ xml: string; entries: SitemapEntry[]; lastmod: string }> {
   const cmsLastmod = await fetchCmsLastmod();
-  const finalEntries = cmsLastmod
-    ? entries.map((e) => ({ ...e, lastmod: cmsLastmod }))
-    : entries;
-
-  writeFileSync(resolve("public/sitemap.xml"), generateSitemap(finalEntries));
-  console.log(
-    `sitemap.xml written (${finalEntries.length} entries, lastmod=${cmsLastmod ?? today})`,
-  );
+  const lastmod = cmsLastmod ?? today();
+  const entries = getStaticEntries(lastmod);
+  return { xml: generateSitemap(entries), entries, lastmod };
 }
 
-main();
+// CLI entry: run directly to write public/sitemap.xml.
+const invokedDirectly = import.meta.url === `file://${process.argv[1]}`;
+if (invokedDirectly) {
+  buildSitemap().then(({ xml, entries, lastmod }) => {
+    writeFileSync(resolve("public/sitemap.xml"), xml);
+    console.log(`sitemap.xml written (${entries.length} entries, lastmod=${lastmod})`);
+  });
+}
