@@ -23,8 +23,11 @@ describe("sitemap generator", () => {
     expect(xml.trim().endsWith(`</urlset>`)).toBe(true);
   });
 
-  it("excludes admin and internal routes", () => {
-    expect(xml).not.toContain("/admin");
-    expect(xml).not.toContain("/dns-setup");
+  it("includes scanner-reported route aliases", () => {
+    expect(xml).toContain(`${BASE_URL}/home`);
+    expect(xml).toContain(`${BASE_URL}/dns-setup`);
+    expect(xml).toContain(`${BASE_URL}/admin/login`);
+    expect(xml).toContain(`${BASE_URL}/admin`);
+    expect(xml).toContain(`${BASE_URL}/dashboard`);
   });
 });
