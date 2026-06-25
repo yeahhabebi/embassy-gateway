@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Check, ExternalLink, Globe, Loader2, X, RefreshCw, History, Trash2, Download } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { parseTxt } from "@/lib/dns-txt";
 
 const LOVABLE_IP = "185.158.133.1";
 const TXT_NAME = "_lovable";
