@@ -6,9 +6,10 @@
   "scripts": {
     "predev": "bunx tsx scripts/generate-sitemap.ts",
     "dev": "vite",
-    "prebuild": "bunx tsx scripts/generate-sitemap.ts",
+    "prebuild": "bunx tsx scripts/verify-sitemap.ts",
     "build": "vite build",
     "build:dev": "vite build --mode development",
+    "sitemap:regenerate": "bunx tsx scripts/verify-sitemap.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
