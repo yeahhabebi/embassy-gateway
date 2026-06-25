@@ -22,6 +22,7 @@ const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const Applications = lazy(() => import("./pages/admin/Applications"));
 const ContactMessages = lazy(() => import("./pages/admin/ContactMessages"));
 const CMS = lazy(() => import("./pages/admin/CMS"));
+const SeoCheck = lazy(() => import("./pages/admin/SeoCheck"));
 
 const AdminLayout = lazy(() => import("./components/admin/AdminLayout").then(m => ({ default: m.AdminLayout })));
 const ProtectedRoute = lazy(() => import("./components/admin/ProtectedRoute").then(m => ({ default: m.ProtectedRoute })));
@@ -88,6 +89,7 @@ const App = () => (
               <Route path="applications" element={<Applications />} />
               <Route path="contact-messages" element={<ContactMessages />} />
               <Route path="cms" element={<CMS />} />
+              <Route path="seo-check" element={<SeoCheck />} />
             </Route>
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

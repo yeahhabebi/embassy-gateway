@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { FileText, Home, LogOut, Menu, X, FileEdit, MessageSquare } from "lucide-react";
+import { FileText, Home, LogOut, Menu, X, FileEdit, MessageSquare, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function AdminLayout() {
@@ -41,6 +41,7 @@ export function AdminLayout() {
     { name: "Applications", path: "/admin/applications", icon: FileText },
     { name: "Contact Messages", path: "/admin/contact-messages", icon: MessageSquare },
     { name: "CMS", path: "/admin/cms", icon: FileEdit },
+    { name: "SEO Check", path: "/admin/seo-check", icon: ShieldCheck },
   ];
 
   return (
