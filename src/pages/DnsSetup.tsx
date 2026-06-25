@@ -158,7 +158,18 @@ export default function DnsSetup() {
 
 type CheckState = { status: "idle" | "checking" | "ok" | "fail"; found: string[]; expected: string; error?: string };
 
+type HistoryEntry = {
+  ts: number;
+  domain: string;
+  root: { ok: boolean; found: string[] };
+  www: { ok: boolean; found: string[] };
+  txt: { ok: boolean; found: string[] };
+  allOk: boolean;
+};
+
 const POLL_INTERVAL_SEC = 180; // 3 minutes
+const HISTORY_KEY = "dns-check-history-v1";
+const HISTORY_LIMIT = 50;
 
 function VerifySection({ domain }: { domain: string }) {
   const [root, setRoot] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
@@ -168,6 +179,13 @@ function VerifySection({ domain }: { domain: string }) {
   const [autoPoll, setAutoPoll] = useState(false);
   const [nextIn, setNextIn] = useState(POLL_INTERVAL_SEC);
   const [lastChecked, setLastChecked] = useState<Date | null>(null);
+  const [history, setHistory] = useState<HistoryEntry[]>(() => {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? (JSON.parse(raw) as HistoryEntry[]) : [];
+    } catch { return []; }
+  });
+  const [showHistory, setShowHistory] = useState(false);
   const runningRef = useRef(false);
 
   const query = async (name: string, type: "A" | "TXT"): Promise<string[]> => {
