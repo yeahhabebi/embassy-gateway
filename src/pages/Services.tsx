@@ -33,7 +33,7 @@ const Services = () => {
       title: "Trade & Investment",
       description: "Explore business opportunities and investment prospects in Bosnia and Herzegovina. We facilitate bilateral trade relations.",
       link: "/contact",
-      linkText: "Learn More",
+      linkText: "Explore Trade & Investment Opportunities",
     },
   ];
 
