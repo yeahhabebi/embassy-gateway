@@ -453,7 +453,7 @@ function VerifySection({ domain }: { domain: string }) {
 
         <Row label="A record (root)" name={domain} state={root} />
         <Row label="A record (www)" name={`www.${domain}`} state={www} />
-        <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} />
+        <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} isTxt />
         <Row label="AAAA record (IPv6, root)" name={domain} state={aaaaRoot} optional emptyOk />
         <Row label="AAAA record (IPv6, www)" name={`www.${domain}`} state={aaaaWww} optional emptyOk />
 
