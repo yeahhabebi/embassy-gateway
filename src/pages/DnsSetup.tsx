@@ -240,8 +240,15 @@ function VerifySection({ domain }: { domain: string }) {
         const found = await query(name, type);
         let ok: boolean;
         if (type === "A") ok = found.includes(expected);
-        else if (type === "TXT") ok = found.some((v) => v.includes("lovable_verify"));
+        else if (type === "TXT") ok = found.some((v) => v.trim() === expected.trim());
         else ok = found.length === 0; // AAAA: clean (no conflicting IPv6)
+        setter({ status: ok ? "ok" : "fail", found, expected });
+        return { ok, found };
+      } catch (e: any) {
+        setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
+        return { ok: false, found: [] as string[] };
+      }
+
         setter({ status: ok ? "ok" : "fail", found, expected });
         return { ok, found };
       } catch (e: any) {
