@@ -42,7 +42,7 @@ describe("parseTxt — property-based fuzz tests", () => {
 
   it("never throws on arbitrary unicode input (including control chars)", () => {
     fc.assert(
-      fc.property(fc.fullUnicodeString({ maxLength: 256 }), (raw) => {
+      fc.property(fc.string({ unit: "binary", maxLength: 256 }), (raw: string) => {
         const out = parseTxt(raw);
         expect(typeof out).toBe("string");
       }),
