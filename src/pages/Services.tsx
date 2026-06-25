@@ -118,8 +118,8 @@ const Services = () => {
   return (
     <Layout>
       <SEOHead
-        title="Consular Services – Visa, Document Legalisation & Citizen Services"
-        description="Embassy of Bosnia and Herzegovina consular services: visa applications, document legalisation, passport services, civil registration, trade and investment facilitation."
+        title="Consular Services"
+        description="BiH Embassy consular services in New Delhi: visa applications, document legalisation, passport services, civil registration, and trade facilitation."
         canonical="/services"
         jsonLd={[
           breadcrumbSchema([
