@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Bootstrap first super admin only" ON public.admin_users;
