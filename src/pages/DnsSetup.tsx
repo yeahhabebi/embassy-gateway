@@ -195,6 +195,20 @@ function VerifySection({ domain }: { domain: string }) {
   const [showHistory, setShowHistory] = useState(false);
   const runningRef = useRef(false);
 
+  // Parse a TXT data field returned by Google DNS. RFC 1035 allows a TXT record
+  // to contain multiple character strings, each ≤255 bytes, that must be
+  // concatenated. Google returns them as space-separated quoted segments
+  // (e.g. `"part1" "part2"`). Some clients return a single quoted blob.
+  const parseTxt = (raw: string): string => {
+    const segments = raw.match(/"((?:[^"\\]|\\.)*)"/g);
+    if (segments && segments.length > 0) {
+      return segments
+        .map((s) => s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\"))
+        .join("");
+    }
+    return raw.replace(/^"|"$/g, "");
+  };
+
   const query = async (name: string, type: "A" | "AAAA" | "TXT"): Promise<string[]> => {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
     const json = await res.json();
@@ -202,8 +216,9 @@ function VerifySection({ domain }: { domain: string }) {
     const code = type === "A" ? 1 : type === "AAAA" ? 28 : 16;
     return answers
       .filter((a) => a.type === code)
-      .map((a) => String(a.data).replace(/^"|"$/g, ""));
+      .map((a) => (type === "TXT" ? parseTxt(String(a.data)) : String(a.data).replace(/^"|"$/g, "")));
   };
+
 
   const runAll = async () => {
     if (!domain || runningRef.current) return;
