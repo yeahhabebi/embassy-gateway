@@ -4,7 +4,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Copy, Check, ExternalLink, Globe } from "lucide-react";
+import { Copy, Check, ExternalLink, Globe, Loader2, X, RefreshCw } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const LOVABLE_IP = "185.158.133.1";
@@ -139,14 +139,15 @@ export default function DnsSetup() {
           </CardContent>
         </Card>
 
+        <VerifySection domain={domain} />
+
         <Card>
-          <CardHeader><CardTitle>3. Verify & wait</CardTitle></CardHeader>
+          <CardHeader><CardTitle>4. After verification passes</CardTitle></CardHeader>
           <CardContent className="space-y-3 text-sm">
             <ol className="list-decimal pl-5 space-y-2">
-              <li>Delete any old A/AAAA/CNAME records for <code className="font-mono">@</code> and <code className="font-mono">www</code> that point elsewhere.</li>
-              <li>Save the 3 records above at your registrar.</li>
-              <li>Check propagation: <a className="text-primary hover:underline" target="_blank" rel="noreferrer" href={`https://dnschecker.org/#A/${domain}`}>dnschecker.org/{domain}</a></li>
-              <li>In Lovable → Project Settings → Domains, click <strong>Verify</strong>. SSL provisions automatically (up to 72h, usually minutes).</li>
+              <li>Open Lovable → Project Settings → Domains, click <strong>Verify</strong>. SSL provisions automatically.</li>
+              <li>Once your site responds on the custom domain, submit the sitemap in Google Search Console and request indexing for key pages.</li>
+              <li>If any check above still fails, wait 10–30 min for DNS propagation and re-run the check.</li>
             </ol>
           </CardContent>
         </Card>
@@ -154,3 +155,109 @@ export default function DnsSetup() {
     </div>
   );
 }
+
+type CheckState = { status: "idle" | "checking" | "ok" | "fail"; found: string[]; expected: string; error?: string };
+
+function VerifySection({ domain }: { domain: string }) {
+  const [root, setRoot] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
+  const [www, setWww] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
+  const [txt, setTxt] = useState<CheckState>({ status: "idle", found: [], expected: TXT_VALUE });
+  const [running, setRunning] = useState(false);
+
+  const query = async (name: string, type: "A" | "TXT"): Promise<string[]> => {
+    const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
+    const json = await res.json();
+    const answers: any[] = json.Answer || [];
+    return answers
+      .filter((a) => (type === "A" ? a.type === 1 : a.type === 16))
+      .map((a) => String(a.data).replace(/^"|"$/g, ""));
+  };
+
+  const runAll = async () => {
+    if (!domain) return;
+    setRunning(true);
+    const targets: Array<[string, "A" | "TXT", string, (s: CheckState) => void]> = [
+      [domain, "A", LOVABLE_IP, setRoot],
+      [`www.${domain}`, "A", LOVABLE_IP, setWww],
+      [`_lovable.${domain}`, "TXT", TXT_VALUE, setTxt],
+    ];
+    for (const [name, type, expected, setter] of targets) {
+      setter({ status: "checking", found: [], expected });
+    }
+    await Promise.all(targets.map(async ([name, type, expected, setter]) => {
+      try {
+        const found = await query(name, type);
+        const ok = type === "A"
+          ? found.includes(expected)
+          : found.some((v) => v.includes("lovable_verify"));
+        setter({ status: ok ? "ok" : "fail", found, expected });
+      } catch (e: any) {
+        setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
+      }
+    }));
+    setRunning(false);
+  };
+
+  const Row = ({ label, name, state }: { label: string; name: string; state: CheckState }) => (
+    <div className="border rounded-lg p-3 flex items-start gap-3">
+      <div className="mt-0.5">
+        {state.status === "idle" && <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />}
+        {state.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
+        {state.status === "ok" && <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
+        {state.status === "fail" && <div className="w-5 h-5 rounded-full bg-destructive flex items-center justify-center"><X className="w-3 h-3 text-white" /></div>}
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="font-medium text-sm">{label} <span className="font-mono text-muted-foreground">({name})</span></div>
+        <div className="text-xs text-muted-foreground mt-1">Expected: <span className="font-mono">{state.expected}</span></div>
+        {state.status !== "idle" && (
+          <div className="text-xs mt-1">
+            Found: {state.found.length === 0
+              ? <span className="text-destructive font-mono">— no record —</span>
+              : <span className="font-mono break-all">{state.found.join(", ")}</span>}
+          </div>
+        )}
+        {state.error && <div className="text-xs text-destructive mt-1">{state.error}</div>}
+      </div>
+    </div>
+  );
+
+  const allOk = root.status === "ok" && www.status === "ok" && txt.status === "ok";
+  const anyChecked = [root, www, txt].some((s) => s.status !== "idle");
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <span>3. Verify DNS propagation</span>
+          <Button onClick={runAll} disabled={running || !domain} size="sm">
+            {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+            {anyChecked ? "Re-check" : "Check now"}
+          </Button>
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        <p className="text-xs text-muted-foreground">Queries Google Public DNS (8.8.8.8) live. Results reflect global propagation within seconds.</p>
+        <Row label="A record (root)" name={domain} state={root} />
+        <Row label="A record (www)" name={`www.${domain}`} state={www} />
+        <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} />
+
+        {anyChecked && !running && (
+          allOk ? (
+            <Alert className="border-green-600/40 bg-green-50 dark:bg-green-950/20">
+              <AlertDescription className="text-green-800 dark:text-green-300 text-sm">
+                All 3 records are live. Go to Lovable → Project Settings → Domains → <strong>Verify</strong>, then submit your sitemap in Google Search Console.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <Alert variant="destructive">
+              <AlertDescription className="text-sm">
+                One or more records aren't propagated yet. Double-check the values at your registrar, remove conflicting old records, then re-check in 5–10 minutes.
+              </AlertDescription>
+            </Alert>
+          )
+        )}
+      </CardContent>
+    </Card>
+  );
+}
+
