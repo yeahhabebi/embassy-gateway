@@ -3,7 +3,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { FileText, Stamp, Scale, BookOpen, Globe, Users, Shield, Briefcase, GraduationCap, Plane, Building, ChevronRight } from "lucide-react";
-import SEOHead, { breadcrumbSchema, serviceSchema } from "@/components/SEOHead";
+import SEOHead, { breadcrumbSchema, serviceSchema, faqSchema } from "@/components/SEOHead";
+
+const servicesFAQs = [
+  { question: "What consular services does the BiH Embassy in New Delhi offer?", answer: "We provide visa services, document legalisation and attestation, passport services for BiH citizens, civil registration, power of attorney, and trade and investment facilitation between India and Bosnia and Herzegovina." },
+  { question: "What types of visas can I apply for?", answer: "We process tourist, business, student, work, transit, and diplomatic visas for travel to Bosnia and Herzegovina." },
+  { question: "How long does visa processing take?", answer: "Standard processing takes 5-7 business days for tourist visas and 14-21 business days for work and long-stay visas. Express processing is available for an additional fee." },
+  { question: "Can I apply for consular services online?", answer: "Yes, you can submit your visa application online through our portal, upload required documents, and track your application status using your tracking number and passport details." },
+  { question: "Does the Embassy provide document attestation?", answer: "Yes, we attest and authenticate educational certificates, commercial documents, and personal documents for use in Bosnia and Herzegovina." },
+  { question: "Do I need to book an appointment to visit the Embassy?", answer: "Appointments are recommended for in-person consular services. You can contact us by phone or email to schedule a convenient time." },
+];
 
 const Services = () => {
   const mainServices = [
@@ -134,6 +143,7 @@ const Services = () => {
             { name: "Document Attestation", description: "Attestation and authentication of documents including educational certificates, commercial documents, and personal documents." },
             { name: "Trade & Investment Facilitation", description: "Support for businesses exploring trade opportunities between India and Bosnia and Herzegovina." },
           ]),
+          faqSchema(servicesFAQs),
         ]}
       />
 
