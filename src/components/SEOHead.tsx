@@ -79,7 +79,7 @@ export const embassyOrganizationSchema = {
     addressCountry: "IN",
   },
   telephone: "+91-11-26147415",
-  email: "info@bhiembassy.com",
+  email: "info@bhiembassy.asia",
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
