@@ -59,9 +59,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Phone className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
               <span className="text-xs sm:text-sm">{get("embassy_phone", "+91-11-26147415")}</span>
             </a>
-            <a href={`mailto:${get("embassy_email", "info@bihembassy.asia")}`} className="hidden sm:flex items-center gap-1.5 hover:text-accent transition-colors min-w-0">
+            <a href={`mailto:${get("embassy_email", "info@bhiembassy.asia")}`} className="hidden sm:flex items-center gap-1.5 hover:text-accent transition-colors min-w-0">
               <Mail className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">{get("embassy_email", "info@bihembassy.asia")}</span>
+              <span className="truncate">{get("embassy_email", "info@bhiembassy.asia")}</span>
             </a>
           </div>
           <div className="flex items-center gap-1 sm:gap-1.5 text-primary-foreground/90 font-mono text-xs sm:text-sm shrink-0">
@@ -160,7 +160,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <div className="space-y-2 text-sm text-primary-foreground/80">
                 <p>Embassy of Bosnia and Herzegovina</p>
                 <p className="whitespace-pre-line">{get("embassy_address", "New Delhi - 110001, India")}</p>
-                <p>Email: {get("embassy_email", "info@bihembassy.asia")}</p>
+                <p>Email: {get("embassy_email", "info@bhiembassy.asia")}</p>
                 <p>Phone: {get("embassy_phone", "+91-11-26147415")}</p>
                 <p>Fax: {get("embassy_fax", "+91-11-26147415")}</p>
               </div>

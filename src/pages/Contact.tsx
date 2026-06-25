@@ -30,7 +30,7 @@ const Contact = () => {
   const [contactInfo, setContactInfo] = useState({
     address: "E8/5, Vasant Vihar, New Delhi\nNew Delhi - 110057\nIndia",
     phone: "+91-11-26147415",
-    email: "info@bihembassy.asia",
+    email: "info@bhiembassy.asia",
     hours: "General Office: Mon-Fri 9:00-17:00\nConsular Services: Mon, Wed, Fri 10:00-12:00\nClosed: Weekends & Public Holidays",
     fax: "+91-11-26147415",
     emergency: "Available 24/7 for citizens in distress",

@@ -10,7 +10,7 @@ interface SEOHeadProps {
   noindex?: boolean;
 }
 
-const BASE_URL = "https://www.bihembassy.asia";
+const BASE_URL = "https://www.bhiembassy.asia";
 
 const SEOHead = ({
   title,
@@ -66,9 +66,9 @@ export const embassyOrganizationSchema = {
   "@type": "GovernmentOffice",
   name: "Embassy of Bosnia and Herzegovina in New Delhi",
   alternateName: "BiH Embassy India",
-  url: "https://www.bihembassy.asia",
-  logo: "https://www.bihembassy.asia/favicon.png",
-  image: "https://www.bihembassy.asia/images/embassy-hero.jpg",
+  url: "https://www.bhiembassy.asia",
+  logo: "https://www.bhiembassy.asia/favicon.png",
+  image: "https://www.bhiembassy.asia/images/embassy-hero.jpg",
   description:
     "Official Embassy of Bosnia and Herzegovina in New Delhi, India. Providing consular services, visa processing, and promoting bilateral relations.",
   address: {
@@ -79,7 +79,7 @@ export const embassyOrganizationSchema = {
     addressCountry: "IN",
   },
   telephone: "+91-11-26147415",
-  email: "info@bihembassy.com",
+  email: "info@bhiembassy.com",
   openingHoursSpecification: [
     {
       "@type": "OpeningHoursSpecification",
@@ -101,7 +101,7 @@ export const websiteSchema = {
   "@type": "WebSite",
   name: "Embassy of Bosnia and Herzegovina in New Delhi, India",
   alternateName: "BiH Embassy India",
-  url: "https://www.bihembassy.asia",
+  url: "https://www.bhiembassy.asia",
   publisher: {
     "@type": "GovernmentOffice",
     name: "Embassy of Bosnia and Herzegovina in New Delhi",
@@ -118,7 +118,7 @@ export const breadcrumbSchema = (
     "@type": "ListItem",
     position: index + 1,
     name: item.name,
-    item: `https://www.bihembassy.asia${item.url}`,
+    item: `https://www.bhiembassy.asia${item.url}`,
   })),
 });
 
@@ -148,11 +148,11 @@ export const serviceSchema = (
   provider: {
     "@type": "GovernmentOffice",
     name: "Embassy of Bosnia and Herzegovina in New Delhi",
-    url: "https://www.bihembassy.asia",
+    url: "https://www.bhiembassy.asia",
   },
   areaServed: {
     "@type": "Country",
     name: "India",
   },
-  ...(service.url ? { url: `https://www.bihembassy.asia${service.url}` } : {}),
+  ...(service.url ? { url: `https://www.bhiembassy.asia${service.url}` } : {}),
 }));

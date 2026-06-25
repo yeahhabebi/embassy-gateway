@@ -189,7 +189,7 @@ const Home = () => {
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Email</p>
-                  <p className="text-muted-foreground">{get("embassy_email", "info@bihembassy.com")}</p>
+                  <p className="text-muted-foreground">{get("embassy_email", "info@bhiembassy.com")}</p>
                 </div>
                 <div>
                   <p className="font-semibold mb-1">Office Hours</p>
