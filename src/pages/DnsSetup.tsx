@@ -301,28 +301,37 @@ function VerifySection({ domain }: { domain: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPoll, domain]);
 
-  const Row = ({ label, name, state }: { label: string; name: string; state: CheckState }) => (
+  const Row = ({ label, name, state, optional, emptyOk }: { label: string; name: string; state: CheckState; optional?: boolean; emptyOk?: boolean }) => (
     <div className="border rounded-lg p-3 flex items-start gap-3">
       <div className="mt-0.5">
         {state.status === "idle" && <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />}
         {state.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
         {state.status === "ok" && <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
-        {state.status === "fail" && <div className="w-5 h-5 rounded-full bg-destructive flex items-center justify-center"><X className="w-3 h-3 text-white" /></div>}
+        {state.status === "fail" && <div className={`w-5 h-5 rounded-full ${optional ? "bg-amber-500" : "bg-destructive"} flex items-center justify-center`}><X className="w-3 h-3 text-white" /></div>}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm">{label} <span className="font-mono text-muted-foreground">({name})</span></div>
+        <div className="font-medium text-sm flex items-center gap-2 flex-wrap">
+          {label} <span className="font-mono text-muted-foreground">({name})</span>
+          {optional && <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-muted text-muted-foreground">optional</span>}
+        </div>
         <div className="text-xs text-muted-foreground mt-1">Expected: <span className="font-mono">{state.expected}</span></div>
         {state.status !== "idle" && (
           <div className="text-xs mt-1">
             Found: {state.found.length === 0
-              ? <span className="text-destructive font-mono">— no record —</span>
-              : <span className="font-mono break-all">{state.found.join(", ")}</span>}
+              ? <span className={`font-mono ${emptyOk ? "text-green-600" : "text-destructive"}`}>{emptyOk ? "— none (good) —" : "— no record —"}</span>
+              : <span className={`font-mono break-all ${optional && state.status === "fail" ? "text-amber-600" : ""}`}>{state.found.join(", ")}</span>}
+          </div>
+        )}
+        {optional && state.status === "fail" && state.found.length > 0 && (
+          <div className="text-xs text-amber-600 mt-1">
+            A stale IPv6 address is set. Remove this AAAA record at your registrar so all traffic resolves to Lovable's IPv4 endpoint.
           </div>
         )}
         {state.error && <div className="text-xs text-destructive mt-1">{state.error}</div>}
       </div>
     </div>
   );
+
 
   const allOk = root.status === "ok" && www.status === "ok" && txt.status === "ok";
   const anyChecked = [root, www, txt].some((s) => s.status !== "idle");
