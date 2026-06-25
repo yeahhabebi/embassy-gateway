@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Check, ExternalLink, Globe, Loader2, X, RefreshCw, History, Trash2, Download } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { parseTxt } from "@/lib/dns-txt";
 
 const LOVABLE_IP = "185.158.133.1";
 const TXT_NAME = "_lovable";
@@ -195,19 +196,8 @@ function VerifySection({ domain }: { domain: string }) {
   const [showHistory, setShowHistory] = useState(false);
   const runningRef = useRef(false);
 
-  // Parse a TXT data field returned by Google DNS. RFC 1035 allows a TXT record
-  // to contain multiple character strings, each ≤255 bytes, that must be
-  // concatenated. Google returns them as space-separated quoted segments
-  // (e.g. `"part1" "part2"`). Some clients return a single quoted blob.
-  const parseTxt = (raw: string): string => {
-    const segments = raw.match(/"((?:[^"\\]|\\.)*)"/g);
-    if (segments && segments.length > 0) {
-      return segments
-        .map((s) => s.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, "\\"))
-        .join("");
-    }
-    return raw.replace(/^"|"$/g, "");
-  };
+  // TXT parsing lives in `@/lib/dns-txt` so it can be unit tested. See
+  // src/lib/dns-txt.test.ts for the regression suite.
 
   const query = async (name: string, type: "A" | "AAAA" | "TXT"): Promise<string[]> => {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
