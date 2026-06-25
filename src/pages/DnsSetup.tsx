@@ -209,25 +209,63 @@ function VerifySection({ domain }: { domain: string }) {
     for (const [, , expected, setter] of targets) {
       setter({ status: "checking", found: [], expected });
     }
-    const results = await Promise.all(targets.map(async ([name, type, expected, setter]) => {
+    const checks = await Promise.all(targets.map(async ([name, type, expected, setter]) => {
       try {
         const found = await query(name, type);
         const ok = type === "A"
           ? found.includes(expected)
           : found.some((v) => v.includes("lovable_verify"));
         setter({ status: ok ? "ok" : "fail", found, expected });
-        return ok;
+        return { ok, found };
       } catch (e: any) {
         setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
-        return false;
+        return { ok: false, found: [] as string[] };
       }
     }));
+    const results = checks.map((c) => c.ok);
+    const entry: HistoryEntry = {
+      ts: Date.now(),
+      domain,
+      root: checks[0],
+      www: checks[1],
+      txt: checks[2],
+      allOk: results.every(Boolean),
+    };
+    setHistory((prev) => {
+      const next = [entry, ...prev].slice(0, HISTORY_LIMIT);
+      try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch {}
+      return next;
+    });
     setLastChecked(new Date());
     setNextIn(POLL_INTERVAL_SEC);
     setRunning(false);
     runningRef.current = false;
     // auto-stop polling once everything passes
     if (results.every(Boolean)) setAutoPoll(false);
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    try { localStorage.removeItem(HISTORY_KEY); } catch {}
+    toast({ title: "History cleared" });
+  };
+
+  const exportHistory = () => {
+    const headers = ["timestamp", "domain", "root_ok", "root_found", "www_ok", "www_found", "txt_ok", "txt_found", "all_ok"];
+    const rows = history.map((h) => [
+      new Date(h.ts).toISOString(),
+      h.domain,
+      h.root.ok, `"${h.root.found.join("|")}"`,
+      h.www.ok, `"${h.www.found.join("|")}"`,
+      h.txt.ok, `"${h.txt.found.join("|")}"`,
+      h.allOk,
+    ].join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = `dns-history-${domain}.csv`; a.click();
+    URL.revokeObjectURL(url);
   };
 
   // Countdown + auto re-run
