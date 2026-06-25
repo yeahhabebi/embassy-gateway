@@ -165,13 +165,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Embassy Information Section */}
-      <section className="py-16 md:py-24 bg-muted/30">
+      <section className="py-16 md:py-24 bg-muted/30" aria-labelledby="embassy-info-heading">
         <div className="container mx-auto px-4">
+          <h2 id="embassy-info-heading" className="sr-only">Embassy Information and Latest Updates</h2>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <Card className="shadow-xl">
               <CardHeader>
-                <CardTitle className="text-2xl">Embassy Information</CardTitle>
+                <CardTitle as="h3" className="text-2xl">Embassy Information</CardTitle>
                 <CardDescription>
                   Contact details and office hours for the Embassy of Bosnia and Herzegovina
                 </CardDescription>
