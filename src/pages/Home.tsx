@@ -171,7 +171,7 @@ const Home = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <Card className="shadow-xl">
               <CardHeader>
-                <CardTitle as="h3" className="text-2xl">Embassy Information</CardTitle>
+                <CardTitle className="text-2xl">Embassy Information</CardTitle>
                 <CardDescription>
                   Contact details and office hours for the Embassy of Bosnia and Herzegovina
                 </CardDescription>
