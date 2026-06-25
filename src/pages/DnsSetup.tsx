@@ -373,6 +373,66 @@ function VerifySection({ domain }: { domain: string }) {
             </Alert>
           )
         )}
+
+        <div className="border-t pt-3">
+          <div className="flex items-center justify-between flex-wrap gap-2">
+            <button
+              onClick={() => setShowHistory((v) => !v)}
+              className="inline-flex items-center gap-2 text-sm font-medium hover:text-primary"
+            >
+              <History className="w-4 h-4" />
+              Check history ({history.length})
+              <span className="text-xs text-muted-foreground">{showHistory ? "Hide" : "Show"}</span>
+            </button>
+            {history.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="outline" onClick={exportHistory}>
+                  <Download className="w-3 h-3 mr-1" /> CSV
+                </Button>
+                <Button size="sm" variant="ghost" onClick={clearHistory}>
+                  <Trash2 className="w-3 h-3 mr-1" /> Clear
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {showHistory && (
+            history.length === 0 ? (
+              <p className="text-xs text-muted-foreground mt-3">No checks recorded yet. Run a check to start tracking propagation history.</p>
+            ) : (
+              <div className="mt-3 max-h-80 overflow-y-auto border rounded-lg divide-y">
+                {history.map((h) => {
+                  const d = new Date(h.ts);
+                  const Pill = ({ ok, label }: { ok: boolean; label: string }) => (
+                    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono ${ok ? "bg-green-100 text-green-800 dark:bg-green-950/40 dark:text-green-300" : "bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300"}`}>
+                      {ok ? <Check className="w-2.5 h-2.5" /> : <X className="w-2.5 h-2.5" />} {label}
+                    </span>
+                  );
+                  return (
+                    <div key={h.ts} className="p-2.5 text-xs space-y-1.5 hover:bg-muted/30">
+                      <div className="flex items-center justify-between gap-2 flex-wrap">
+                        <span className="font-mono text-muted-foreground">{d.toLocaleString()}</span>
+                        <span className={`font-semibold ${h.allOk ? "text-green-600" : "text-destructive"}`}>
+                          {h.allOk ? "ALL PASS" : "PARTIAL / FAIL"}
+                        </span>
+                      </div>
+                      <div className="flex gap-1.5 flex-wrap">
+                        <Pill ok={h.root.ok} label="root A" />
+                        <Pill ok={h.www.ok} label="www A" />
+                        <Pill ok={h.txt.ok} label="TXT" />
+                      </div>
+                      <div className="font-mono text-[10px] text-muted-foreground break-all space-y-0.5">
+                        <div>root: {h.root.found.join(", ") || "—"}</div>
+                        <div>www: {h.www.found.join(", ") || "—"}</div>
+                        <div>txt: {h.txt.found.join(", ") || "—"}</div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )
+          )}
+        </div>
       </CardContent>
     </Card>
   );
