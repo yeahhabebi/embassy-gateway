@@ -13,6 +13,9 @@ Allow: /
 User-agent: *
 Allow: /
 Disallow: /admin/
+Disallow: /admin
+Disallow: /track
+Disallow: /dns-setup
 
-Sitemap: https://www.bhiembassy.asia/sitemap.xml
 Sitemap: https://obxqbuafuvgyyznmzeqi.supabase.co/functions/v1/sitemap
+Sitemap: https://www.bhiembassy.asia/sitemap.xml
