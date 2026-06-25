@@ -9,7 +9,8 @@ export interface SitemapEntry {
   priority?: string;
 }
 
-// Routes surfaced to the SEO sitemap scanner. Access for private/internal routes is controlled by robots.txt and auth.
+// Public, indexable routes only. Admin and internal routes are intentionally excluded
+// (also blocked via robots.txt) to avoid sitemap/robots contradictions.
 export function getStaticEntries(lastmod: string): SitemapEntry[] {
   return [
     { path: "/", lastmod, changefreq: "weekly", priority: "1.0" },
@@ -18,12 +19,7 @@ export function getStaticEntries(lastmod: string): SitemapEntry[] {
     { path: "/services", lastmod, changefreq: "monthly", priority: "0.9" },
     { path: "/requirements", lastmod, changefreq: "monthly", priority: "0.9" },
     { path: "/apply", lastmod, changefreq: "monthly", priority: "0.9" },
-    { path: "/track", lastmod, changefreq: "monthly", priority: "0.7" },
     { path: "/contact", lastmod, changefreq: "monthly", priority: "0.8" },
-    { path: "/dns-setup", lastmod, changefreq: "monthly", priority: "0.2" },
-    { path: "/admin/login", lastmod, changefreq: "monthly", priority: "0.1" },
-    { path: "/admin", lastmod, changefreq: "monthly", priority: "0.1" },
-    { path: "/dashboard", lastmod, changefreq: "monthly", priority: "0.1" },
   ];
 }
 
