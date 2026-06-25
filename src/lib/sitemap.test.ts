@@ -23,11 +23,10 @@ describe("sitemap generator", () => {
     expect(xml.trim().endsWith(`</urlset>`)).toBe(true);
   });
 
-  it("includes scanner-reported route aliases", () => {
-    expect(xml).toContain(`${BASE_URL}/home`);
-    expect(xml).toContain(`${BASE_URL}/dns-setup`);
-    expect(xml).toContain(`${BASE_URL}/admin/login`);
-    expect(xml).toContain(`${BASE_URL}/admin`);
-    expect(xml).toContain(`${BASE_URL}/dashboard`);
+  it("excludes admin and internal routes blocked by robots.txt", () => {
+    expect(xml).not.toContain(`${BASE_URL}/admin`);
+    expect(xml).not.toContain(`${BASE_URL}/dashboard`);
+    expect(xml).not.toContain(`${BASE_URL}/dns-setup`);
+    expect(xml).not.toContain(`${BASE_URL}/track`);
   });
 });
