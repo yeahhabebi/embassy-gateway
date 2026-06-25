@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { BASE_URL, generateSitemap, getStaticEntries } from "../../scripts/generate-sitemap";
+import { BASE_URL, generateSitemap, getStaticEntries } from "./sitemap";
 
 describe("sitemap generator", () => {
   const lastmod = "2026-06-25";
