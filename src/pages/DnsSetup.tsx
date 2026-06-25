@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -158,11 +158,17 @@ export default function DnsSetup() {
 
 type CheckState = { status: "idle" | "checking" | "ok" | "fail"; found: string[]; expected: string; error?: string };
 
+const POLL_INTERVAL_SEC = 180; // 3 minutes
+
 function VerifySection({ domain }: { domain: string }) {
   const [root, setRoot] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
   const [www, setWww] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
   const [txt, setTxt] = useState<CheckState>({ status: "idle", found: [], expected: TXT_VALUE });
   const [running, setRunning] = useState(false);
+  const [autoPoll, setAutoPoll] = useState(false);
+  const [nextIn, setNextIn] = useState(POLL_INTERVAL_SEC);
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
+  const runningRef = useRef(false);
 
   const query = async (name: string, type: "A" | "TXT"): Promise<string[]> => {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
@@ -174,29 +180,53 @@ function VerifySection({ domain }: { domain: string }) {
   };
 
   const runAll = async () => {
-    if (!domain) return;
+    if (!domain || runningRef.current) return;
+    runningRef.current = true;
     setRunning(true);
     const targets: Array<[string, "A" | "TXT", string, (s: CheckState) => void]> = [
       [domain, "A", LOVABLE_IP, setRoot],
       [`www.${domain}`, "A", LOVABLE_IP, setWww],
       [`_lovable.${domain}`, "TXT", TXT_VALUE, setTxt],
     ];
-    for (const [name, type, expected, setter] of targets) {
+    for (const [, , expected, setter] of targets) {
       setter({ status: "checking", found: [], expected });
     }
-    await Promise.all(targets.map(async ([name, type, expected, setter]) => {
+    const results = await Promise.all(targets.map(async ([name, type, expected, setter]) => {
       try {
         const found = await query(name, type);
         const ok = type === "A"
           ? found.includes(expected)
           : found.some((v) => v.includes("lovable_verify"));
         setter({ status: ok ? "ok" : "fail", found, expected });
+        return ok;
       } catch (e: any) {
         setter({ status: "fail", found: [], expected, error: e?.message || "Query failed" });
+        return false;
       }
     }));
+    setLastChecked(new Date());
+    setNextIn(POLL_INTERVAL_SEC);
     setRunning(false);
+    runningRef.current = false;
+    // auto-stop polling once everything passes
+    if (results.every(Boolean)) setAutoPoll(false);
   };
+
+  // Countdown + auto re-run
+  useEffect(() => {
+    if (!autoPoll) return;
+    const tick = setInterval(() => {
+      setNextIn((n) => {
+        if (n <= 1) {
+          runAll();
+          return POLL_INTERVAL_SEC;
+        }
+        return n - 1;
+      });
+    }, 1000);
+    return () => clearInterval(tick);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoPoll, domain]);
 
   const Row = ({ label, name, state }: { label: string; name: string; state: CheckState }) => (
     <div className="border rounded-lg p-3 flex items-start gap-3">
@@ -223,20 +253,51 @@ function VerifySection({ domain }: { domain: string }) {
 
   const allOk = root.status === "ok" && www.status === "ok" && txt.status === "ok";
   const anyChecked = [root, www, txt].some((s) => s.status !== "idle");
+  const mm = String(Math.floor(nextIn / 60)).padStart(1, "0");
+  const ss = String(nextIn % 60).padStart(2, "0");
+  const progress = ((POLL_INTERVAL_SEC - nextIn) / POLL_INTERVAL_SEC) * 100;
+
+  const toggleAuto = () => {
+    if (!autoPoll) {
+      setAutoPoll(true);
+      setNextIn(POLL_INTERVAL_SEC);
+      if (!anyChecked) runAll();
+    } else {
+      setAutoPoll(false);
+    }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center justify-between">
+        <CardTitle className="flex items-center justify-between flex-wrap gap-2">
           <span>3. Verify DNS propagation</span>
-          <Button onClick={runAll} disabled={running || !domain} size="sm">
-            {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
-            {anyChecked ? "Re-check" : "Check now"}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button onClick={toggleAuto} disabled={!domain} size="sm" variant={autoPoll ? "secondary" : "outline"}>
+              {autoPoll ? "Stop auto-check" : "Auto-check every 3 min"}
+            </Button>
+            <Button onClick={runAll} disabled={running || !domain} size="sm">
+              {running ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <RefreshCw className="w-4 h-4 mr-2" />}
+              {anyChecked ? "Re-check" : "Check now"}
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         <p className="text-xs text-muted-foreground">Queries Google Public DNS (8.8.8.8) live. Results reflect global propagation within seconds.</p>
+
+        {autoPoll && !allOk && (
+          <div className="rounded-lg border bg-muted/40 p-3 space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-medium">Auto-checking… next run in <span className="font-mono text-primary">{mm}:{ss}</span></span>
+              {lastChecked && <span className="text-muted-foreground">Last: {lastChecked.toLocaleTimeString()}</span>}
+            </div>
+            <div className="h-1.5 w-full bg-muted rounded overflow-hidden">
+              <div className="h-full bg-primary transition-all duration-1000 ease-linear" style={{ width: `${progress}%` }} />
+            </div>
+          </div>
+        )}
+
         <Row label="A record (root)" name={domain} state={root} />
         <Row label="A record (www)" name={`www.${domain}`} state={www} />
         <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} />
@@ -245,13 +306,13 @@ function VerifySection({ domain }: { domain: string }) {
           allOk ? (
             <Alert className="border-green-600/40 bg-green-50 dark:bg-green-950/20">
               <AlertDescription className="text-green-800 dark:text-green-300 text-sm">
-                All 3 records are live. Go to Lovable → Project Settings → Domains → <strong>Verify</strong>, then submit your sitemap in Google Search Console.
+                All 3 records are live{autoPoll ? " — auto-check stopped" : ""}. Go to Lovable → Project Settings → Domains → <strong>Verify</strong>, then submit your sitemap in Google Search Console.
               </AlertDescription>
             </Alert>
           ) : (
             <Alert variant="destructive">
               <AlertDescription className="text-sm">
-                One or more records aren't propagated yet. Double-check the values at your registrar, remove conflicting old records, then re-check in 5–10 minutes.
+                One or more records aren't propagated yet. {autoPoll ? "Auto-check is on — leave this tab open and it will keep re-checking." : "Turn on auto-check or re-check in 5–10 minutes."}
               </AlertDescription>
             </Alert>
           )
@@ -260,4 +321,5 @@ function VerifySection({ domain }: { domain: string }) {
     </Card>
   );
 }
+
 
