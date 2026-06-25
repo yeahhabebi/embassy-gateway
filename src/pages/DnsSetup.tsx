@@ -164,17 +164,24 @@ type HistoryEntry = {
   root: { ok: boolean; found: string[] };
   www: { ok: boolean; found: string[] };
   txt: { ok: boolean; found: string[] };
+  aaaaRoot: { ok: boolean; found: string[] };
+  aaaaWww: { ok: boolean; found: string[] };
   allOk: boolean;
 };
 
 const POLL_INTERVAL_SEC = 180; // 3 minutes
 const HISTORY_KEY = "dns-check-history-v1";
 const HISTORY_LIMIT = 50;
+// Lovable does not currently publish an IPv6 (AAAA) endpoint, so the expected state
+// is "no AAAA record present". Any stale AAAA will conflict with the IPv4 A setup.
+const AAAA_EXPECTED = "(none — Lovable is IPv4 only)";
 
 function VerifySection({ domain }: { domain: string }) {
   const [root, setRoot] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
   const [www, setWww] = useState<CheckState>({ status: "idle", found: [], expected: LOVABLE_IP });
   const [txt, setTxt] = useState<CheckState>({ status: "idle", found: [], expected: TXT_VALUE });
+  const [aaaaRoot, setAaaaRoot] = useState<CheckState>({ status: "idle", found: [], expected: AAAA_EXPECTED });
+  const [aaaaWww, setAaaaWww] = useState<CheckState>({ status: "idle", found: [], expected: AAAA_EXPECTED });
   const [running, setRunning] = useState(false);
   const [autoPoll, setAutoPoll] = useState(false);
   const [nextIn, setNextIn] = useState(POLL_INTERVAL_SEC);
@@ -188,12 +195,13 @@ function VerifySection({ domain }: { domain: string }) {
   const [showHistory, setShowHistory] = useState(false);
   const runningRef = useRef(false);
 
-  const query = async (name: string, type: "A" | "TXT"): Promise<string[]> => {
+  const query = async (name: string, type: "A" | "AAAA" | "TXT"): Promise<string[]> => {
     const res = await fetch(`https://dns.google/resolve?name=${encodeURIComponent(name)}&type=${type}`);
     const json = await res.json();
     const answers: any[] = json.Answer || [];
+    const code = type === "A" ? 1 : type === "AAAA" ? 28 : 16;
     return answers
-      .filter((a) => (type === "A" ? a.type === 1 : a.type === 16))
+      .filter((a) => a.type === code)
       .map((a) => String(a.data).replace(/^"|"$/g, ""));
   };
 
@@ -201,10 +209,13 @@ function VerifySection({ domain }: { domain: string }) {
     if (!domain || runningRef.current) return;
     runningRef.current = true;
     setRunning(true);
-    const targets: Array<[string, "A" | "TXT", string, (s: CheckState) => void]> = [
+    type Target = [string, "A" | "AAAA" | "TXT", string, (s: CheckState) => void];
+    const targets: Target[] = [
       [domain, "A", LOVABLE_IP, setRoot],
       [`www.${domain}`, "A", LOVABLE_IP, setWww],
       [`_lovable.${domain}`, "TXT", TXT_VALUE, setTxt],
+      [domain, "AAAA", AAAA_EXPECTED, setAaaaRoot],
+      [`www.${domain}`, "AAAA", AAAA_EXPECTED, setAaaaWww],
     ];
     for (const [, , expected, setter] of targets) {
       setter({ status: "checking", found: [], expected });
@@ -212,9 +223,10 @@ function VerifySection({ domain }: { domain: string }) {
     const checks = await Promise.all(targets.map(async ([name, type, expected, setter]) => {
       try {
         const found = await query(name, type);
-        const ok = type === "A"
-          ? found.includes(expected)
-          : found.some((v) => v.includes("lovable_verify"));
+        let ok: boolean;
+        if (type === "A") ok = found.includes(expected);
+        else if (type === "TXT") ok = found.some((v) => v.includes("lovable_verify"));
+        else ok = found.length === 0; // AAAA: clean (no conflicting IPv6)
         setter({ status: ok ? "ok" : "fail", found, expected });
         return { ok, found };
       } catch (e: any) {
@@ -222,14 +234,17 @@ function VerifySection({ domain }: { domain: string }) {
         return { ok: false, found: [] as string[] };
       }
     }));
-    const results = checks.map((c) => c.ok);
+    // AAAA is advisory — don't block "all OK" on it, but record it
+    const requiredOk = checks.slice(0, 3).map((c) => c.ok);
     const entry: HistoryEntry = {
       ts: Date.now(),
       domain,
       root: checks[0],
       www: checks[1],
       txt: checks[2],
-      allOk: results.every(Boolean),
+      aaaaRoot: checks[3],
+      aaaaWww: checks[4],
+      allOk: requiredOk.every(Boolean),
     };
     setHistory((prev) => {
       const next = [entry, ...prev].slice(0, HISTORY_LIMIT);
@@ -240,8 +255,7 @@ function VerifySection({ domain }: { domain: string }) {
     setNextIn(POLL_INTERVAL_SEC);
     setRunning(false);
     runningRef.current = false;
-    // auto-stop polling once everything passes
-    if (results.every(Boolean)) setAutoPoll(false);
+    if (requiredOk.every(Boolean)) setAutoPoll(false);
   };
 
   const clearHistory = () => {
@@ -251,13 +265,15 @@ function VerifySection({ domain }: { domain: string }) {
   };
 
   const exportHistory = () => {
-    const headers = ["timestamp", "domain", "root_ok", "root_found", "www_ok", "www_found", "txt_ok", "txt_found", "all_ok"];
+    const headers = ["timestamp", "domain", "root_ok", "root_found", "www_ok", "www_found", "txt_ok", "txt_found", "aaaa_root_ok", "aaaa_root_found", "aaaa_www_ok", "aaaa_www_found", "all_ok"];
     const rows = history.map((h) => [
       new Date(h.ts).toISOString(),
       h.domain,
       h.root.ok, `"${h.root.found.join("|")}"`,
       h.www.ok, `"${h.www.found.join("|")}"`,
       h.txt.ok, `"${h.txt.found.join("|")}"`,
+      h.aaaaRoot?.ok ?? "", `"${(h.aaaaRoot?.found || []).join("|")}"`,
+      h.aaaaWww?.ok ?? "", `"${(h.aaaaWww?.found || []).join("|")}"`,
       h.allOk,
     ].join(","));
     const csv = [headers.join(","), ...rows].join("\n");
@@ -267,6 +283,7 @@ function VerifySection({ domain }: { domain: string }) {
     a.href = url; a.download = `dns-history-${domain}.csv`; a.click();
     URL.revokeObjectURL(url);
   };
+
 
   // Countdown + auto re-run
   useEffect(() => {
@@ -284,28 +301,37 @@ function VerifySection({ domain }: { domain: string }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoPoll, domain]);
 
-  const Row = ({ label, name, state }: { label: string; name: string; state: CheckState }) => (
+  const Row = ({ label, name, state, optional, emptyOk }: { label: string; name: string; state: CheckState; optional?: boolean; emptyOk?: boolean }) => (
     <div className="border rounded-lg p-3 flex items-start gap-3">
       <div className="mt-0.5">
         {state.status === "idle" && <div className="w-5 h-5 rounded-full border-2 border-muted-foreground/30" />}
         {state.status === "checking" && <Loader2 className="w-5 h-5 animate-spin text-primary" />}
         {state.status === "ok" && <div className="w-5 h-5 rounded-full bg-green-600 flex items-center justify-center"><Check className="w-3 h-3 text-white" /></div>}
-        {state.status === "fail" && <div className="w-5 h-5 rounded-full bg-destructive flex items-center justify-center"><X className="w-3 h-3 text-white" /></div>}
+        {state.status === "fail" && <div className={`w-5 h-5 rounded-full ${optional ? "bg-amber-500" : "bg-destructive"} flex items-center justify-center`}><X className="w-3 h-3 text-white" /></div>}
       </div>
       <div className="flex-1 min-w-0">
-        <div className="font-medium text-sm">{label} <span className="font-mono text-muted-foreground">({name})</span></div>
+        <div className="font-medium text-sm flex items-center gap-2 flex-wrap">
+          {label} <span className="font-mono text-muted-foreground">({name})</span>
+          {optional && <span className="text-[10px] uppercase tracking-wide px-1.5 py-0.5 rounded bg-muted text-muted-foreground">optional</span>}
+        </div>
         <div className="text-xs text-muted-foreground mt-1">Expected: <span className="font-mono">{state.expected}</span></div>
         {state.status !== "idle" && (
           <div className="text-xs mt-1">
             Found: {state.found.length === 0
-              ? <span className="text-destructive font-mono">— no record —</span>
-              : <span className="font-mono break-all">{state.found.join(", ")}</span>}
+              ? <span className={`font-mono ${emptyOk ? "text-green-600" : "text-destructive"}`}>{emptyOk ? "— none (good) —" : "— no record —"}</span>
+              : <span className={`font-mono break-all ${optional && state.status === "fail" ? "text-amber-600" : ""}`}>{state.found.join(", ")}</span>}
+          </div>
+        )}
+        {optional && state.status === "fail" && state.found.length > 0 && (
+          <div className="text-xs text-amber-600 mt-1">
+            A stale IPv6 address is set. Remove this AAAA record at your registrar so all traffic resolves to Lovable's IPv4 endpoint.
           </div>
         )}
         {state.error && <div className="text-xs text-destructive mt-1">{state.error}</div>}
       </div>
     </div>
   );
+
 
   const allOk = root.status === "ok" && www.status === "ok" && txt.status === "ok";
   const anyChecked = [root, www, txt].some((s) => s.status !== "idle");
@@ -357,6 +383,9 @@ function VerifySection({ domain }: { domain: string }) {
         <Row label="A record (root)" name={domain} state={root} />
         <Row label="A record (www)" name={`www.${domain}`} state={www} />
         <Row label="TXT record (ownership)" name={`_lovable.${domain}`} state={txt} />
+        <Row label="AAAA record (IPv6, root)" name={domain} state={aaaaRoot} optional emptyOk />
+        <Row label="AAAA record (IPv6, www)" name={`www.${domain}`} state={aaaaWww} optional emptyOk />
+
 
         {anyChecked && !running && (
           allOk ? (
