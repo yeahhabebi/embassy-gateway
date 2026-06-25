@@ -60,4 +60,80 @@ describe("parseTxt (RFC 1035 TXT parsing)", () => {
       "v=spf1 include:_spf.example.com ~all"
     );
   });
+  // ---------- Mixed empty segments ----------
+
+  it("treats a lone empty segment as an empty string", () => {
+    expect(parseTxt('""')).toBe("");
+  });
+
+  it("ignores empty segments between non-empty ones", () => {
+    expect(parseTxt('"a" "" "b"')).toBe("ab");
+  });
+
+  it("handles leading and trailing empty segments", () => {
+    expect(parseTxt('"" "payload" ""')).toBe("payload");
+  });
+
+  it("concatenates several consecutive empty segments to an empty string", () => {
+    expect(parseTxt('"" "" ""')).toBe("");
+  });
+
+  // ---------- Multiple quoted strings per TXT record ----------
+
+  it("joins four quoted segments preserving order", () => {
+    expect(parseTxt('"v=" "spf1 " "include:_spf " "~all"')).toBe(
+      "v=spf1 include:_spf ~all"
+    );
+  });
+
+  it("joins segments split across the 255-byte boundary three times", () => {
+    const a = "a".repeat(255);
+    const b = "b".repeat(255);
+    const c = "c".repeat(64);
+    expect(parseTxt(`"${a}" "${b}" "${c}"`)).toBe(a + b + c);
+  });
+
+  it("does not insert separators between adjacent quoted segments with no inner whitespace", () => {
+    expect(parseTxt('"alpha""beta""gamma"')).toBe("alphabetagamma");
+  });
+
+  it("parses a DKIM-style multi-segment record", () => {
+    const raw =
+      '"v=DKIM1; k=rsa; " "p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQ" "DwIDAQAB"';
+    expect(parseTxt(raw)).toBe(
+      "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDwIDAQAB"
+    );
+  });
+
+  // ---------- Adjacent escaped characters ----------
+
+  it("handles two escaped quotes adjacent to each other", () => {
+    expect(parseTxt('"\\"\\""')).toBe('""');
+  });
+
+  it("handles two escaped backslashes adjacent to each other", () => {
+    expect(parseTxt('"\\\\\\\\"')).toBe("\\\\");
+  });
+
+  it("handles an escaped backslash followed by an escaped quote", () => {
+    expect(parseTxt('"\\\\\\""')).toBe('\\"');
+  });
+
+  it("handles an escaped quote followed by an escaped backslash", () => {
+    expect(parseTxt('"\\"\\\\"')).toBe('"\\');
+  });
+
+  it("preserves adjacent escapes when split across segments", () => {
+    expect(parseTxt('"prefix\\"" "\\"suffix"')).toBe('prefix""suffix');
+  });
+
+  it("preserves adjacent backslash escapes when split across segments", () => {
+    expect(parseTxt('"a\\\\" "\\\\b"')).toBe("a\\\\b");
+  });
+
+  it("does not greedily match across an unescaped quote boundary", () => {
+    // Two separate segments — the parser must not collapse them into one
+    // 5-character segment by ignoring the closing/opening quote pair.
+    expect(parseTxt('"a\\"b" "c\\"d"')).toBe('a"bc"d');
+  });
 });
