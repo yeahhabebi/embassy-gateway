@@ -7,6 +7,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Copy, Check, ExternalLink, Globe, Loader2, X, RefreshCw, History, Trash2, Download } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { parseTxt } from "@/lib/dns-txt";
+import SEOHead from "@/components/SEOHead";
 
 const LOVABLE_IP = "185.158.133.1";
 const TXT_NAME = "_lovable";
@@ -46,6 +47,12 @@ export default function DnsSetup() {
 
   return (
     <div className="min-h-screen bg-muted/30 py-10 px-4">
+      <SEOHead
+        title="DNS Setup Wizard"
+        description="Step-by-step DNS configuration to connect your custom domain to the BiH Embassy India website."
+        canonical="/dns-setup"
+        noindex
+      />
       <div className="max-w-4xl mx-auto space-y-6">
         <div className="text-center space-y-2">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary text-primary-foreground">

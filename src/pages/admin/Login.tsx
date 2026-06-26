@@ -7,6 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { Shield } from "lucide-react";
+import SEOHead from "@/components/SEOHead";
+
+
 
 
 export default function AdminLogin() {
@@ -63,6 +66,12 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/10 via-background to-accent/10 p-4">
+      <SEOHead
+        title="Admin Login"
+        description="Restricted admin login for the Embassy of Bosnia and Herzegovina India administrative panel."
+        canonical="/admin/login"
+        noindex
+      />
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1 text-center">
           <div className="flex justify-center mb-4">

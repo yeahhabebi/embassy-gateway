@@ -31,7 +31,7 @@ const About = () => {
     <Layout>
       <SEOHead
         title="About Bosnia and Herzegovina"
-        description="Learn about Bosnia and Herzegovina – its rich history, cultural diversity, natural beauty, and diplomatic relations with India. Discover Sarajevo, Mostar, and more."
+        description="Learn about Bosnia and Herzegovina — its history, culture, geography, and diplomatic relations with India."
         canonical="/about"
         jsonLd={[
           embassyOrganizationSchema,
