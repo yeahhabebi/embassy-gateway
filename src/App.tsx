@@ -75,7 +75,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/apply" element={<Apply />} />
             <Route path="/track" element={<Track />} />
-            <Route path="/dns-setup" element={<DnsSetup />} />
+            <Route path="/dns-setup" element={<ProtectedRoute><DnsSetup /></ProtectedRoute>} />
 
             {/* Admin Routes */}
             

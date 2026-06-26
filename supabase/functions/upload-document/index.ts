@@ -79,6 +79,34 @@ Deno.serve(async (req) => {
       );
     }
 
+    // Magic-byte verification — the client-supplied MIME type cannot be trusted.
+    const headerBytes = new Uint8Array(await file.slice(0, 12).arrayBuffer());
+    const matchesMagic = (() => {
+      // PDF: %PDF
+      if (headerBytes[0] === 0x25 && headerBytes[1] === 0x50 && headerBytes[2] === 0x44 && headerBytes[3] === 0x46) {
+        return file.type === 'application/pdf';
+      }
+      // JPEG: FF D8 FF
+      if (headerBytes[0] === 0xff && headerBytes[1] === 0xd8 && headerBytes[2] === 0xff) {
+        return file.type === 'image/jpeg' || file.type === 'image/jpg';
+      }
+      // PNG: 89 50 4E 47 0D 0A 1A 0A
+      if (
+        headerBytes[0] === 0x89 && headerBytes[1] === 0x50 && headerBytes[2] === 0x4e && headerBytes[3] === 0x47 &&
+        headerBytes[4] === 0x0d && headerBytes[5] === 0x0a && headerBytes[6] === 0x1a && headerBytes[7] === 0x0a
+      ) {
+        return file.type === 'image/png';
+      }
+      return false;
+    })();
+
+    if (!matchesMagic) {
+      return new Response(
+        JSON.stringify({ error: 'File contents do not match the declared file type.' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     if (file.size > MAX_FILE_SIZE) {
       return new Response(
         JSON.stringify({ error: 'File too large. Maximum size is 5MB' }),
