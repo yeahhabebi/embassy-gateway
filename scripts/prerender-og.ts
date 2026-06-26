@@ -77,13 +77,21 @@ function patchHead(html: string, meta: RouteMeta): string {
   let out = html;
 
   // <title>
-  out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
+  if (/<title>[\s\S]*?<\/title>/i.test(out)) {
+    out = out.replace(/<title>[\s\S]*?<\/title>/i, `<title>${title}</title>`);
+  } else {
+    out = out.replace(/<\/head>/i, `  <title>${title}</title>\n</head>`);
+  }
 
   // meta name="description"
-  out = out.replace(
-    /<meta\s+name=["']description["'][^>]*>/i,
-    `<meta name="description" content="${desc}" />`
-  );
+  if (/<meta\s+name=["']description["'][^>]*>/i.test(out)) {
+    out = out.replace(
+      /<meta\s+name=["']description["'][^>]*>/i,
+      `<meta name="description" content="${desc}" />`
+    );
+  } else {
+    out = out.replace(/<\/head>/i, `  <meta name="description" content="${desc}" />\n</head>`);
+  }
 
   // canonical
   if (/<link\s+rel=["']canonical["'][^>]*>/i.test(out)) {
