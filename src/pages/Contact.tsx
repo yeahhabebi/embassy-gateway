@@ -113,7 +113,7 @@ const Contact = () => {
     <Layout>
       <SEOHead
         title="Contact Us – Embassy of Bosnia and Herzegovina"
-        description="Contact the Embassy of Bosnia and Herzegovina in New Delhi, India. Find our address, phone, email, office hours, and send us a message for visa or consular inquiries."
+        description="Contact the Embassy of Bosnia and Herzegovina in New Delhi: address, phone, email, and office hours for visa and consular inquiries."
         canonical="/contact"
         jsonLd={[
           breadcrumbSchema([
