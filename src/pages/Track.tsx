@@ -240,8 +240,9 @@ const Track = () => {
       <section className="bg-primary text-primary-foreground py-16 md:py-24">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <FileText className="h-16 w-16 mx-auto mb-6" />
-            <h1 className="mb-6">{get("track_hero_title", "Track Your Application")}</h1>
+            <FileText className="h-16 w-16 mx-auto mb-6" aria-hidden="true" />
+            <h1 className="mb-4">{get("track_hero_title", "Track Your Application")}</h1>
+            <h2 className="text-2xl font-semibold mb-4 text-primary-foreground/95">Visa Application Status</h2>
             <p className="text-xl text-primary-foreground/90">
               {get("track_hero_subtitle", "Check the status of your visa application")}
             </p>

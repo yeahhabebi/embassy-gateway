@@ -52,6 +52,7 @@ export default function DnsSetup() {
             <Globe className="w-7 h-7" />
           </div>
           <h1 className="text-3xl font-bold">DNS Setup Wizard</h1>
+          <h2 className="text-base font-medium text-muted-foreground">Connect your custom domain</h2>
           <p className="text-muted-foreground">Get the exact DNS records to connect your domain to Lovable.</p>
         </div>
 
@@ -109,14 +110,24 @@ export default function DnsSetup() {
                       <td className="p-3 font-mono font-bold">{r.type}</td>
                       <td className="p-3 font-mono">
                         {r.name}
-                        <button onClick={() => copy(r.id + "-n", r.name)} className="ml-2 text-muted-foreground hover:text-primary">
+                        <button
+                          type="button"
+                          onClick={() => copy(r.id + "-n", r.name)}
+                          aria-label={`Copy ${r.type} record name ${r.name}`}
+                          className="ml-2 text-muted-foreground hover:text-primary"
+                        >
                           {copied === r.id + "-n" ? <Check className="inline w-3 h-3" /> : <Copy className="inline w-3 h-3" />}
                         </button>
                         <div className="text-xs text-muted-foreground font-sans">{r.purpose}</div>
                       </td>
                       <td className="p-3 font-mono break-all">
                         {r.value}
-                        <button onClick={() => copy(r.id + "-v", r.value)} className="ml-2 text-muted-foreground hover:text-primary">
+                        <button
+                          type="button"
+                          onClick={() => copy(r.id + "-v", r.value)}
+                          aria-label={`Copy ${r.type} record value ${r.value}`}
+                          className="ml-2 text-muted-foreground hover:text-primary"
+                        >
                           {copied === r.id + "-v" ? <Check className="inline w-3 h-3" /> : <Copy className="inline w-3 h-3" />}
                         </button>
                       </td>
