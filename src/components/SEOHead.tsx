@@ -17,7 +17,7 @@ const SEOHead = ({
   description,
   canonical,
   ogType = "website",
-  ogImage = `${BASE_URL}/images/embassy-hero.jpg`,
+  ogImage = `${BASE_URL}/icons/icon-512.png?v=5`,
   jsonLd,
   noindex = false,
 }: SEOHeadProps) => {
@@ -67,8 +67,8 @@ export const embassyOrganizationSchema = {
   name: "Embassy of Bosnia and Herzegovina in New Delhi",
   alternateName: "BiH Embassy India",
   url: "https://www.bhiembassy.asia",
-  logo: "https://www.bhiembassy.asia/favicon.png",
-  image: "https://www.bhiembassy.asia/images/embassy-hero.jpg",
+  logo: "https://www.bhiembassy.asia/icons/icon-512.png?v=5",
+  image: "https://www.bhiembassy.asia/icons/icon-512.png?v=5",
   description:
     "Official Embassy of Bosnia and Herzegovina in New Delhi, India. Providing consular services, visa processing, and promoting bilateral relations.",
   address: {
