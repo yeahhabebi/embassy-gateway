@@ -446,7 +446,9 @@ const ContactMessages = () => {
                 <Button
                   variant="outline"
                   onClick={() => {
-                    window.location.href = `mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject}`;
+                    const safeEmail = encodeURIComponent(selectedMessage.email);
+                    const safeSubject = encodeURIComponent(`Re: ${selectedMessage.subject}`);
+                    window.location.href = `mailto:${safeEmail}?subject=${safeSubject}`;
                   }}
                   className="flex-1"
                 >
