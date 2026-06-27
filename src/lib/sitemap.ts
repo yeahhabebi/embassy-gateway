@@ -14,7 +14,6 @@ export interface SitemapEntry {
 export function getStaticEntries(lastmod: string): SitemapEntry[] {
   return [
     { path: "/", lastmod, changefreq: "weekly", priority: "1.0" },
-    { path: "/home", lastmod, changefreq: "weekly", priority: "1.0" },
     { path: "/about", lastmod, changefreq: "monthly", priority: "0.8" },
     { path: "/services", lastmod, changefreq: "monthly", priority: "0.9" },
     { path: "/requirements", lastmod, changefreq: "monthly", priority: "0.9" },

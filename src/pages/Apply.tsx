@@ -1,16 +1,7 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout";
 import SEOHead from "@/components/SEOHead";
 
 const Apply = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const t = setTimeout(() => navigate("/", { replace: true }), 1500);
-    return () => clearTimeout(t);
-  }, [navigate]);
-
   return (
     <Layout>
       <SEOHead
@@ -26,7 +17,6 @@ const Apply = () => {
             Online public applications are currently unavailable. Please contact Our Embassy directly
             for visa guidance and submission instructions.
           </p>
-          <p className="text-sm text-muted-foreground">Redirecting you to the homepage…</p>
         </div>
       </section>
     </Layout>
