@@ -29,4 +29,8 @@ describe("sitemap generator", () => {
     expect(xml).not.toContain(`${BASE_URL}/dns-setup`);
     expect(xml).not.toContain(`${BASE_URL}/track`);
   });
+
+  it("excludes duplicate or redirect-only routes", () => {
+    expect(xml).not.toContain(`${BASE_URL}/home`);
+  });
 });
