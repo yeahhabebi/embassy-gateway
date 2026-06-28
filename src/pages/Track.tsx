@@ -230,7 +230,7 @@ const Track = () => {
     <Layout>
       <SEOHead
         title="Track Your Visa Application"
-        description="Track your Bosnia and Herzegovina visa application status online. Enter your passport number and date of birth to check the current status of your application."
+        description="Check the status of your Bosnia and Herzegovina visa application online using your passport number and date of birth."
         canonical="/track"
         jsonLd={breadcrumbSchema([
           { name: "Home", url: "/" },
