@@ -21,8 +21,8 @@ const Requirements = () => {
   return (
     <Layout>
       <SEOHead
-        title="Visa Requirements & Documents"
-        description="Bosnia and Herzegovina visa requirements: passport, photos, financial proof, travel insurance. For tourist, business, student, and work visa applicants."
+        title="Visa Requirements"
+        description="Bosnia and Herzegovina visa requirements: passport, photos, financial proof, and travel insurance for tourist, business, student, and work visas."
         canonical="/requirements"
         jsonLd={[
           breadcrumbSchema([
