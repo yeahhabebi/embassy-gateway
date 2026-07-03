@@ -81,6 +81,7 @@ const App = () => (
             {/* Admin Routes */}
             
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/reset-password" element={<AdminResetPassword />} />
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminLayout />
