@@ -16,8 +16,32 @@ export default function AdminLogin() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState("");
+  const [forgotLoading, setForgotLoading] = useState(false);
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail) return;
+    setForgotLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(forgotEmail, {
+      redirectTo: `${window.location.origin}/admin/reset-password`,
+    });
+    setForgotLoading(false);
+    if (error) {
+      toast({ title: "Could not send reset email", description: error.message, variant: "destructive" });
+      return;
+    }
+    toast({
+      title: "Check your email",
+      description: "If an account exists for that email, a reset link has been sent.",
+    });
+    setForgotOpen(false);
+    setForgotEmail("");
+  };
+
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
