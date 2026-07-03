@@ -17,6 +17,7 @@ const Track = lazy(() => import("./pages/Track"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const DnsSetup = lazy(() => import("./pages/DnsSetup"));
 const AdminLogin = lazy(() => import("./pages/admin/Login"));
+const AdminResetPassword = lazy(() => import("./pages/admin/ResetPassword"));
 
 const AdminDashboard = lazy(() => import("./pages/admin/Dashboard"));
 const Applications = lazy(() => import("./pages/admin/Applications"));
@@ -80,6 +81,7 @@ const App = () => (
             {/* Admin Routes */}
             
             <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin/reset-password" element={<AdminResetPassword />} />
             <Route path="/admin" element={
               <ProtectedRoute>
                 <AdminLayout />
