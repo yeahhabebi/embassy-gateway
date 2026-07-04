@@ -46,7 +46,8 @@
     
     
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://www.bhiembassy.asia/" />
+    <!-- og:url is set per-route by react-helmet-async (see src/components/SEOHead.tsx) so each page shares its own URL. -->
+    <!-- Sitewide og:title/og:description below act as fallback for non-JS social crawlers on unknown routes. -->
     <meta property="og:image" content="https://storage.googleapis.com/gpt-engineer-file-uploads/ZKK9WNNLFVW37Gb1ouhRwRxlPCK2/social-images/social-1782570348044-1000030759.webp">
     <meta property="og:image:width" content="512" />
     <meta property="og:image:height" content="512" />
