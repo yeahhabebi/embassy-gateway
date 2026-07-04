@@ -59,7 +59,7 @@ const Home = () => {
         <div className="container mx-auto px-4 relative z-20">
           <div className="max-w-4xl mx-auto text-center animate-fade-in">
             <h1 className="mb-6 font-bold">
-              {get("homepage_hero_title", "Welcome to the Embassy of Bosnia and Herzegovina")}
+              {get("homepage_hero_title", "Embassy of Bosnia and Herzegovina in New Delhi — Consular Services")}
             </h1>
             <p className="text-xl md:text-2xl mb-10 text-primary-foreground/90">
               {get("homepage_hero_subtitle", "Serving the Bosnian community and promoting bilateral relations between Bosnia and Herzegovina and India")}
