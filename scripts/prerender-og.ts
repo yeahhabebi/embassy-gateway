@@ -42,9 +42,9 @@ const routes: RouteMeta[] = [
   },
   {
     path: "/requirements",
-    title: "Visa Requirements & Documents | BiH Embassy India",
+    title: "Visa Requirements | BiH Embassy India",
     description:
-      "Bosnia and Herzegovina visa requirements: passport, photos, financial proof, travel insurance. For tourist, business, student, and work visa applicants.",
+      "Bosnia and Herzegovina visa requirements: passport, photos, financial proof, and travel insurance for tourist, business, student, and work visas.",
   },
   {
     path: "/contact",
@@ -56,7 +56,7 @@ const routes: RouteMeta[] = [
     path: "/track",
     title: "Track Your Visa Application | BiH Embassy India",
     description:
-      "Track your Bosnia and Herzegovina visa application status online. Enter your passport number and date of birth to check the current status.",
+      "Check the status of your Bosnia and Herzegovina visa application online using your passport number and date of birth.",
   },
 ];
 
