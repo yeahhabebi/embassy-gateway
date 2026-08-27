@@ -91,7 +91,11 @@ Deno.serve(async (req) => {
     }
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
+    const supabaseAnonKey =
+      Deno.env.get("SUPABASE_ANON_KEY") ??
+      Deno.env.get("SUPABASE_PUBLISHABLE_KEY") ??
+      Deno.env.get("SUPABASE_PUBLISHABLE_OR_ANON_KEY") ??
+      "";
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
     // Sign in with anon client
@@ -99,7 +103,12 @@ Deno.serve(async (req) => {
     const { data: authData, error: authError } =
       await anonClient.auth.signInWithPassword({ email, password });
 
+    if (!supabaseAnonKey) {
+      console.error("Missing anon/publishable key env var");
+    }
+
     if (authError) {
+      console.error("signInWithPassword failed:", authError.status, authError.message);
       return new Response(
         JSON.stringify({ error: "Login failed. Please check your credentials." }),
         {
@@ -147,6 +156,7 @@ Deno.serve(async (req) => {
       }
     );
   } catch (error) {
+    console.error("admin-login unexpected error:", error);
     return new Response(
       JSON.stringify({ error: "An unexpected error occurred. Please try again." }),
       {
